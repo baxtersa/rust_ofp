@@ -1,0 +1,22 @@
+[package]
+name = "rust_of"
+version = "0.1.0"
+authors = ["Sam Baxter <sbaxter@cs.umass.edu>"]
+
+description = "Simple Rust OpenFlow echo server"
+
+keywords = ["SDN", "Networking", "OpenFlow"]
+license = "MIT"
+
+[lib]
+name = "rust_of"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rust_of"
+path = "src/main.rs"
+
+[dependencies]
+rustc-serialize = "*"
+byteorder = "*"
+bufstream = "*"
