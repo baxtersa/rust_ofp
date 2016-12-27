@@ -33,7 +33,7 @@ impl OfpHeader {
         bytes.write_u32::<BigEndian>(header.xid()).unwrap();
     }
 
-    pub fn parse(buf: [u8; 64]) -> Self {
+    pub fn parse(buf: [u8; 8]) -> Self {
         let mut bytes = Cursor::new(buf.to_vec());
         OfpHeader {
             version: bytes.read_u8().unwrap(),

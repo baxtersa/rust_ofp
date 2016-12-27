@@ -29,7 +29,7 @@ fn process_message(xid: u32, message: Message, writer: &mut TcpStream) {
 fn handle_client(stream: &mut TcpStream) {
     send_message(0, Message::Hello, stream);
 
-    let mut buf = [0u8; 64];
+    let mut buf = [0u8; 8];
 
     loop {
         let res = stream.read(&mut buf);
