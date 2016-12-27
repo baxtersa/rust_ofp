@@ -18,3 +18,17 @@ cargo run
 Testing
 ---
 I'm performing all correctness evaluation in [mininet](https://mininet.org) for the time being. Mininet offers quick feedback, as much scalability as I need for now, and should properly support OpenFlow 1.0 (and other protocols). There is no reason correctness in mininet shouldn't transfer to physical hardware as well, and maybe one day I'll get around to testing out that hypothesis.
+
+Anyway, testing the controller binary is pretty straightforward, assuming mininet is installed.
+In one terminal
+```bash
+cd path/to/rust_ofp
+cargo run
+```
+In another terminal
+```bash
+sudo  mn --controller=remote
+```
+The terminal running `rust_ofp_controller` will occasionally print some things out, logging a rough idea of the types of messages it receives, and behaviors it performs.
+
+The mininet terminal should launch an interactive shell with the typical mininet utilities. Soon, the controller may even install forwarding rules on switches that you'll be able to investigate with `ovs-ofctl` queries!
