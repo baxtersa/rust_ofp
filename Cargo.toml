@@ -17,6 +17,4 @@ name = "rust_ofp_controller"
 path = "src/main.rs"
 
 [dependencies]
-rustc-serialize = "*"
 byteorder = "*"
-bufstream = "*"

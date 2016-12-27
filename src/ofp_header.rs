@@ -4,7 +4,6 @@ use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 
 use rust_ofp::openflow0x01::MsgCode;
 
-#[derive(RustcEncodable, RustcDecodable)]
 pub struct OfpHeader {
     version: u8,
     typ: u8,
