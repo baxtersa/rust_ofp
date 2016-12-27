@@ -1,7 +1,7 @@
 use std::io::{BufRead, Cursor};
 use std::mem::{size_of, transmute};
 
-use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
+use byteorder::{BigEndian, ReadBytesExt};
 
 fn test_bit(bit: u64, x: u64) -> bool {
     (x >> bit) & 1 == 1
@@ -10,23 +10,7 @@ fn test_bit(bit: u64, x: u64) -> bool {
 pub struct Pattern {}
 
 #[repr(packed)]
-struct OfpMatch {
-    wildcards: u32,
-    in_port: u16,
-    dl_src: [u8; 6],
-    dl_dst: [u8; 6],
-    dl_vlan: u16,
-    dl_vlan_pcp: u8,
-    pad1: u8,
-    dl_type: u16,
-    nw_tos: u8,
-    nw_proto: u8,
-    pad2: u16,
-    nw_src: u32,
-    nw_dst: u32,
-    tp_src: u16,
-    tp_dst: u16,
-}
+struct OfpMatch(u32, u16, [u8; 6], [u8; 6], u16, u8, u8, u16, u8, u8, u16, u32, u32, u16, u16);
 
 #[derive(Copy, Clone)]
 pub enum PseudoPort {
@@ -46,16 +30,10 @@ pub enum Action {
 }
 
 #[repr(packed)]
-struct OfpActionHeader {
-    typ: u16,
-    len: u16,
-}
+struct OfpActionHeader(u16, u16);
 
 #[repr(packed)]
-struct OfpActionOutput {
-    port: u16,
-    max_len: u16,
-}
+struct OfpActionOutput(u16, u16);
 
 impl Action {
     fn size_of(a: &Action) -> usize {
@@ -139,14 +117,7 @@ pub struct SwitchFeatures {
 }
 
 #[repr(packed)]
-struct OfpSwitchFeatures {
-    datapath_id: u64,
-    n_buffers: u32,
-    n_tables: u8,
-    pad: [u8; 3],
-    capabilities: u32,
-    action: u32,
-}
+struct OfpSwitchFeatures(u64, u32, u8, [u8; 3], u32, u32);
 
 impl SwitchFeatures {
     pub fn parse(buf: &[u8], buf_len: usize) -> SwitchFeatures {
@@ -227,16 +198,7 @@ pub struct FlowMod {
 }
 
 #[repr(packed)]
-struct OfpFlowMod {
-    cookie: u64,
-    command: u16,
-    idle_timeout: u16,
-    hard_timeout: u16,
-    priority: u16,
-    buffer_id: u32,
-    out_port: u16,
-    flags: u16,
-}
+struct OfpFlowMod(u64, u16, u16, u16, u16, u32, u16, u16);
 
 impl FlowMod {
     pub fn size_of(msg: &FlowMod) -> usize {
@@ -275,13 +237,7 @@ pub struct PacketIn {
 }
 
 #[repr(packed)]
-struct OfpPacketIn {
-    buffer_id: i32,
-    total_len: u16,
-    in_port: u16,
-    reason: u8,
-    pad: u8,
-}
+struct OfpPacketIn(i32, u16, u16, u8, u8);
 
 impl PacketIn {
     pub fn size_of(pi: &PacketIn) -> usize {
@@ -383,17 +339,7 @@ pub struct PortDesc {
 }
 
 #[repr(packed)]
-struct OfpPhyPort {
-    port_no: u16,
-    hw_addr: [u8; 6],
-    name: [u8; 16],
-    config: u32,
-    state: u32,
-    curr: u32,
-    advertised: u32,
-    supported: u32,
-    peer: u32,
-}
+struct OfpPhyPort(u16, [u8; 6], [u8; 16], u32, u32, u32, u32, u32, u32);
 
 impl PortDesc {
     fn parse(bytes: &mut Cursor<Vec<u8>>) -> PortDesc {
