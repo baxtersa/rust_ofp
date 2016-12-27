@@ -1,4 +1,4 @@
-rust_ofp
+rust_ofp [![Build Status](https://travis-ci.org/baxtersa/rust_ofp.svg?branch=master)](https://travis-ci.org/baxtersa/rust_ofp)
 ===
 OpenFlow 1.0 protocol and controller in Rust.
 ---
