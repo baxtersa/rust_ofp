@@ -1,9 +1,9 @@
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 
-extern crate rust_of;
-use rust_of::ofp_header::*;
-use rust_of::openflow0x01::message::{add_flow, Message};
+extern crate rust_ofp;
+use rust_ofp::ofp_header::*;
+use rust_ofp::openflow0x01::message::{add_flow, Message};
 
 fn send_message(xid: u32, message: Message, writer: &mut TcpStream) {
     let raw_msg = Message::marshal(xid, message);

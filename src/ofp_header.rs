@@ -2,7 +2,7 @@ use std::io::Cursor;
 use std::mem::{size_of, transmute};
 use byteorder::{BigEndian, WriteBytesExt, ReadBytesExt};
 
-use rust_of::openflow0x01::MsgCode;
+use rust_ofp::openflow0x01::MsgCode;
 
 #[derive(RustcEncodable, RustcDecodable)]
 pub struct OfpHeader {
