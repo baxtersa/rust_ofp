@@ -19,6 +19,7 @@ fn implement_flow(datapath_id: u64, writer: &mut TcpStream) {
 
 fn process_message(xid: u32, message: Message, writer: &mut TcpStream) {
     match message {
+        Message::EchoRequest(bytes) => send_message(xid, Message::EchoReply(bytes), writer),
         Message::Hello => send_message(10, Message::FeaturesReq, writer),
         Message::FeaturesReply(fts) => implement_flow(fts.datapath_id, writer),
         _ => println!("Unsupported message type"),
@@ -38,7 +39,7 @@ fn handle_client(stream: &mut TcpStream) {
                 let message_len = header.length() - OfpHeader::size();
                 let mut message_buf = vec![0; message_len];
                 let _ = stream.read(&mut message_buf);
-                let (xid, body) = Message::parse(&header, &message_buf);
+                let (xid, body) = Message::parse(&header, &message_buf, message_len);
                 process_message(xid, body, stream)
             }
             Ok(_) => {
