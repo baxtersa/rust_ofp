@@ -10,7 +10,7 @@ fn send_message(xid: u32, message: Message, writer: &mut TcpStream) {
     writer.write_all(&raw_msg).unwrap()
 }
 
-fn implement_flow(datapath_id: u64, writer: &mut TcpStream) {
+fn implement_flow(_: u64, writer: &mut TcpStream) {
     let prio = 0;
     let pat = 0;
     let message = Message::FlowMod(add_flow(prio, pat, vec![]));

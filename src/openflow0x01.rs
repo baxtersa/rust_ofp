@@ -206,7 +206,7 @@ impl FlowMod {
         Action::size_of_sequence(msg.actions.clone())
     }
 
-    pub fn marshal(msg: FlowMod, bytes: &mut Vec<u8>) {}
+    pub fn marshal(_: FlowMod, _: &mut Vec<u8>) {}
 }
 
 pub enum Payload {
@@ -266,7 +266,7 @@ impl PacketIn {
         }
     }
 
-    pub fn marshal(pi: PacketIn, bytes: &mut Vec<u8>) {}
+    pub fn marshal(_: PacketIn, _: &mut Vec<u8>) {}
 }
 
 #[repr(u8)]
@@ -437,7 +437,7 @@ impl PortStatus {
         }
     }
 
-    pub fn marshal(sts: PortStatus, bytes: &mut Vec<u8>) {}
+    pub fn marshal(_: PortStatus, _: &mut Vec<u8>) {}
 }
 
 pub mod message {
