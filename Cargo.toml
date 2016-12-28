@@ -5,6 +5,10 @@ authors = ["Sam Baxter <sbaxter@cs.umass.edu>"]
 
 description = "Simple Rust OpenFlow 0x01 controller"
 
+documentation = "https://baxtersa.github.io/rust_ofp/docs"
+repository = "https://github.com/baxtersa/rust_ofp"
+readme = "README.md"
+
 keywords = ["SDN", "Networking", "OpenFlow"]
 license = "MIT"
 

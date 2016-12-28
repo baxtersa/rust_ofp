@@ -3,6 +3,7 @@ use std::net::{TcpListener, TcpStream};
 
 extern crate rust_ofp;
 use rust_ofp::ofp_header::*;
+use rust_ofp::openflow0x01::Pattern;
 use rust_ofp::openflow0x01::message::{add_flow, Message};
 
 fn send_message(xid: u32, message: Message, writer: &mut TcpStream) {
@@ -12,7 +13,7 @@ fn send_message(xid: u32, message: Message, writer: &mut TcpStream) {
 
 fn implement_flow(_: u64, writer: &mut TcpStream) {
     let prio = 0;
-    let pat = 0;
+    let pat = Pattern {};
     let message = Message::FlowMod(add_flow(prio, pat, vec![]));
     send_message(1000, message, writer)
 }

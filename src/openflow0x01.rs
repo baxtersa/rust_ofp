@@ -3,6 +3,12 @@ use std::mem::{size_of, transmute};
 
 use byteorder::{BigEndian, ReadBytesExt};
 
+pub trait MessageType {
+    fn size_of(&Self) -> usize;
+    fn parse(buf: &[u8]) -> Self;
+    fn marshal(Self, &mut Vec<u8>);
+}
+
 fn test_bit(bit: u64, x: u64) -> bool {
     (x >> bit) & 1 == 1
 }
@@ -24,6 +30,46 @@ pub enum PseudoPort {
     Local,
 }
 
+#[repr(u16)]
+enum OfpPort {
+    OFPPMax = 0xff00,
+    OFPPInPort = 0xfff8,
+    OFPPTable = 0xfff9,
+    OFPPNormal = 0xfffa,
+    OFPPFlood = 0xfffb,
+    OFPPAll = 0xfffc,
+    OFPPController = 0xfffd,
+    OFPPLocal = 0xfffe,
+    OFPPNone = 0xffff,
+}
+
+impl PseudoPort {
+    fn of_int(p: u16) -> Option<PseudoPort> {
+        if (OfpPort::OFPPNone as u16) == p {
+            None
+        } else {
+            Some(PseudoPort::make(p, 0))
+        }
+    }
+
+    fn make(p: u16, len: u64) -> PseudoPort {
+        match p {
+            p if p == (OfpPort::OFPPInPort as u16) => PseudoPort::InPort,
+            p if p == (OfpPort::OFPPTable as u16) => PseudoPort::Table,
+            p if p == (OfpPort::OFPPNormal as u16) => PseudoPort::Normal,
+            p if p == (OfpPort::OFPPFlood as u16) => PseudoPort::Flood,
+            p if p == (OfpPort::OFPPAll as u16) => PseudoPort::AllPorts,
+            p if p == (OfpPort::OFPPController as u16) => PseudoPort::Controller(len),
+            p if p == (OfpPort::OFPPLocal as u16) => PseudoPort::Local,
+            _ => if p <= (OfpPort::OFPPMax as u16) {
+                PseudoPort::PhysicalPort(p)
+            } else {
+                panic!("Unsupported port number {}", p)
+            }
+        }
+    }
+}
+
 #[derive(Copy, Clone)]
 pub enum Action {
     Output(PseudoPort),
@@ -34,6 +80,22 @@ struct OfpActionHeader(u16, u16);
 
 #[repr(packed)]
 struct OfpActionOutput(u16, u16);
+
+#[repr(u16)]
+enum OfpActionType {
+    OFPATOutput,
+    // OFPATSetVlanVId,
+    // OFPATSetVlanPCP,
+    // OFPATStripVlan,
+    // OFPATSetDlSrc,
+    // OFPATSetDlDst,
+    // OFPATSetNwSrc,
+    // OFPATSetNwDst,
+    // OFPATSetNwTos,
+    // OFPATSetTpSrc,
+    // OFPATSetTpDst,
+    // OFPATEnqueue,
+}
 
 impl Action {
     fn size_of(a: &Action) -> usize {
@@ -47,11 +109,45 @@ impl Action {
     pub fn size_of_sequence(actions: Vec<Action>) -> usize {
         actions.iter().fold(0, |acc, x| Action::size_of(x) + acc)
     }
+
+    fn _parse(bytes: &mut Cursor<Vec<u8>>) -> (&mut Cursor<Vec<u8>>, Action) {
+        let action_code = bytes.read_u16::<BigEndian>().unwrap();
+        let _ = bytes.read_u16::<BigEndian>().unwrap();
+        let action = match action_code {
+            t if t == (OfpActionType::OFPATOutput as u16) => {
+                let port_code = bytes.read_u16::<BigEndian>().unwrap();
+                let len = bytes.read_u16::<BigEndian>().unwrap();
+                Action::Output(PseudoPort::make(port_code, len as u64))
+            },
+            _ => Action::Output(PseudoPort::InPort),
+        };
+        (bytes, action)
+    }
+
+    pub fn parse_sequence(bytes: &mut Cursor<Vec<u8>>) -> Vec<Action> {
+        if bytes.get_ref().is_empty() {
+            vec![]
+        } else {
+            let (bytes_, action) = Action::_parse(bytes);
+            let mut v = vec![action];
+            v.append(&mut Action::parse_sequence(bytes_));
+            v
+        }
+    }
 }
 
 pub enum Timeout {
     Permanent,
     ExpiresAfter(u16),
+}
+
+impl Timeout {
+    fn of_int(tm: u16) -> Timeout {
+        match tm {
+            0 => Timeout::Permanent,
+            d => Timeout::ExpiresAfter(d),
+        }
+    }
 }
 
 #[repr(u8)]
@@ -175,6 +271,7 @@ impl SwitchFeatures {
     }
 }
 
+#[repr(u16)]
 pub enum FlowModCmd {
     AddFlow,
     ModFlow,
@@ -185,10 +282,10 @@ pub enum FlowModCmd {
 
 pub struct FlowMod {
     pub command: FlowModCmd,
-    pub pattern: u8,
+    pub pattern: Pattern,
     pub priority: u16,
     pub actions: Vec<Action>,
-    pub cookie: i64,
+    pub cookie: u64,
     pub idle_timeout: Timeout,
     pub hard_timeout: Timeout,
     pub notify_when_removed: bool,
@@ -201,12 +298,55 @@ pub struct FlowMod {
 struct OfpFlowMod(u64, u16, u16, u16, u16, u32, u16, u16);
 
 impl FlowMod {
-    pub fn size_of(msg: &FlowMod) -> usize {
+    fn check_overlap_of_flags(flags: u16) -> bool {
+        2 & flags != 0
+    }
+
+    fn notify_when_removed_of_flags(flags: u16) -> bool {
+        1 & flags != 0
+    }
+}
+
+impl MessageType for FlowMod {
+    fn size_of(msg: &FlowMod) -> usize {
         size_of::<OfpMatch>() + size_of::<OfpFlowMod>() +
         Action::size_of_sequence(msg.actions.clone())
     }
 
-    pub fn marshal(_: FlowMod, _: &mut Vec<u8>) {}
+    fn parse(buf: &[u8]) -> FlowMod {
+        let mut bytes = Cursor::new(buf.to_vec());
+        let pattern = Pattern {};
+        bytes.consume(size_of::<OfpMatch>());
+        let cookie = bytes.read_u64::<BigEndian>().unwrap();
+        let command = unsafe { transmute(bytes.read_u16::<BigEndian>().unwrap()) };
+        let idle = Timeout::of_int(bytes.read_u16::<BigEndian>().unwrap());
+        let hard = Timeout::of_int(bytes.read_u16::<BigEndian>().unwrap());
+        let prio = bytes.read_u16::<BigEndian>().unwrap();
+        let buffer_id = bytes.read_i32::<BigEndian>().unwrap();
+        let out_port = PseudoPort::of_int(bytes.read_u16::<BigEndian>().unwrap());
+        let flags = bytes.read_u16::<BigEndian>().unwrap();
+        let actions = Action::parse_sequence(&mut bytes);
+        FlowMod {
+            command: command,
+            pattern: pattern,
+            priority: prio,
+            actions: actions,
+            cookie: cookie,
+            idle_timeout: idle,
+            hard_timeout: hard,
+            notify_when_removed: FlowMod::notify_when_removed_of_flags(flags),
+            apply_to_packet: {
+                match buffer_id {
+                    -1 => None,
+                    n => Some(n as u32),
+                }
+            },
+            out_port: out_port,
+            check_overlap: FlowMod::check_overlap_of_flags(flags),
+        }
+    }
+
+    fn marshal(_: FlowMod, _: &mut Vec<u8>) {}
 }
 
 pub enum Payload {
@@ -553,7 +693,7 @@ pub mod message {
         }
     }
 
-    pub fn add_flow(prio: u16, pattern: u8, actions: Vec<Action>) -> FlowMod {
+    pub fn add_flow(prio: u16, pattern: Pattern, actions: Vec<Action>) -> FlowMod {
         FlowMod {
             command: FlowModCmd::AddFlow,
             pattern: pattern,
