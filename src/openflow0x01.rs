@@ -416,6 +416,16 @@ impl PseudoPort {
 #[derive(Copy, Clone)]
 pub enum Action {
     Output(PseudoPort),
+    SetDlVlan(Option<u16>),
+    SetDlVlanPcp(u8),
+    SetDlSrc([u8; 6]),
+    SetDlDst([u8; 6]),
+    SetNwSrc(u32),
+    SetNwDst(u32),
+    SetNwTos(u8),
+    SetTpSrc(u16),
+    SetTpDst(u16),
+    Enqueue(PseudoPort, u32),
 }
 
 #[repr(packed)]
@@ -423,27 +433,54 @@ struct OfpActionHeader(u16, u16, [u8; 4]);
 
 #[repr(packed)]
 struct OfpActionOutput(u16, u16);
+#[repr(packed)]
+struct OfpActionVlanVId(u16, u16);
+#[repr(packed)]
+struct OfpActionVlanPcp(u8, [u8; 3]);
+#[repr(packed)]
+struct OfpActionStripVlan(u32);
+#[repr(packed)]
+struct OfpActionDlAddr([u8; 6], [u8; 6]);
+#[repr(packed)]
+struct OfpActionNwAddr(u32);
+#[repr(packed)]
+struct OfpActionTpPort(u16, u16);
+#[repr(packed)]
+struct OfpActionNwTos(u8, [u8; 3]);
+#[repr(packed)]
+struct OfpActionEnqueue(u16, [u8; 6], u32);
 
 #[repr(u16)]
 enum OfpActionType {
     OFPATOutput,
-    // OFPATSetVlanVId,
-    // OFPATSetVlanPCP,
-    // OFPATStripVlan,
-    // OFPATSetDlSrc,
-    // OFPATSetDlDst,
-    // OFPATSetNwSrc,
-    // OFPATSetNwDst,
-    // OFPATSetNwTos,
-    // OFPATSetTpSrc,
-    // OFPATSetTpDst,
-    // OFPATEnqueue,
+    OFPATSetVlanVId,
+    OFPATSetVlanPCP,
+    OFPATStripVlan,
+    OFPATSetDlSrc,
+    OFPATSetDlDst,
+    OFPATSetNwSrc,
+    OFPATSetNwDst,
+    OFPATSetNwTos,
+    OFPATSetTpSrc,
+    OFPATSetTpDst,
+    OFPATEnqueue,
 }
 
 impl Action {
     fn type_code(a: &Action) -> OfpActionType {
         match *a {
             Action::Output(_) => OfpActionType::OFPATOutput,
+            Action::SetDlVlan(None) => OfpActionType::OFPATStripVlan,
+            Action::SetDlVlan(Some(_)) => OfpActionType::OFPATSetVlanVId,
+            Action::SetDlVlanPcp(_) => OfpActionType::OFPATSetVlanPCP,
+            Action::SetDlSrc(_) => OfpActionType::OFPATSetDlSrc,
+            Action::SetDlDst(_) => OfpActionType::OFPATSetDlDst,
+            Action::SetNwSrc(_) => OfpActionType::OFPATSetNwSrc,
+            Action::SetNwDst(_) => OfpActionType::OFPATSetNwDst,
+            Action::SetNwTos(_) => OfpActionType::OFPATSetNwTos,
+            Action::SetTpSrc(_) => OfpActionType::OFPATSetTpSrc,
+            Action::SetTpDst(_) => OfpActionType::OFPATSetTpDst,
+            Action::Enqueue(_, _) => OfpActionType::OFPATEnqueue,
         }
     }
 
@@ -451,6 +488,17 @@ impl Action {
         let h = size_of::<OfpActionHeader>();
         let body = match *a {
             Action::Output(_) => size_of::<OfpActionOutput>(),
+            Action::SetDlVlan(None) => size_of::<OfpActionStripVlan>(),
+            Action::SetDlVlan(Some(_)) => size_of::<OfpActionVlanVId>(),
+            Action::SetDlVlanPcp(_) => size_of::<OfpActionVlanPcp>(),
+            Action::SetDlSrc(_) |
+            Action::SetDlDst(_) => size_of::<OfpActionDlAddr>(),
+            Action::SetNwSrc(_) |
+            Action::SetNwDst(_) => size_of::<OfpActionNwAddr>(),
+            Action::SetNwTos(_) => size_of::<OfpActionNwTos>(),
+            Action::SetTpSrc(_) |
+            Action::SetTpDst(_) => size_of::<OfpActionTpPort>(),
+            Action::Enqueue(_, _) => size_of::<OfpActionEnqueue>(),
         };
         h + body
     }
@@ -468,7 +516,68 @@ impl Action {
                 let len = bytes.read_u16::<BigEndian>().unwrap();
                 Action::Output(PseudoPort::make(port_code, len as u64))
             }
-            _ => Action::Output(PseudoPort::InPort),
+            t if t == (OfpActionType::OFPATSetVlanVId as u16) => {
+                let vid = bytes.read_u16::<BigEndian>().unwrap();
+                bytes.consume(2);
+                if vid == 0xffff {
+                    Action::SetDlVlan(None)
+                } else {
+                    Action::SetDlVlan(Some(vid))
+                }
+            }
+            t if t == (OfpActionType::OFPATSetVlanPCP as u16) => {
+                let pcp = bytes.read_u8().unwrap();
+                bytes.consume(3);
+                Action::SetDlVlanPcp(pcp)
+            }
+            t if t == (OfpActionType::OFPATStripVlan as u16) => {
+                bytes.consume(4);
+                Action::SetDlVlan(None)
+            }
+            t if t == (OfpActionType::OFPATSetDlSrc as u16) => {
+                let mut dl_addr: [u8; 6] = [0; 6];
+                for i in 0..6 {
+                    dl_addr[i] = bytes.read_u8().unwrap();
+                }
+                bytes.consume(6);
+                Action::SetDlSrc(dl_addr)
+            }
+            t if t == (OfpActionType::OFPATSetDlDst as u16) => {
+                let mut dl_addr: [u8; 6] = [0; 6];
+                for i in 0..6 {
+                    dl_addr[i] = bytes.read_u8().unwrap();
+                }
+                bytes.consume(6);
+                Action::SetDlDst(dl_addr)
+            }
+            t if t == (OfpActionType::OFPATSetNwSrc as u16) => {
+                Action::SetNwSrc(bytes.read_u32::<BigEndian>().unwrap())
+            }
+            t if t == (OfpActionType::OFPATSetNwDst as u16) => {
+                Action::SetNwDst(bytes.read_u32::<BigEndian>().unwrap())
+            }
+            t if t == (OfpActionType::OFPATSetNwTos as u16) => {
+                let nw_tos = bytes.read_u8().unwrap();
+                bytes.consume(3);
+                Action::SetNwTos(nw_tos)
+            }
+            t if t == (OfpActionType::OFPATSetTpSrc as u16) => {
+                let pt = bytes.read_u16::<BigEndian>().unwrap();
+                bytes.consume(2);
+                Action::SetTpSrc(pt)
+            }
+            t if t == (OfpActionType::OFPATSetTpDst as u16) => {
+                let pt = bytes.read_u16::<BigEndian>().unwrap();
+                bytes.consume(2);
+                Action::SetTpDst(pt)
+            }
+            t if t == (OfpActionType::OFPATEnqueue as u16) => {
+                let pt = bytes.read_u16::<BigEndian>().unwrap();
+                bytes.consume(6);
+                let qid = bytes.read_u32::<BigEndian>().unwrap();
+                Action::Enqueue(PseudoPort::make(pt, 0), qid)
+            }
+            t => panic!("Unrecognized OfpActionType {}", t),
         };
         (bytes, action)
     }
@@ -506,6 +615,46 @@ impl Action {
                         _ => 0,
                     })
                     .unwrap()
+            }
+            Action::SetDlVlan(None) => bytes.write_u32::<BigEndian>(0xffff).unwrap(),
+            Action::SetDlVlan(Some(vid)) => {
+                bytes.write_u16::<BigEndian>(vid).unwrap();
+                bytes.write_u16::<BigEndian>(0).unwrap();
+            }
+            Action::SetDlVlanPcp(n) => {
+                bytes.write_u8(n).unwrap();
+                for _ in 0..3 {
+                    bytes.write_u8(0).unwrap();
+                }
+            }
+            Action::SetDlSrc(mac) |
+            Action::SetDlDst(mac) => {
+                for i in 0..6 {
+                    bytes.write_u8(mac[i]).unwrap();
+                }
+                for _ in 0..6 {
+                    bytes.write_u8(0).unwrap();
+                }
+            }
+            Action::SetNwSrc(addr) |
+            Action::SetNwDst(addr) => bytes.write_u32::<BigEndian>(addr).unwrap(),
+            Action::SetNwTos(n) => {
+                bytes.write_u8(n).unwrap();
+                for _ in 0..3 {
+                    bytes.write_u8(0).unwrap();
+                }
+            }
+            Action::SetTpSrc(pt) |
+            Action::SetTpDst(pt) => {
+                bytes.write_u16::<BigEndian>(pt).unwrap();
+                bytes.write_u16::<BigEndian>(0).unwrap();
+            }
+            Action::Enqueue(pp, qid) => {
+                PseudoPort::marshal(pp, bytes);
+                for _ in 0..6 {
+                    bytes.write_u8(0).unwrap();
+                }
+                bytes.write_u32::<BigEndian>(qid).unwrap();
             }
         }
     }

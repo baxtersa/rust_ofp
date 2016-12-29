@@ -12,6 +12,7 @@ fn send_message(xid: u32, message: Message, writer: &mut TcpStream) {
 }
 
 fn implement_flow(_: u64, writer: &mut TcpStream) {
+    // Drop all packets at each switch on arrival.
     let prio = 0;
     let pat = Pattern::match_all();
     let message = Message::FlowMod(add_flow(prio, pat, vec![]));
