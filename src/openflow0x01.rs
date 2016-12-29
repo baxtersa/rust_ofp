@@ -1,4 +1,4 @@
-use std::io::{BufRead, Cursor, Write};
+use std::io::{BufRead, Cursor};
 use std::mem::{size_of, transmute};
 
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
@@ -41,17 +41,301 @@ pub trait MessageType {
     fn marshal(Self, &mut Vec<u8>);
 }
 
+/// Set bit `bit` of `x` on if `toggle` is true, otherwise off.
+fn bit(bit: u64, x: u64, toggle: bool) -> u64 {
+    if toggle {
+        x | (1 << bit)
+    } else {
+        x & !(1 << bit)
+    }
+}
+
 /// Test whether bit `bit` of `x` is set.
 fn test_bit(bit: u64, x: u64) -> bool {
     (x >> bit) & 1 == 1
 }
 
+pub struct Mask<T> {
+    pub value: T,
+    pub mask: Option<T>,
+}
+
 /// Fields to match against flows.
-pub struct Pattern {}
+pub struct Pattern {
+    pub dl_src: Option<[u8; 6]>,
+    pub dl_dst: Option<[u8; 6]>,
+    pub dl_typ: Option<u16>,
+    pub dl_vlan: Option<Option<u16>>,
+    pub dl_vlan_pcp: Option<u8>,
+    pub nw_src: Option<Mask<u32>>,
+    pub nw_dst: Option<Mask<u32>>,
+    pub nw_proto: Option<u8>,
+    pub nw_tos: Option<u8>,
+    pub tp_src: Option<u16>,
+    pub tp_dst: Option<u16>,
+    pub in_port: Option<u16>,
+}
+
+struct Wildcards {
+    in_port: bool,
+    dl_vlan: bool,
+    dl_src: bool,
+    dl_dst: bool,
+    dl_type: bool,
+    nw_proto: bool,
+    tp_src: bool,
+    tp_dst: bool,
+    nw_src: u32,
+    nw_dst: u32,
+    dl_vlan_pcp: bool,
+    nw_tos: bool,
+}
+
+impl Wildcards {
+    fn set_nw_mask(f: u32, offset: usize, v: u32) -> u32 {
+        let value = (0x3f & v) << offset;
+        f | value
+    }
+
+    fn get_nw_mask(f: u32, offset: usize) -> u32 {
+        (f >> offset) & 0x3f
+    }
+
+    fn mask_bits(x: &Option<Mask<u32>>) -> u32 {
+        match *x {
+            None => 32,
+            Some(ref x) => {
+                match x.mask {
+                    None => 0,
+                    Some(m) => m,
+                }
+            }
+        }
+    }
+
+    fn marshal(w: Wildcards, bytes: &mut Vec<u8>) {
+        let ret = 0u32;
+        let ret = bit(0, ret as u64, w.in_port) as u32;
+        let ret = bit(1, ret as u64, w.dl_vlan) as u32;
+        let ret = bit(2, ret as u64, w.dl_src) as u32;
+        let ret = bit(3, ret as u64, w.dl_dst) as u32;
+        let ret = bit(4, ret as u64, w.dl_type) as u32;
+        let ret = bit(5, ret as u64, w.nw_proto) as u32;
+        let ret = bit(6, ret as u64, w.tp_src) as u32;
+        let ret = bit(7, ret as u64, w.tp_dst) as u32;
+        let ret = Wildcards::set_nw_mask(ret, 8, w.nw_src);
+        let ret = Wildcards::set_nw_mask(ret, 14, w.nw_dst);
+        let ret = bit(20, ret as u64, w.dl_vlan_pcp) as u32;
+        let ret = bit(21, ret as u64, w.nw_tos) as u32;
+        bytes.write_u32::<BigEndian>(ret).unwrap()
+    }
+
+    fn parse(bits: u32) -> Wildcards {
+        Wildcards {
+            in_port: test_bit(0, bits as u64),
+            dl_vlan: test_bit(1, bits as u64),
+            dl_src: test_bit(2, bits as u64),
+            dl_dst: test_bit(3, bits as u64),
+            dl_type: test_bit(4, bits as u64),
+            nw_proto: test_bit(5, bits as u64),
+            tp_src: test_bit(6, bits as u64),
+            tp_dst: test_bit(7, bits as u64),
+            nw_src: Wildcards::get_nw_mask(bits, 8),
+            nw_dst: Wildcards::get_nw_mask(bits, 14),
+            dl_vlan_pcp: test_bit(20, bits as u64),
+            nw_tos: test_bit(21, bits as u64),
+        }
+    }
+}
 
 impl Pattern {
-    fn marshal(_: Pattern, bytes: &mut Vec<u8>) {
-        bytes.write(&[0; 40]).unwrap();
+    pub fn match_all() -> Pattern {
+        Pattern {
+            dl_src: None,
+            dl_dst: None,
+            dl_typ: None,
+            dl_vlan: None,
+            dl_vlan_pcp: None,
+            nw_src: None,
+            nw_dst: None,
+            nw_proto: None,
+            nw_tos: None,
+            tp_src: None,
+            tp_dst: None,
+            in_port: None,
+        }
+    }
+
+    fn wildcards_of_pattern(m: &Pattern) -> Wildcards {
+        Wildcards {
+            in_port: m.in_port.is_none(),
+            dl_vlan: m.dl_vlan.is_none(),
+            dl_src: m.dl_src.is_none(),
+            dl_dst: m.dl_dst.is_none(),
+            dl_type: m.dl_typ.is_none(),
+            nw_proto: m.nw_proto.is_none(),
+            tp_src: m.tp_src.is_none(),
+            tp_dst: m.tp_dst.is_none(),
+            nw_src: Wildcards::mask_bits(&m.nw_src),
+            nw_dst: Wildcards::mask_bits(&m.nw_dst),
+            dl_vlan_pcp: m.dl_vlan_pcp.is_none(),
+            nw_tos: m.nw_tos.is_none(),
+        }
+    }
+
+    fn size_of(_: &Pattern) -> usize {
+        size_of::<OfpMatch>()
+    }
+
+    fn parse(bytes: &mut Cursor<Vec<u8>>) -> Pattern {
+        let w = Wildcards::parse(bytes.read_u32::<BigEndian>().unwrap());
+        let in_port = if w.in_port {
+            None
+        } else {
+            Some(bytes.read_u16::<BigEndian>().unwrap())
+        };
+        let dl_src = if w.dl_src {
+            None
+        } else {
+            let mut arr: [u8; 6] = [0; 6];
+            for i in 0..6 {
+                arr[i] = bytes.read_u8().unwrap();
+            }
+            Some(arr)
+        };
+        let dl_dst = if w.dl_dst {
+            None
+        } else {
+            let mut arr: [u8; 6] = [0; 6];
+            for i in 0..6 {
+                arr[i] = bytes.read_u8().unwrap();
+            }
+            Some(arr)
+        };
+        let dl_vlan = if w.dl_vlan {
+            None
+        } else {
+            let vlan = bytes.read_u16::<BigEndian>().unwrap();
+            if vlan == 0xfff {
+                Some(None)
+            } else {
+                Some(Some(vlan))
+            }
+        };
+        let dl_vlan_pcp = if w.dl_vlan_pcp {
+            None
+        } else {
+            Some(bytes.read_u8().unwrap())
+        };
+        bytes.consume(1);
+        let dl_typ = if w.dl_type {
+            None
+        } else {
+            Some(bytes.read_u16::<BigEndian>().unwrap())
+        };
+        let nw_tos = if w.nw_tos {
+            None
+        } else {
+            Some(bytes.read_u8().unwrap())
+        };
+        let nw_proto = if w.nw_proto {
+            None
+        } else {
+            Some(bytes.read_u8().unwrap())
+        };
+        bytes.consume(2);
+        let nw_src = if w.nw_src >= 32 {
+            None
+        } else if w.nw_src == 0 {
+            Some(Mask {
+                value: bytes.read_u32::<BigEndian>().unwrap(),
+                mask: None,
+            })
+        } else {
+            Some(Mask {
+                value: bytes.read_u32::<BigEndian>().unwrap(),
+                mask: Some(w.nw_src),
+            })
+        };
+        let nw_dst = if w.nw_dst >= 32 {
+            None
+        } else if w.nw_dst == 0 {
+            Some(Mask {
+                value: bytes.read_u32::<BigEndian>().unwrap(),
+                mask: None,
+            })
+        } else {
+            Some(Mask {
+                value: bytes.read_u32::<BigEndian>().unwrap(),
+                mask: Some(w.nw_src),
+            })
+        };
+        let tp_src = if w.tp_src {
+            None
+        } else {
+            Some(bytes.read_u16::<BigEndian>().unwrap())
+        };
+        let tp_dst = if w.tp_dst {
+            None
+        } else {
+            Some(bytes.read_u16::<BigEndian>().unwrap())
+        };
+        Pattern {
+            dl_src: dl_src,
+            dl_dst: dl_dst,
+            dl_typ: dl_typ,
+            dl_vlan: dl_vlan,
+            dl_vlan_pcp: dl_vlan_pcp,
+            nw_src: nw_src,
+            nw_dst: nw_dst,
+            nw_proto: nw_proto,
+            nw_tos: nw_tos,
+            tp_src: tp_src,
+            tp_dst: tp_dst,
+            in_port: in_port,
+        }
+    }
+
+    fn marshal(p: Pattern, bytes: &mut Vec<u8>) {
+        let w = Pattern::wildcards_of_pattern(&p);
+        Wildcards::marshal(w, bytes);
+        bytes.write_u16::<BigEndian>(p.in_port.unwrap_or(0)).unwrap();
+        for i in 0..6 {
+            bytes.write_u8(p.dl_src.unwrap_or([0; 6])[i]).unwrap();
+        }
+        for i in 0..6 {
+            bytes.write_u8(p.dl_dst.unwrap_or([0; 6])[i]).unwrap();
+        }
+        let vlan = match p.dl_vlan {
+            Some(Some(v)) => v,
+            Some(None) => 0xffff,
+            None => 0xffff,
+        };
+        bytes.write_u16::<BigEndian>(vlan).unwrap();
+        bytes.write_u8(p.dl_vlan_pcp.unwrap_or(0)).unwrap();
+        bytes.write_u8(0).unwrap();
+        bytes.write_u16::<BigEndian>(p.dl_typ.unwrap_or(0)).unwrap();
+        bytes.write_u8(p.nw_tos.unwrap_or(0)).unwrap();
+        bytes.write_u16::<BigEndian>(0).unwrap();
+        bytes.write_u8(p.nw_proto.unwrap_or(0)).unwrap();
+
+        bytes.write_u32::<BigEndian>(p.nw_src
+                .unwrap_or(Mask {
+                    value: 0,
+                    mask: None,
+                })
+                .value)
+            .unwrap();
+        bytes.write_u32::<BigEndian>(p.nw_dst
+                .unwrap_or(Mask {
+                    value: 0,
+                    mask: None,
+                })
+                .value)
+            .unwrap();
+
+        bytes.write_u16::<BigEndian>(p.tp_src.unwrap_or(0)).unwrap();
+        bytes.write_u16::<BigEndian>(p.tp_dst.unwrap_or(0)).unwrap();
     }
 }
 
@@ -397,14 +681,13 @@ impl FlowMod {
 
 impl MessageType for FlowMod {
     fn size_of(msg: &FlowMod) -> usize {
-        size_of::<OfpMatch>() + size_of::<OfpFlowMod>() +
+        Pattern::size_of(&msg.pattern) + size_of::<OfpFlowMod>() +
         Action::size_of_sequence(msg.actions.clone())
     }
 
     fn parse(buf: &[u8]) -> FlowMod {
         let mut bytes = Cursor::new(buf.to_vec());
-        let pattern = Pattern {};
-        bytes.consume(size_of::<OfpMatch>());
+        let pattern = Pattern::parse(&mut bytes);
         let cookie = bytes.read_u64::<BigEndian>().unwrap();
         let command = unsafe { transmute(bytes.read_u16::<BigEndian>().unwrap()) };
         let idle = Timeout::of_int(bytes.read_u16::<BigEndian>().unwrap());

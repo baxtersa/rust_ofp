@@ -13,7 +13,7 @@ fn send_message(xid: u32, message: Message, writer: &mut TcpStream) {
 
 fn implement_flow(_: u64, writer: &mut TcpStream) {
     let prio = 0;
-    let pat = Pattern {};
+    let pat = Pattern::match_all();
     let message = Message::FlowMod(add_flow(prio, pat, vec![]));
     send_message(1000, message, writer)
 }
