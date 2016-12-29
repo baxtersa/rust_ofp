@@ -3,21 +3,56 @@ use std::mem::{size_of, transmute};
 
 use byteorder::{BigEndian, ReadBytesExt};
 
+/// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
+#[repr(u8)]
+#[derive(Copy, Clone)]
+pub enum MsgCode {
+    Hello,
+    Error,
+    EchoReq,
+    EchoResp,
+    Vendor,
+    FeaturesReq,
+    FeaturesResp,
+    GetConfigReq,
+    GetConfigResp,
+    SetConfig,
+    PacketIn,
+    FlowRemoved,
+    PortStatus,
+    PacketOut,
+    FlowMod,
+    PortMod,
+    StatsReq,
+    StatsResp,
+    BarrierReq,
+    BarrierResp,
+    QueueGetConfigReq,
+    QueueGetConfigResp,
+}
+
+/// Common API for message types implementing OpenFlow Message Codes (see `MsgCode` enum).
 pub trait MessageType {
+    /// Return the byte-size of a message.
     fn size_of(&Self) -> usize;
+    /// Parse a buffer into a message.
     fn parse(buf: &[u8]) -> Self;
+    /// Marshal a message into a `u8` buffer.
     fn marshal(Self, &mut Vec<u8>);
 }
 
+/// Test whether bit `bit` of `x` is set.
 fn test_bit(bit: u64, x: u64) -> bool {
     (x >> bit) & 1 == 1
 }
 
+/// Fields to match against flows.
 pub struct Pattern {}
 
 #[repr(packed)]
 struct OfpMatch(u32, u16, [u8; 6], [u8; 6], u16, u8, u8, u16, u8, u8, u16, u32, u32, u16, u16);
 
+/// Port behavior.
 #[derive(Copy, Clone)]
 pub enum PseudoPort {
     PhysicalPort(u16),
@@ -61,15 +96,18 @@ impl PseudoPort {
             p if p == (OfpPort::OFPPAll as u16) => PseudoPort::AllPorts,
             p if p == (OfpPort::OFPPController as u16) => PseudoPort::Controller(len),
             p if p == (OfpPort::OFPPLocal as u16) => PseudoPort::Local,
-            _ => if p <= (OfpPort::OFPPMax as u16) {
-                PseudoPort::PhysicalPort(p)
-            } else {
-                panic!("Unsupported port number {}", p)
+            _ => {
+                if p <= (OfpPort::OFPPMax as u16) {
+                    PseudoPort::PhysicalPort(p)
+                } else {
+                    panic!("Unsupported port number {}", p)
+                }
             }
         }
     }
 }
 
+/// Actions associated with flows and packets.
 #[derive(Copy, Clone)]
 pub enum Action {
     Output(PseudoPort),
@@ -106,7 +144,7 @@ impl Action {
         h + body
     }
 
-    pub fn size_of_sequence(actions: Vec<Action>) -> usize {
+    fn size_of_sequence(actions: Vec<Action>) -> usize {
         actions.iter().fold(0, |acc, x| Action::size_of(x) + acc)
     }
 
@@ -118,13 +156,13 @@ impl Action {
                 let port_code = bytes.read_u16::<BigEndian>().unwrap();
                 let len = bytes.read_u16::<BigEndian>().unwrap();
                 Action::Output(PseudoPort::make(port_code, len as u64))
-            },
+            }
             _ => Action::Output(PseudoPort::InPort),
         };
         (bytes, action)
     }
 
-    pub fn parse_sequence(bytes: &mut Cursor<Vec<u8>>) -> Vec<Action> {
+    fn parse_sequence(bytes: &mut Cursor<Vec<u8>>) -> Vec<Action> {
         if bytes.get_ref().is_empty() {
             vec![]
         } else {
@@ -136,6 +174,7 @@ impl Action {
     }
 }
 
+/// How long before a flow entry expires.
 pub enum Timeout {
     Permanent,
     ExpiresAfter(u16),
@@ -150,33 +189,7 @@ impl Timeout {
     }
 }
 
-#[repr(u8)]
-#[derive(Copy, Clone)]
-pub enum MsgCode {
-    Hello,
-    Error,
-    EchoReq,
-    EchoResp,
-    Vendor,
-    FeaturesReq,
-    FeaturesResp,
-    GetConfigReq,
-    GetConfigResp,
-    SetConfig,
-    PacketIn,
-    FlowRemoved,
-    PortStatus,
-    PacketOut,
-    FlowMod,
-    PortMod,
-    StatsReq,
-    StatsResp,
-    BarrierReq,
-    BarrierResp,
-    QueueGetConfigReq,
-    QueueGetConfigResp,
-}
-
+/// Capabilities supported by the datapath.
 pub struct Capabilities {
     pub flow_stats: bool,
     pub table_stats: bool,
@@ -187,6 +200,7 @@ pub struct Capabilities {
     pub arp_match_ip: bool,
 }
 
+/// Actions supported by the datapath.
 pub struct SupportedActions {
     pub output: bool,
     pub set_vlan_id: bool,
@@ -203,6 +217,7 @@ pub struct SupportedActions {
     pub vendor: bool,
 }
 
+/// Switch features.
 pub struct SwitchFeatures {
     pub datapath_id: u64,
     pub num_buffers: u32,
@@ -215,8 +230,13 @@ pub struct SwitchFeatures {
 #[repr(packed)]
 struct OfpSwitchFeatures(u64, u32, u8, [u8; 3], u32, u32);
 
-impl SwitchFeatures {
-    pub fn parse(buf: &[u8], buf_len: usize) -> SwitchFeatures {
+impl MessageType for SwitchFeatures {
+    fn size_of(sf: &SwitchFeatures) -> usize {
+        let pds: usize = sf.ports.iter().map(|pd| PortDesc::size_of(pd)).sum();
+        size_of::<OfpSwitchFeatures>() + pds
+    }
+
+    fn parse(buf: &[u8]) -> SwitchFeatures {
         let mut bytes = Cursor::new(buf.to_vec());
         let datapath_id = bytes.read_u64::<BigEndian>().unwrap();
         let num_buffers = bytes.read_u32::<BigEndian>().unwrap();
@@ -254,7 +274,7 @@ impl SwitchFeatures {
         };
         let ports = {
             let mut v = vec![];
-            let num_ports = (buf_len - size_of::<OfpSwitchFeatures>()) / size_of::<OfpPhyPort>();
+            let num_ports = bytes.clone().into_inner().len() / size_of::<OfpPhyPort>();
             for _ in 0..num_ports {
                 v.push(PortDesc::parse(&mut bytes))
             }
@@ -269,8 +289,11 @@ impl SwitchFeatures {
             ports: ports,
         }
     }
+
+    fn marshal(_: SwitchFeatures, _: &mut Vec<u8>) {}
 }
 
+/// Type of modification to perform on a flow table.
 #[repr(u16)]
 pub enum FlowModCmd {
     AddFlow,
@@ -280,6 +303,7 @@ pub enum FlowModCmd {
     DeleteStrictFlow,
 }
 
+/// Represents modifications to a flow table from the controller.
 pub struct FlowMod {
     pub command: FlowModCmd,
     pub pattern: Pattern,
@@ -349,6 +373,7 @@ impl MessageType for FlowMod {
     fn marshal(_: FlowMod, _: &mut Vec<u8>) {}
 }
 
+/// The data associated with a packet received by the controller.
 pub enum Payload {
     Buffered(u32, Vec<u8>),
     NotBuffered(Vec<u8>),
@@ -363,12 +388,15 @@ impl Payload {
     }
 }
 
+/// The reason a packet arrives at the controller.
 #[repr(u8)]
 pub enum PacketInReason {
     NoMatch,
     ExplicitSend,
 }
 
+
+/// Represents packets received by the datapath and sent to the controller.
 pub struct PacketIn {
     pub input_payload: Payload,
     pub total_len: u16,
@@ -379,12 +407,12 @@ pub struct PacketIn {
 #[repr(packed)]
 struct OfpPacketIn(i32, u16, u16, u8, u8);
 
-impl PacketIn {
-    pub fn size_of(pi: &PacketIn) -> usize {
+impl MessageType for PacketIn {
+    fn size_of(pi: &PacketIn) -> usize {
         size_of::<OfpPacketIn>() + Payload::size_of(&pi.input_payload)
     }
 
-    pub fn parse(buf: &[u8]) -> PacketIn {
+    fn parse(buf: &[u8]) -> PacketIn {
         let mut bytes = Cursor::new(buf.to_vec());
         let buf_id = match bytes.read_i32::<BigEndian>().unwrap() {
             -1 => None,
@@ -406,9 +434,10 @@ impl PacketIn {
         }
     }
 
-    pub fn marshal(_: PacketIn, _: &mut Vec<u8>) {}
+    fn marshal(_: PacketIn, _: &mut Vec<u8>) {}
 }
 
+/// STP state of a port.
 #[repr(u8)]
 pub enum StpState {
     Listen,
@@ -417,11 +446,13 @@ pub enum StpState {
     Block,
 }
 
+/// Current state of a physical port. Not configurable by the controller.
 pub struct PortState {
     pub down: bool,
     pub stp_state: StpState,
 }
 
+/// Features of physical ports available in a datapath.
 pub struct PortFeatures {
     pub f_10mbhd: bool,
     pub f_10mbfd: bool,
@@ -456,6 +487,10 @@ impl PortFeatures {
     }
 }
 
+/// Flags to indicate behavior of the physical port.
+///
+/// These flags are used both to describe the current configuration of a physical port,
+/// and to configure a port's behavior.
 pub struct PortConfig {
     pub down: bool,
     pub no_stp: bool,
@@ -466,6 +501,7 @@ pub struct PortConfig {
     pub no_packet_in: bool,
 }
 
+/// Description of a physical port.
 pub struct PortDesc {
     pub port_no: u16,
     pub hw_addr: i64,
@@ -482,6 +518,10 @@ pub struct PortDesc {
 struct OfpPhyPort(u16, [u8; 6], [u8; 16], u32, u32, u32, u32, u32, u32);
 
 impl PortDesc {
+    fn size_of(_: &PortDesc) -> usize {
+        size_of::<OfpPhyPort>()
+    }
+
     fn parse(bytes: &mut Cursor<Vec<u8>>) -> PortDesc {
         let port_no = bytes.read_u16::<BigEndian>().unwrap();
         let hw_addr = {
@@ -549,6 +589,7 @@ impl PortDesc {
     }
 }
 
+/// What changed about a physical port.
 #[repr(u8)]
 pub enum PortReason {
     PortAdd,
@@ -556,17 +597,18 @@ pub enum PortReason {
     PortModify,
 }
 
+/// A physical port has changed in the datapath.
 pub struct PortStatus {
     pub reason: PortReason,
     pub desc: PortDesc,
 }
 
-impl PortStatus {
-    pub fn size_of() -> usize {
+impl MessageType for PortStatus {
+    fn size_of(_: &PortStatus) -> usize {
         size_of::<PortReason>() + size_of::<OfpPhyPort>()
     }
 
-    pub fn parse(buf: &[u8]) -> PortStatus {
+    fn parse(buf: &[u8]) -> PortStatus {
         let mut bytes = Cursor::new(buf.to_vec());
         let reason = unsafe { transmute(bytes.read_u8().unwrap()) };
         bytes.consume(7);
@@ -577,14 +619,16 @@ impl PortStatus {
         }
     }
 
-    pub fn marshal(_: PortStatus, _: &mut Vec<u8>) {}
+    fn marshal(_: PortStatus, _: &mut Vec<u8>) {}
 }
 
+/// Encapsulates handling of messages implementing `MessageType` trait.
 pub mod message {
     use super::*;
     use byteorder::WriteBytesExt;
     use ofp_header::OfpHeader;
 
+    /// Abstractions of OpenFlow messages mapping to message codes.
     pub enum Message {
         Hello,
         EchoRequest(Vec<u8>),
@@ -597,6 +641,7 @@ pub mod message {
     }
 
     impl Message {
+        /// Map `Message` to associated OpenFlow message type code `MsgCode`.
         fn msg_code_of_message(msg: &Message) -> MsgCode {
             match *msg {
                 Message::Hello => MsgCode::Hello,
@@ -611,6 +656,7 @@ pub mod message {
             }
         }
 
+        /// Return the byte-size of a `Message`.
         fn size_of(msg: &Message) -> usize {
             match *msg {
                 Message::Hello => OfpHeader::size(),
@@ -621,11 +667,12 @@ pub mod message {
                 Message::PacketIn(ref packet_in) => {
                     OfpHeader::size() + PacketIn::size_of(packet_in)
                 }
-                Message::PortStatus(_) => OfpHeader::size() + PortStatus::size_of(),
+                Message::PortStatus(ref ps) => OfpHeader::size() + PortStatus::size_of(ps),
                 _ => 0,
             }
         }
 
+        /// Create an `OfpHeader` for the given `xid` and `msg`.
         fn header_of(xid: u32, msg: &Message) -> OfpHeader {
             let sizeof_buf = Self::size_of(&msg);
             OfpHeader::new(0x01,
@@ -634,6 +681,7 @@ pub mod message {
                            xid)
         }
 
+        /// Marshal the OpenFlow message `msg`.
         fn marshal_body(msg: Message, bytes: &mut Vec<u8>) {
             match msg {
                 Message::Hello => (),
@@ -655,6 +703,7 @@ pub mod message {
             }
         }
 
+        /// Returns a `u8` buffer containing a marshaled OpenFlow header and the message `msg`.
         pub fn marshal(xid: u32, msg: Message) -> Vec<u8> {
             let hdr = Self::header_of(xid, &msg);
             let mut bytes = vec![];
@@ -663,7 +712,9 @@ pub mod message {
             bytes
         }
 
-        pub fn parse(header: &OfpHeader, buf: &[u8], buf_len: usize) -> (u32, Message) {
+        /// Returns a pair `(u32, Message)` of the transaction id and OpenFlow message parsed from
+        /// the given OpenFlow header `header`, and buffer `buf`.
+        pub fn parse(header: &OfpHeader, buf: &[u8]) -> (u32, Message) {
             let typ = header.type_code();
             let msg = match typ {
                 MsgCode::Hello => {
@@ -674,7 +725,7 @@ pub mod message {
                 MsgCode::EchoResp => Message::EchoReply(buf.to_vec()),
                 MsgCode::FeaturesResp => {
                     println!("FeaturesResp");
-                    Message::FeaturesReply(SwitchFeatures::parse(buf, buf_len))
+                    Message::FeaturesReply(SwitchFeatures::parse(buf))
                 }
                 MsgCode::PacketIn => {
                     println!("PacketIn");
@@ -693,6 +744,8 @@ pub mod message {
         }
     }
 
+    /// Return a `FlowMod` adding a flow parameterized by the given `priority`, `pattern`,
+    /// and `actions`.
     pub fn add_flow(prio: u16, pattern: Pattern, actions: Vec<Action>) -> FlowMod {
         FlowMod {
             command: FlowModCmd::AddFlow,

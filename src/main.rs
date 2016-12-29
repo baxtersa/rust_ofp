@@ -40,7 +40,7 @@ fn handle_client(stream: &mut TcpStream) {
                 let message_len = header.length() - OfpHeader::size();
                 let mut message_buf = vec![0; message_len];
                 let _ = stream.read(&mut message_buf);
-                let (xid, body) = Message::parse(&header, &message_buf, message_len);
+                let (xid, body) = Message::parse(&header, &message_buf);
                 process_message(xid, body, stream)
             }
             Ok(_) => {
