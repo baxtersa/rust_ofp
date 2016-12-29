@@ -108,6 +108,7 @@
 <span id="64">64</span>
 <span id="65">65</span>
 <span id="66">66</span>
+<span id="67">67</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>Read</span>, <span class='ident'>Write</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>TcpListener</span>, <span class='ident'>TcpStream</span>};
@@ -123,6 +124,7 @@
 }
 
 <span class='kw'>fn</span> <span class='ident'>implement_flow</span>(_: <span class='ident'>u64</span>, <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TcpStream</span>) {
+    <span class='comment'>// Drop all packets at each switch on arrival.</span>
     <span class='kw'>let</span> <span class='ident'>prio</span> <span class='op'>=</span> <span class='number'>0</span>;
     <span class='kw'>let</span> <span class='ident'>pat</span> <span class='op'>=</span> <span class='ident'>Pattern</span>::<span class='ident'>match_all</span>();
     <span class='kw'>let</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='ident'>Message</span>::<span class='ident'>FlowMod</span>(<span class='ident'>add_flow</span>(<span class='ident'>prio</span>, <span class='ident'>pat</span>, <span class='macro'>vec</span><span class='macro'>!</span>[]));
