@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["OfpHeader",""]]});
+initSidebarItems({"struct":[["OfpHeader","OpenFlow Header"]]});

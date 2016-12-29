@@ -47,14 +47,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-37' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#1-711' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-37' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#1-764' title='goto source code'>[src]</a></span></h1>
 <h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='mod' href='message/index.html'
                                   title='rust_ofp::openflow0x01::message'>message</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Encapsulates handling of messages implementing <code>MessageType</code> trait.</p>
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -62,77 +62,77 @@
                            <td><a class='struct' href='struct.Capabilities.html'
                                   title='rust_ofp::openflow0x01::Capabilities'>Capabilities</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Capabilities supported by the datapath.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.FlowMod.html'
                                   title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Represents modifications to a flow table from the controller.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.PacketIn.html'
                                   title='rust_ofp::openflow0x01::PacketIn'>PacketIn</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Represents packets received by the datapath and sent to the controller.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Pattern.html'
                                   title='rust_ofp::openflow0x01::Pattern'>Pattern</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Fields to match against flows.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.PortConfig.html'
                                   title='rust_ofp::openflow0x01::PortConfig'>PortConfig</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Flags to indicate behavior of the physical port.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.PortDesc.html'
                                   title='rust_ofp::openflow0x01::PortDesc'>PortDesc</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Description of a physical port.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.PortFeatures.html'
                                   title='rust_ofp::openflow0x01::PortFeatures'>PortFeatures</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Features of physical ports available in a datapath.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.PortState.html'
                                   title='rust_ofp::openflow0x01::PortState'>PortState</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Current state of a physical port. Not configurable by the controller.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.PortStatus.html'
                                   title='rust_ofp::openflow0x01::PortStatus'>PortStatus</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A physical port has changed in the datapath.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.SupportedActions.html'
                                   title='rust_ofp::openflow0x01::SupportedActions'>SupportedActions</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Actions supported by the datapath.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.SwitchFeatures.html'
                                   title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Switch features.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -140,63 +140,63 @@
                            <td><a class='enum' href='enum.Action.html'
                                   title='rust_ofp::openflow0x01::Action'>Action</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Actions associated with flows and packets.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.FlowModCmd.html'
                                   title='rust_ofp::openflow0x01::FlowModCmd'>FlowModCmd</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Type of modification to perform on a flow table.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.MsgCode.html'
                                   title='rust_ofp::openflow0x01::MsgCode'>MsgCode</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.PacketInReason.html'
                                   title='rust_ofp::openflow0x01::PacketInReason'>PacketInReason</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>The reason a packet arrives at the controller.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Payload.html'
                                   title='rust_ofp::openflow0x01::Payload'>Payload</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>The data associated with a packet received by the controller.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.PortReason.html'
                                   title='rust_ofp::openflow0x01::PortReason'>PortReason</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>What changed about a physical port.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.PseudoPort.html'
                                   title='rust_ofp::openflow0x01::PseudoPort'>PseudoPort</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Port behavior.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.StpState.html'
                                   title='rust_ofp::openflow0x01::StpState'>StpState</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>STP state of a port.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='enum' href='enum.Timeout.html'
                                   title='rust_ofp::openflow0x01::Timeout'>Timeout</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>How long before a flow entry expires.</p>
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -204,7 +204,7 @@
                            <td><a class='trait' href='trait.MessageType.html'
                                   title='rust_ofp::openflow0x01::MessageType'>MessageType</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Common API for message types implementing OpenFlow Message Codes (see <code>MsgCode</code> enum).</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

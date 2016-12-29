@@ -99,6 +99,27 @@
 <span id="55">55</span>
 <span id="56">56</span>
 <span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Cursor</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::{<span class='ident'>size_of</span>, <span class='ident'>transmute</span>};
@@ -106,6 +127,11 @@
 
 <span class='kw'>use</span> <span class='ident'>rust_ofp</span>::<span class='ident'>openflow0x01</span>::<span class='ident'>MsgCode</span>;
 
+<span class='doccomment'>/// OpenFlow Header</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// The first fields of every OpenFlow message, no matter the protocol version.</span>
+<span class='doccomment'>/// This is parsed to determine version and length of the remaining message, so that</span>
+<span class='doccomment'>/// it can be properly handled.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>OfpHeader</span> {
     <span class='ident'>version</span>: <span class='ident'>u8</span>,
     <span class='ident'>typ</span>: <span class='ident'>u8</span>,
@@ -114,6 +140,7 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>OfpHeader</span> {
+    <span class='doccomment'>/// Create an `OfpHeader` out of the arguments.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>version</span>: <span class='ident'>u8</span>, <span class='ident'>typ</span>: <span class='ident'>u8</span>, <span class='ident'>length</span>: <span class='ident'>u16</span>, <span class='ident'>xid</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>OfpHeader</span> {
         <span class='ident'>OfpHeader</span> {
             <span class='ident'>version</span>: <span class='ident'>version</span>,
@@ -123,10 +150,12 @@
         }
     }
 
+    <span class='doccomment'>/// Return the byte-size of an `OfpHeader`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>size</span>() <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpHeader</span><span class='op'>&gt;</span>()
     }
 
+    <span class='doccomment'>/// Fills a message buffer with the header fields of an `OfpHeader`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>marshal</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>header</span>: <span class='ident'>OfpHeader</span>) {
         <span class='ident'>bytes</span>.<span class='ident'>write_u8</span>(<span class='ident'>header</span>.<span class='ident'>version</span>()).<span class='ident'>unwrap</span>();
         <span class='ident'>bytes</span>.<span class='ident'>write_u8</span>(<span class='ident'>header</span>.<span class='ident'>type_code</span>() <span class='kw'>as</span> <span class='ident'>u8</span>).<span class='ident'>unwrap</span>();
@@ -134,6 +163,7 @@
         <span class='ident'>bytes</span>.<span class='ident'>write_u32</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>(<span class='ident'>header</span>.<span class='ident'>xid</span>()).<span class='ident'>unwrap</span>();
     }
 
+    <span class='doccomment'>/// Takes a message buffer (sized for an `OfpHeader`) and returns an `OfpHeader`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: [<span class='ident'>u8</span>; <span class='number'>8</span>]) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>.<span class='ident'>to_vec</span>());
         <span class='ident'>OfpHeader</span> {
@@ -144,15 +174,27 @@
         }
     }
 
+    <span class='doccomment'>/// Return the `version` field of a header.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>version</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u8</span> {
         <span class='self'>self</span>.<span class='ident'>version</span>
     }
+
+    <span class='doccomment'>/// Return the OpenFlow message type code of a header.</span>
+    <span class='doccomment'>/// # Safety</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// The `typ` field of the `self` header is expected to be a `u8` within the</span>
+    <span class='doccomment'>/// defined range of the `MsgCode` enum.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>type_code</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>MsgCode</span> {
         <span class='kw'>unsafe</span> { <span class='ident'>transmute</span>(<span class='self'>self</span>.<span class='ident'>typ</span>) }
     }
+
+    <span class='doccomment'>/// Return the `length` field of a header. Includes the length of the header itself.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>length</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='self'>self</span>.<span class='ident'>length</span> <span class='kw'>as</span> <span class='ident'>usize</span>
     }
+
+    <span class='doccomment'>/// Return the `xid` field of a header, the transaction id associated with this packet.</span>
+    <span class='doccomment'>///  Replies use the same id to facilitate pairing.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>xid</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
         <span class='self'>self</span>.<span class='ident'>xid</span>
     }

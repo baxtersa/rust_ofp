@@ -753,27 +753,115 @@
 <span id="709">709</span>
 <span id="710">710</span>
 <span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>BufRead</span>, <span class='ident'>Cursor</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::{<span class='ident'>size_of</span>, <span class='ident'>transmute</span>};
 
 <span class='kw'>use</span> <span class='ident'>byteorder</span>::{<span class='ident'>BigEndian</span>, <span class='ident'>ReadBytesExt</span>};
 
+<span class='doccomment'>/// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.</span>
+<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u8</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>MsgCode</span> {
+    <span class='ident'>Hello</span>,
+    <span class='ident'>Error</span>,
+    <span class='ident'>EchoReq</span>,
+    <span class='ident'>EchoResp</span>,
+    <span class='ident'>Vendor</span>,
+    <span class='ident'>FeaturesReq</span>,
+    <span class='ident'>FeaturesResp</span>,
+    <span class='ident'>GetConfigReq</span>,
+    <span class='ident'>GetConfigResp</span>,
+    <span class='ident'>SetConfig</span>,
+    <span class='ident'>PacketIn</span>,
+    <span class='ident'>FlowRemoved</span>,
+    <span class='ident'>PortStatus</span>,
+    <span class='ident'>PacketOut</span>,
+    <span class='ident'>FlowMod</span>,
+    <span class='ident'>PortMod</span>,
+    <span class='ident'>StatsReq</span>,
+    <span class='ident'>StatsResp</span>,
+    <span class='ident'>BarrierReq</span>,
+    <span class='ident'>BarrierResp</span>,
+    <span class='ident'>QueueGetConfigReq</span>,
+    <span class='ident'>QueueGetConfigResp</span>,
+}
+
+<span class='doccomment'>/// Common API for message types implementing OpenFlow Message Codes (see `MsgCode` enum).</span>
 <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>MessageType</span> {
+    <span class='doccomment'>/// Return the byte-size of a message.</span>
     <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span>;
+    <span class='doccomment'>/// Parse a buffer into a message.</span>
     <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='doccomment'>/// Marshal a message into a `u8` buffer.</span>
     <span class='kw'>fn</span> <span class='ident'>marshal</span>(<span class='self'>Self</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>);
 }
 
+<span class='doccomment'>/// Test whether bit `bit` of `x` is set.</span>
 <span class='kw'>fn</span> <span class='ident'>test_bit</span>(<span class='ident'>bit</span>: <span class='ident'>u64</span>, <span class='ident'>x</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
     (<span class='ident'>x</span> <span class='op'>&gt;&gt;</span> <span class='ident'>bit</span>) <span class='kw-2'>&amp;</span> <span class='number'>1</span> <span class='op'>==</span> <span class='number'>1</span>
 }
 
+<span class='doccomment'>/// Fields to match against flows.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Pattern</span> {}
 
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>packed</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>OfpMatch</span>(<span class='ident'>u32</span>, <span class='ident'>u16</span>, [<span class='ident'>u8</span>; <span class='number'>6</span>], [<span class='ident'>u8</span>; <span class='number'>6</span>], <span class='ident'>u16</span>, <span class='ident'>u8</span>, <span class='ident'>u8</span>, <span class='ident'>u16</span>, <span class='ident'>u8</span>, <span class='ident'>u8</span>, <span class='ident'>u16</span>, <span class='ident'>u32</span>, <span class='ident'>u32</span>, <span class='ident'>u16</span>, <span class='ident'>u16</span>);
 
+<span class='doccomment'>/// Port behavior.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>PseudoPort</span> {
     <span class='ident'>PhysicalPort</span>(<span class='ident'>u16</span>),
@@ -817,15 +905,18 @@
             <span class='ident'>p</span> <span class='kw'>if</span> <span class='ident'>p</span> <span class='op'>==</span> (<span class='ident'>OfpPort</span>::<span class='ident'>OFPPAll</span> <span class='kw'>as</span> <span class='ident'>u16</span>) <span class='op'>=&gt;</span> <span class='ident'>PseudoPort</span>::<span class='ident'>AllPorts</span>,
             <span class='ident'>p</span> <span class='kw'>if</span> <span class='ident'>p</span> <span class='op'>==</span> (<span class='ident'>OfpPort</span>::<span class='ident'>OFPPController</span> <span class='kw'>as</span> <span class='ident'>u16</span>) <span class='op'>=&gt;</span> <span class='ident'>PseudoPort</span>::<span class='ident'>Controller</span>(<span class='ident'>len</span>),
             <span class='ident'>p</span> <span class='kw'>if</span> <span class='ident'>p</span> <span class='op'>==</span> (<span class='ident'>OfpPort</span>::<span class='ident'>OFPPLocal</span> <span class='kw'>as</span> <span class='ident'>u16</span>) <span class='op'>=&gt;</span> <span class='ident'>PseudoPort</span>::<span class='ident'>Local</span>,
-            _ <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='ident'>p</span> <span class='op'>&lt;=</span> (<span class='ident'>OfpPort</span>::<span class='ident'>OFPPMax</span> <span class='kw'>as</span> <span class='ident'>u16</span>) {
-                <span class='ident'>PseudoPort</span>::<span class='ident'>PhysicalPort</span>(<span class='ident'>p</span>)
-            } <span class='kw'>else</span> {
-                <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Unsupported port number {}&quot;</span>, <span class='ident'>p</span>)
+            _ <span class='op'>=&gt;</span> {
+                <span class='kw'>if</span> <span class='ident'>p</span> <span class='op'>&lt;=</span> (<span class='ident'>OfpPort</span>::<span class='ident'>OFPPMax</span> <span class='kw'>as</span> <span class='ident'>u16</span>) {
+                    <span class='ident'>PseudoPort</span>::<span class='ident'>PhysicalPort</span>(<span class='ident'>p</span>)
+                } <span class='kw'>else</span> {
+                    <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Unsupported port number {}&quot;</span>, <span class='ident'>p</span>)
+                }
             }
         }
     }
 }
 
+<span class='doccomment'>/// Actions associated with flows and packets.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Action</span> {
     <span class='ident'>Output</span>(<span class='ident'>PseudoPort</span>),
@@ -862,7 +953,7 @@
         <span class='ident'>h</span> <span class='op'>+</span> <span class='ident'>body</span>
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>size_of_sequence</span>(<span class='ident'>actions</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Action</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+    <span class='kw'>fn</span> <span class='ident'>size_of_sequence</span>(<span class='ident'>actions</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Action</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='ident'>actions</span>.<span class='ident'>iter</span>().<span class='ident'>fold</span>(<span class='number'>0</span>, <span class='op'>|</span><span class='ident'>acc</span>, <span class='ident'>x</span><span class='op'>|</span> <span class='ident'>Action</span>::<span class='ident'>size_of</span>(<span class='ident'>x</span>) <span class='op'>+</span> <span class='ident'>acc</span>)
     }
 
@@ -874,13 +965,13 @@
                 <span class='kw'>let</span> <span class='ident'>port_code</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>read_u16</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>().<span class='ident'>unwrap</span>();
                 <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>read_u16</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>().<span class='ident'>unwrap</span>();
                 <span class='ident'>Action</span>::<span class='ident'>Output</span>(<span class='ident'>PseudoPort</span>::<span class='ident'>make</span>(<span class='ident'>port_code</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>u64</span>))
-            },
+            }
             _ <span class='op'>=&gt;</span> <span class='ident'>Action</span>::<span class='ident'>Output</span>(<span class='ident'>PseudoPort</span>::<span class='ident'>InPort</span>),
         };
         (<span class='ident'>bytes</span>, <span class='ident'>action</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_sequence</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Action</span><span class='op'>&gt;</span> {
+    <span class='kw'>fn</span> <span class='ident'>parse_sequence</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Action</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='ident'>bytes</span>.<span class='ident'>get_ref</span>().<span class='ident'>is_empty</span>() {
             <span class='macro'>vec</span><span class='macro'>!</span>[]
         } <span class='kw'>else</span> {
@@ -892,6 +983,7 @@
     }
 }
 
+<span class='doccomment'>/// How long before a flow entry expires.</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Timeout</span> {
     <span class='ident'>Permanent</span>,
     <span class='ident'>ExpiresAfter</span>(<span class='ident'>u16</span>),
@@ -906,33 +998,7 @@
     }
 }
 
-<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u8</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>MsgCode</span> {
-    <span class='ident'>Hello</span>,
-    <span class='ident'>Error</span>,
-    <span class='ident'>EchoReq</span>,
-    <span class='ident'>EchoResp</span>,
-    <span class='ident'>Vendor</span>,
-    <span class='ident'>FeaturesReq</span>,
-    <span class='ident'>FeaturesResp</span>,
-    <span class='ident'>GetConfigReq</span>,
-    <span class='ident'>GetConfigResp</span>,
-    <span class='ident'>SetConfig</span>,
-    <span class='ident'>PacketIn</span>,
-    <span class='ident'>FlowRemoved</span>,
-    <span class='ident'>PortStatus</span>,
-    <span class='ident'>PacketOut</span>,
-    <span class='ident'>FlowMod</span>,
-    <span class='ident'>PortMod</span>,
-    <span class='ident'>StatsReq</span>,
-    <span class='ident'>StatsResp</span>,
-    <span class='ident'>BarrierReq</span>,
-    <span class='ident'>BarrierResp</span>,
-    <span class='ident'>QueueGetConfigReq</span>,
-    <span class='ident'>QueueGetConfigResp</span>,
-}
-
+<span class='doccomment'>/// Capabilities supported by the datapath.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Capabilities</span> {
     <span class='kw'>pub</span> <span class='ident'>flow_stats</span>: <span class='ident'>bool</span>,
     <span class='kw'>pub</span> <span class='ident'>table_stats</span>: <span class='ident'>bool</span>,
@@ -943,6 +1009,7 @@
     <span class='kw'>pub</span> <span class='ident'>arp_match_ip</span>: <span class='ident'>bool</span>,
 }
 
+<span class='doccomment'>/// Actions supported by the datapath.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SupportedActions</span> {
     <span class='kw'>pub</span> <span class='ident'>output</span>: <span class='ident'>bool</span>,
     <span class='kw'>pub</span> <span class='ident'>set_vlan_id</span>: <span class='ident'>bool</span>,
@@ -959,6 +1026,7 @@
     <span class='kw'>pub</span> <span class='ident'>vendor</span>: <span class='ident'>bool</span>,
 }
 
+<span class='doccomment'>/// Switch features.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SwitchFeatures</span> {
     <span class='kw'>pub</span> <span class='ident'>datapath_id</span>: <span class='ident'>u64</span>,
     <span class='kw'>pub</span> <span class='ident'>num_buffers</span>: <span class='ident'>u32</span>,
@@ -971,8 +1039,13 @@
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>packed</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>OfpSwitchFeatures</span>(<span class='ident'>u64</span>, <span class='ident'>u32</span>, <span class='ident'>u8</span>, [<span class='ident'>u8</span>; <span class='number'>3</span>], <span class='ident'>u32</span>, <span class='ident'>u32</span>);
 
-<span class='kw'>impl</span> <span class='ident'>SwitchFeatures</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>], <span class='ident'>buf_len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>SwitchFeatures</span> {
+<span class='kw'>impl</span> <span class='ident'>MessageType</span> <span class='kw'>for</span> <span class='ident'>SwitchFeatures</span> {
+    <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='ident'>sf</span>: <span class='kw-2'>&amp;</span><span class='ident'>SwitchFeatures</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+        <span class='kw'>let</span> <span class='ident'>pds</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='ident'>sf</span>.<span class='ident'>ports</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>pd</span><span class='op'>|</span> <span class='ident'>PortDesc</span>::<span class='ident'>size_of</span>(<span class='ident'>pd</span>)).<span class='ident'>sum</span>();
+        <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpSwitchFeatures</span><span class='op'>&gt;</span>() <span class='op'>+</span> <span class='ident'>pds</span>
+    }
+
+    <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>SwitchFeatures</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>.<span class='ident'>to_vec</span>());
         <span class='kw'>let</span> <span class='ident'>datapath_id</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>read_u64</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>().<span class='ident'>unwrap</span>();
         <span class='kw'>let</span> <span class='ident'>num_buffers</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>read_u32</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>().<span class='ident'>unwrap</span>();
@@ -1010,7 +1083,7 @@
         };
         <span class='kw'>let</span> <span class='ident'>ports</span> <span class='op'>=</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>v</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
-            <span class='kw'>let</span> <span class='ident'>num_ports</span> <span class='op'>=</span> (<span class='ident'>buf_len</span> <span class='op'>-</span> <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpSwitchFeatures</span><span class='op'>&gt;</span>()) <span class='op'>/</span> <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpPhyPort</span><span class='op'>&gt;</span>();
+            <span class='kw'>let</span> <span class='ident'>num_ports</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>clone</span>().<span class='ident'>into_inner</span>().<span class='ident'>len</span>() <span class='op'>/</span> <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpPhyPort</span><span class='op'>&gt;</span>();
             <span class='kw'>for</span> _ <span class='kw'>in</span> <span class='number'>0</span>..<span class='ident'>num_ports</span> {
                 <span class='ident'>v</span>.<span class='ident'>push</span>(<span class='ident'>PortDesc</span>::<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bytes</span>))
             }
@@ -1025,8 +1098,11 @@
             <span class='ident'>ports</span>: <span class='ident'>ports</span>,
         }
     }
+
+    <span class='kw'>fn</span> <span class='ident'>marshal</span>(_: <span class='ident'>SwitchFeatures</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {}
 }
 
+<span class='doccomment'>/// Type of modification to perform on a flow table.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u16</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FlowModCmd</span> {
     <span class='ident'>AddFlow</span>,
@@ -1036,6 +1112,7 @@
     <span class='ident'>DeleteStrictFlow</span>,
 }
 
+<span class='doccomment'>/// Represents modifications to a flow table from the controller.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>FlowMod</span> {
     <span class='kw'>pub</span> <span class='ident'>command</span>: <span class='ident'>FlowModCmd</span>,
     <span class='kw'>pub</span> <span class='ident'>pattern</span>: <span class='ident'>Pattern</span>,
@@ -1105,6 +1182,7 @@
     <span class='kw'>fn</span> <span class='ident'>marshal</span>(_: <span class='ident'>FlowMod</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {}
 }
 
+<span class='doccomment'>/// The data associated with a packet received by the controller.</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Payload</span> {
     <span class='ident'>Buffered</span>(<span class='ident'>u32</span>, <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
     <span class='ident'>NotBuffered</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
@@ -1119,12 +1197,15 @@
     }
 }
 
+<span class='doccomment'>/// The reason a packet arrives at the controller.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u8</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>PacketInReason</span> {
     <span class='ident'>NoMatch</span>,
     <span class='ident'>ExplicitSend</span>,
 }
 
+
+<span class='doccomment'>/// Represents packets received by the datapath and sent to the controller.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PacketIn</span> {
     <span class='kw'>pub</span> <span class='ident'>input_payload</span>: <span class='ident'>Payload</span>,
     <span class='kw'>pub</span> <span class='ident'>total_len</span>: <span class='ident'>u16</span>,
@@ -1135,12 +1216,12 @@
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>packed</span>)]</span>
 <span class='kw'>struct</span> <span class='ident'>OfpPacketIn</span>(<span class='ident'>i32</span>, <span class='ident'>u16</span>, <span class='ident'>u16</span>, <span class='ident'>u8</span>, <span class='ident'>u8</span>);
 
-<span class='kw'>impl</span> <span class='ident'>PacketIn</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='ident'>pi</span>: <span class='kw-2'>&amp;</span><span class='ident'>PacketIn</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+<span class='kw'>impl</span> <span class='ident'>MessageType</span> <span class='kw'>for</span> <span class='ident'>PacketIn</span> {
+    <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='ident'>pi</span>: <span class='kw-2'>&amp;</span><span class='ident'>PacketIn</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpPacketIn</span><span class='op'>&gt;</span>() <span class='op'>+</span> <span class='ident'>Payload</span>::<span class='ident'>size_of</span>(<span class='kw-2'>&amp;</span><span class='ident'>pi</span>.<span class='ident'>input_payload</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>PacketIn</span> {
+    <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>PacketIn</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>.<span class='ident'>to_vec</span>());
         <span class='kw'>let</span> <span class='ident'>buf_id</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>bytes</span>.<span class='ident'>read_i32</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>().<span class='ident'>unwrap</span>() {
             <span class='op'>-</span><span class='number'>1</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
@@ -1162,9 +1243,10 @@
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>marshal</span>(_: <span class='ident'>PacketIn</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {}
+    <span class='kw'>fn</span> <span class='ident'>marshal</span>(_: <span class='ident'>PacketIn</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {}
 }
 
+<span class='doccomment'>/// STP state of a port.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u8</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>StpState</span> {
     <span class='ident'>Listen</span>,
@@ -1173,11 +1255,13 @@
     <span class='ident'>Block</span>,
 }
 
+<span class='doccomment'>/// Current state of a physical port. Not configurable by the controller.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PortState</span> {
     <span class='kw'>pub</span> <span class='ident'>down</span>: <span class='ident'>bool</span>,
     <span class='kw'>pub</span> <span class='ident'>stp_state</span>: <span class='ident'>StpState</span>,
 }
 
+<span class='doccomment'>/// Features of physical ports available in a datapath.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PortFeatures</span> {
     <span class='kw'>pub</span> <span class='ident'>f_10mbhd</span>: <span class='ident'>bool</span>,
     <span class='kw'>pub</span> <span class='ident'>f_10mbfd</span>: <span class='ident'>bool</span>,
@@ -1212,6 +1296,10 @@
     }
 }
 
+<span class='doccomment'>/// Flags to indicate behavior of the physical port.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// These flags are used both to describe the current configuration of a physical port,</span>
+<span class='doccomment'>/// and to configure a port&#39;s behavior.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PortConfig</span> {
     <span class='kw'>pub</span> <span class='ident'>down</span>: <span class='ident'>bool</span>,
     <span class='kw'>pub</span> <span class='ident'>no_stp</span>: <span class='ident'>bool</span>,
@@ -1222,6 +1310,7 @@
     <span class='kw'>pub</span> <span class='ident'>no_packet_in</span>: <span class='ident'>bool</span>,
 }
 
+<span class='doccomment'>/// Description of a physical port.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PortDesc</span> {
     <span class='kw'>pub</span> <span class='ident'>port_no</span>: <span class='ident'>u16</span>,
     <span class='kw'>pub</span> <span class='ident'>hw_addr</span>: <span class='ident'>i64</span>,
@@ -1238,6 +1327,10 @@
 <span class='kw'>struct</span> <span class='ident'>OfpPhyPort</span>(<span class='ident'>u16</span>, [<span class='ident'>u8</span>; <span class='number'>6</span>], [<span class='ident'>u8</span>; <span class='number'>16</span>], <span class='ident'>u32</span>, <span class='ident'>u32</span>, <span class='ident'>u32</span>, <span class='ident'>u32</span>, <span class='ident'>u32</span>, <span class='ident'>u32</span>);
 
 <span class='kw'>impl</span> <span class='ident'>PortDesc</span> {
+    <span class='kw'>fn</span> <span class='ident'>size_of</span>(_: <span class='kw-2'>&amp;</span><span class='ident'>PortDesc</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+        <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpPhyPort</span><span class='op'>&gt;</span>()
+    }
+
     <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Cursor</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>PortDesc</span> {
         <span class='kw'>let</span> <span class='ident'>port_no</span> <span class='op'>=</span> <span class='ident'>bytes</span>.<span class='ident'>read_u16</span>::<span class='op'>&lt;</span><span class='ident'>BigEndian</span><span class='op'>&gt;</span>().<span class='ident'>unwrap</span>();
         <span class='kw'>let</span> <span class='ident'>hw_addr</span> <span class='op'>=</span> {
@@ -1305,6 +1398,7 @@
     }
 }
 
+<span class='doccomment'>/// What changed about a physical port.</span>
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u8</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>PortReason</span> {
     <span class='ident'>PortAdd</span>,
@@ -1312,17 +1406,18 @@
     <span class='ident'>PortModify</span>,
 }
 
+<span class='doccomment'>/// A physical port has changed in the datapath.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PortStatus</span> {
     <span class='kw'>pub</span> <span class='ident'>reason</span>: <span class='ident'>PortReason</span>,
     <span class='kw'>pub</span> <span class='ident'>desc</span>: <span class='ident'>PortDesc</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>PortStatus</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>size_of</span>() <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
+<span class='kw'>impl</span> <span class='ident'>MessageType</span> <span class='kw'>for</span> <span class='ident'>PortStatus</span> {
+    <span class='kw'>fn</span> <span class='ident'>size_of</span>(_: <span class='kw-2'>&amp;</span><span class='ident'>PortStatus</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
         <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>PortReason</span><span class='op'>&gt;</span>() <span class='op'>+</span> <span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>OfpPhyPort</span><span class='op'>&gt;</span>()
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>PortStatus</span> {
+    <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='ident'>PortStatus</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>Cursor</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>.<span class='ident'>to_vec</span>());
         <span class='kw'>let</span> <span class='ident'>reason</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>transmute</span>(<span class='ident'>bytes</span>.<span class='ident'>read_u8</span>().<span class='ident'>unwrap</span>()) };
         <span class='ident'>bytes</span>.<span class='ident'>consume</span>(<span class='number'>7</span>);
@@ -1333,14 +1428,16 @@
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>marshal</span>(_: <span class='ident'>PortStatus</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {}
+    <span class='kw'>fn</span> <span class='ident'>marshal</span>(_: <span class='ident'>PortStatus</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {}
 }
 
+<span class='doccomment'>/// Encapsulates handling of messages implementing `MessageType` trait.</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>message</span> {
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>byteorder</span>::<span class='ident'>WriteBytesExt</span>;
     <span class='kw'>use</span> <span class='ident'>ofp_header</span>::<span class='ident'>OfpHeader</span>;
 
+    <span class='doccomment'>/// Abstractions of OpenFlow messages mapping to message codes.</span>
     <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Message</span> {
         <span class='ident'>Hello</span>,
         <span class='ident'>EchoRequest</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
@@ -1353,6 +1450,7 @@
     }
 
     <span class='kw'>impl</span> <span class='ident'>Message</span> {
+        <span class='doccomment'>/// Map `Message` to associated OpenFlow message type code `MsgCode`.</span>
         <span class='kw'>fn</span> <span class='ident'>msg_code_of_message</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>MsgCode</span> {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>msg</span> {
                 <span class='ident'>Message</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> <span class='ident'>MsgCode</span>::<span class='ident'>Hello</span>,
@@ -1367,6 +1465,7 @@
             }
         }
 
+        <span class='doccomment'>/// Return the byte-size of a `Message`.</span>
         <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>msg</span> {
                 <span class='ident'>Message</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> <span class='ident'>OfpHeader</span>::<span class='ident'>size</span>(),
@@ -1377,11 +1476,12 @@
                 <span class='ident'>Message</span>::<span class='ident'>PacketIn</span>(<span class='kw-2'>ref</span> <span class='ident'>packet_in</span>) <span class='op'>=&gt;</span> {
                     <span class='ident'>OfpHeader</span>::<span class='ident'>size</span>() <span class='op'>+</span> <span class='ident'>PacketIn</span>::<span class='ident'>size_of</span>(<span class='ident'>packet_in</span>)
                 }
-                <span class='ident'>Message</span>::<span class='ident'>PortStatus</span>(_) <span class='op'>=&gt;</span> <span class='ident'>OfpHeader</span>::<span class='ident'>size</span>() <span class='op'>+</span> <span class='ident'>PortStatus</span>::<span class='ident'>size_of</span>(),
+                <span class='ident'>Message</span>::<span class='ident'>PortStatus</span>(<span class='kw-2'>ref</span> <span class='ident'>ps</span>) <span class='op'>=&gt;</span> <span class='ident'>OfpHeader</span>::<span class='ident'>size</span>() <span class='op'>+</span> <span class='ident'>PortStatus</span>::<span class='ident'>size_of</span>(<span class='ident'>ps</span>),
                 _ <span class='op'>=&gt;</span> <span class='number'>0</span>,
             }
         }
 
+        <span class='doccomment'>/// Create an `OfpHeader` for the given `xid` and `msg`.</span>
         <span class='kw'>fn</span> <span class='ident'>header_of</span>(<span class='ident'>xid</span>: <span class='ident'>u32</span>, <span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>OfpHeader</span> {
             <span class='kw'>let</span> <span class='ident'>sizeof_buf</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>size_of</span>(<span class='kw-2'>&amp;</span><span class='ident'>msg</span>);
             <span class='ident'>OfpHeader</span>::<span class='ident'>new</span>(<span class='number'>0x01</span>,
@@ -1390,6 +1490,7 @@
                            <span class='ident'>xid</span>)
         }
 
+        <span class='doccomment'>/// Marshal the OpenFlow message `msg`.</span>
         <span class='kw'>fn</span> <span class='ident'>marshal_body</span>(<span class='ident'>msg</span>: <span class='ident'>Message</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {
             <span class='kw'>match</span> <span class='ident'>msg</span> {
                 <span class='ident'>Message</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> (),
@@ -1411,6 +1512,7 @@
             }
         }
 
+        <span class='doccomment'>/// Returns a `u8` buffer containing a marshaled OpenFlow header and the message `msg`.</span>
         <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>marshal</span>(<span class='ident'>xid</span>: <span class='ident'>u32</span>, <span class='ident'>msg</span>: <span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
             <span class='kw'>let</span> <span class='ident'>hdr</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>header_of</span>(<span class='ident'>xid</span>, <span class='kw-2'>&amp;</span><span class='ident'>msg</span>);
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
@@ -1419,7 +1521,9 @@
             <span class='ident'>bytes</span>
         }
 
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>header</span>: <span class='kw-2'>&amp;</span><span class='ident'>OfpHeader</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>], <span class='ident'>buf_len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> (<span class='ident'>u32</span>, <span class='ident'>Message</span>) {
+        <span class='doccomment'>/// Returns a pair `(u32, Message)` of the transaction id and OpenFlow message parsed from</span>
+        <span class='doccomment'>/// the given OpenFlow header `header`, and buffer `buf`.</span>
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>header</span>: <span class='kw-2'>&amp;</span><span class='ident'>OfpHeader</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> (<span class='ident'>u32</span>, <span class='ident'>Message</span>) {
             <span class='kw'>let</span> <span class='ident'>typ</span> <span class='op'>=</span> <span class='ident'>header</span>.<span class='ident'>type_code</span>();
             <span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>typ</span> {
                 <span class='ident'>MsgCode</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> {
@@ -1430,7 +1534,7 @@
                 <span class='ident'>MsgCode</span>::<span class='ident'>EchoResp</span> <span class='op'>=&gt;</span> <span class='ident'>Message</span>::<span class='ident'>EchoReply</span>(<span class='ident'>buf</span>.<span class='ident'>to_vec</span>()),
                 <span class='ident'>MsgCode</span>::<span class='ident'>FeaturesResp</span> <span class='op'>=&gt;</span> {
                     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;FeaturesResp&quot;</span>);
-                    <span class='ident'>Message</span>::<span class='ident'>FeaturesReply</span>(<span class='ident'>SwitchFeatures</span>::<span class='ident'>parse</span>(<span class='ident'>buf</span>, <span class='ident'>buf_len</span>))
+                    <span class='ident'>Message</span>::<span class='ident'>FeaturesReply</span>(<span class='ident'>SwitchFeatures</span>::<span class='ident'>parse</span>(<span class='ident'>buf</span>))
                 }
                 <span class='ident'>MsgCode</span>::<span class='ident'>PacketIn</span> <span class='op'>=&gt;</span> {
                     <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;PacketIn&quot;</span>);
@@ -1449,6 +1553,8 @@
         }
     }
 
+    <span class='doccomment'>/// Return a `FlowMod` adding a flow parameterized by the given `priority`, `pattern`,</span>
+    <span class='doccomment'>/// and `actions`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_flow</span>(<span class='ident'>prio</span>: <span class='ident'>u16</span>, <span class='ident'>pattern</span>: <span class='ident'>Pattern</span>, <span class='ident'>actions</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Action</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>FlowMod</span> {
         <span class='ident'>FlowMod</span> {
             <span class='ident'>command</span>: <span class='ident'>FlowModCmd</span>::<span class='ident'>AddFlow</span>,

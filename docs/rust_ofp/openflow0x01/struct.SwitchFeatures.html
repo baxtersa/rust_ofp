@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-166' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#206-213' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-166' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#221-228' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct SwitchFeatures {
     pub datapath_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,
     pub num_buffers: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>,
@@ -55,7 +55,8 @@
     pub supported_capabilities: <a class='struct' href='../../rust_ofp/openflow0x01/struct.Capabilities.html' title='rust_ofp::openflow0x01::Capabilities'>Capabilities</a>,
     pub supported_actions: <a class='struct' href='../../rust_ofp/openflow0x01/struct.SupportedActions.html' title='rust_ofp::openflow0x01::SupportedActions'>SupportedActions</a>,
     pub ports: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../rust_ofp/openflow0x01/struct.PortDesc.html' title='rust_ofp::openflow0x01::PortDesc'>PortDesc</a>&gt;,
-}</pre><h2 class='fields'>Fields</h2><span id='structfield.datapath_id' class='structfield'>
+}</pre><div class='docblock'><p>Switch features.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.datapath_id' class='structfield'>
                            <span id='datapath_id.v' class='invisible'>
                            <code>datapath_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code>
                            </span></span><span class='stab '></span><span id='structfield.num_buffers' class='structfield'>
@@ -73,9 +74,14 @@
                            </span></span><span class='stab '></span><span id='structfield.ports' class='structfield'>
                            <span id='ports.v' class='invisible'>
                            <code>ports: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../rust_ofp/openflow0x01/struct.PortDesc.html' title='rust_ofp::openflow0x01::PortDesc'>PortDesc</a>&gt;</code>
-                           </span></span><span class='stab '></span><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-182' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#218-272' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='#method.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>, buf_len: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a></code></span></h4>
-</div></section>
+                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../rust_ofp/openflow0x01/trait.MessageType.html' title='rust_ofp::openflow0x01::MessageType'>MessageType</a> for <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-182' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#233-294' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.size_of' class='method'><span id='size_of.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.size_of' class='fnname'>size_of</a>(sf: &amp;<a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+<div class='docblock'><p>Return the byte-size of a message.</p>
+</div><h4 id='method.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a></code></span></h4>
+<div class='docblock'><p>Parse a buffer into a message.</p>
+</div><h4 id='method.marshal' class='method'><span id='marshal.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.marshal' class='fnname'>marshal</a>(_: <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a>, _: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)</code></span></h4>
+<div class='docblock'><p>Marshal a message into a <code>u8</code> buffer.</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

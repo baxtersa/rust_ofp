@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Message",""]],"fn":[["add_flow",""]]});
+initSidebarItems({"enum":[["Message","Abstractions of OpenFlow messages mapping to message codes."]],"fn":[["add_flow","Return a `FlowMod` adding a flow parameterized by the given `priority`, `pattern`, and `actions`."]]});

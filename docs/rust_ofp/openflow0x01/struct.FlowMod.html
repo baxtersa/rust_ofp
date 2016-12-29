@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-203' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#283-295' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-208' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#307-319' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct FlowMod {
     pub command: <a class='enum' href='../../rust_ofp/openflow0x01/enum.FlowModCmd.html' title='rust_ofp::openflow0x01::FlowModCmd'>FlowModCmd</a>,
     pub pattern: <a class='struct' href='../../rust_ofp/openflow0x01/struct.Pattern.html' title='rust_ofp::openflow0x01::Pattern'>Pattern</a>,
@@ -60,7 +60,8 @@
     pub apply_to_packet: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;,
     pub out_port: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../../rust_ofp/openflow0x01/enum.PseudoPort.html' title='rust_ofp::openflow0x01::PseudoPort'>PseudoPort</a>&gt;,
     pub check_overlap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-}</pre><h2 class='fields'>Fields</h2><span id='structfield.command' class='structfield'>
+}</pre><div class='docblock'><p>Represents modifications to a flow table from the controller.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.command' class='structfield'>
                            <span id='command.v' class='invisible'>
                            <code>command: <a class='enum' href='../../rust_ofp/openflow0x01/enum.FlowModCmd.html' title='rust_ofp::openflow0x01::FlowModCmd'>FlowModCmd</a></code>
                            </span></span><span class='stab '></span><span id='structfield.pattern' class='structfield'>
@@ -93,11 +94,14 @@
                            </span></span><span class='stab '></span><span id='structfield.check_overlap' class='structfield'>
                            <span id='check_overlap.v' class='invisible'>
                            <code>check_overlap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../rust_ofp/openflow0x01/trait.MessageType.html' title='rust_ofp::openflow0x01::MessageType'>MessageType</a> for <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-230' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#310-350' title='goto source code'>[src]</a></span></h3>
+                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../rust_ofp/openflow0x01/trait.MessageType.html' title='rust_ofp::openflow0x01::MessageType'>MessageType</a> for <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-235' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#334-374' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.size_of' class='method'><span id='size_of.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.size_of' class='fnname'>size_of</a>(msg: &amp;<a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
-<h4 id='method.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></code></span></h4>
-<h4 id='method.marshal' class='method'><span id='marshal.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.marshal' class='fnname'>marshal</a>(_: <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a>, _: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)</code></span></h4>
-</div></section>
+<div class='docblock'><p>Return the byte-size of a message.</p>
+</div><h4 id='method.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></code></span></h4>
+<div class='docblock'><p>Parse a buffer into a message.</p>
+</div><h4 id='method.marshal' class='method'><span id='marshal.v' class='invisible'><code>fn <a href='../../rust_ofp/openflow0x01/trait.MessageType.html#tymethod.marshal' class='fnname'>marshal</a>(_: <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a>, _: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)</code></span></h4>
+<div class='docblock'><p>Marshal a message into a <code>u8</code> buffer.</p>
+</div></div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
