@@ -1,7 +1,7 @@
-use std::io::{BufRead, Cursor};
+use std::io::{BufRead, Cursor, Write};
 use std::mem::{size_of, transmute};
 
-use byteorder::{BigEndian, ReadBytesExt};
+use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
 /// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
 #[repr(u8)]
@@ -48,6 +48,12 @@ fn test_bit(bit: u64, x: u64) -> bool {
 
 /// Fields to match against flows.
 pub struct Pattern {}
+
+impl Pattern {
+    fn marshal(_: Pattern, bytes: &mut Vec<u8>) {
+        bytes.write(&[0; 40]).unwrap();
+    }
+}
 
 #[repr(packed)]
 struct OfpMatch(u32, u16, [u8; 6], [u8; 6], u16, u8, u8, u16, u8, u8, u16, u32, u32, u16, u16);
@@ -105,6 +111,21 @@ impl PseudoPort {
             }
         }
     }
+
+    fn marshal(pp: PseudoPort, bytes: &mut Vec<u8>) {
+        match pp {
+            PseudoPort::PhysicalPort(p) => bytes.write_u16::<BigEndian>(p).unwrap(),
+            PseudoPort::InPort => bytes.write_u16::<BigEndian>(OfpPort::OFPPInPort as u16).unwrap(),
+            PseudoPort::Table => bytes.write_u16::<BigEndian>(OfpPort::OFPPTable as u16).unwrap(),
+            PseudoPort::Normal => bytes.write_u16::<BigEndian>(OfpPort::OFPPNormal as u16).unwrap(),
+            PseudoPort::Flood => bytes.write_u16::<BigEndian>(OfpPort::OFPPFlood as u16).unwrap(),
+            PseudoPort::AllPorts => bytes.write_u16::<BigEndian>(OfpPort::OFPPAll as u16).unwrap(),
+            PseudoPort::Controller(_) => {
+                bytes.write_u16::<BigEndian>(OfpPort::OFPPController as u16).unwrap()
+            }
+            PseudoPort::Local => bytes.write_u16::<BigEndian>(OfpPort::OFPPLocal as u16).unwrap(),
+        }
+    }
 }
 
 /// Actions associated with flows and packets.
@@ -114,7 +135,7 @@ pub enum Action {
 }
 
 #[repr(packed)]
-struct OfpActionHeader(u16, u16);
+struct OfpActionHeader(u16, u16, [u8; 4]);
 
 #[repr(packed)]
 struct OfpActionOutput(u16, u16);
@@ -136,6 +157,12 @@ enum OfpActionType {
 }
 
 impl Action {
+    fn type_code(a: &Action) -> OfpActionType {
+        match *a {
+            Action::Output(_) => OfpActionType::OFPATOutput,
+        }
+    }
+
     fn size_of(a: &Action) -> usize {
         let h = size_of::<OfpActionHeader>();
         let body = match *a {
@@ -172,6 +199,32 @@ impl Action {
             v
         }
     }
+
+    fn move_controller_last(acts: Vec<Action>) -> Vec<Action> {
+        let (mut to_ctrl, mut not_to_ctrl): (Vec<Action>, Vec<Action>) = acts.into_iter()
+            .partition(|act| match *act {
+                Action::Output(PseudoPort::Controller(_)) => true,
+                _ => false,
+            });
+        not_to_ctrl.append(&mut to_ctrl);
+        not_to_ctrl
+    }
+
+    fn marshal(act: Action, bytes: &mut Vec<u8>) {
+        bytes.write_u16::<BigEndian>(Action::type_code(&act) as u16).unwrap();
+        bytes.write_u16::<BigEndian>(Action::size_of(&act) as u16).unwrap();
+        bytes.write_u32::<BigEndian>(0).unwrap();
+        match act {
+            Action::Output(pp) => {
+                PseudoPort::marshal(pp, bytes);
+                bytes.write_u16::<BigEndian>(match pp {
+                        PseudoPort::Controller(w) => w as u16,
+                        _ => 0,
+                    })
+                    .unwrap()
+            }
+        }
+    }
 }
 
 /// How long before a flow entry expires.
@@ -185,6 +238,13 @@ impl Timeout {
         match tm {
             0 => Timeout::Permanent,
             d => Timeout::ExpiresAfter(d),
+        }
+    }
+
+    fn to_int(tm: Timeout) -> u16 {
+        match tm {
+            Timeout::Permanent => 0,
+            Timeout::ExpiresAfter(d) => d,
         }
     }
 }
@@ -322,6 +382,10 @@ pub struct FlowMod {
 struct OfpFlowMod(u64, u16, u16, u16, u16, u32, u16, u16);
 
 impl FlowMod {
+    fn flags_to_int(check_overlap: bool, notify_when_removed: bool) -> u16 {
+        (if check_overlap { 1 << 1 } else { 0 }) | (if notify_when_removed { 1 << 0 } else { 0 })
+    }
+
     fn check_overlap_of_flags(flags: u16) -> bool {
         2 & flags != 0
     }
@@ -370,7 +434,35 @@ impl MessageType for FlowMod {
         }
     }
 
-    fn marshal(_: FlowMod, _: &mut Vec<u8>) {}
+    fn marshal(fm: FlowMod, bytes: &mut Vec<u8>) {
+        Pattern::marshal(fm.pattern, bytes);
+        bytes.write_u64::<BigEndian>(fm.cookie).unwrap();
+        bytes.write_u16::<BigEndian>(fm.command as u16).unwrap();
+        bytes.write_u16::<BigEndian>(Timeout::to_int(fm.idle_timeout)).unwrap();
+        bytes.write_u16::<BigEndian>(Timeout::to_int(fm.hard_timeout)).unwrap();
+        bytes.write_u16::<BigEndian>(fm.priority).unwrap();
+        bytes.write_i32::<BigEndian>(match fm.apply_to_packet {
+                None => -1,
+                Some(buf_id) => buf_id as i32,
+            })
+            .unwrap();
+        match fm.out_port {
+            None => bytes.write_u16::<BigEndian>(OfpPort::OFPPNone as u16).unwrap(),
+            Some(x) => PseudoPort::marshal(x, bytes),
+        }
+        bytes.write_u16::<BigEndian>(FlowMod::flags_to_int(fm.check_overlap,
+                                                          fm.notify_when_removed))
+            .unwrap();
+        for act in Action::move_controller_last(fm.actions) {
+            match act {
+                Action::Output(PseudoPort::Table) => {
+                    panic!("OFPPTable not allowed in installed flow.")
+                }
+                _ => (),
+            }
+            Action::marshal(act, bytes)
+        }
+    }
 }
 
 /// The data associated with a packet received by the controller.
