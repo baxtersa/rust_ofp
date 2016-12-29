@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `StpState` enum in crate `rust_ofp`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, StpState">
+    <meta name="description" content="API documentation for the Rust `Mask` struct in crate `rust_ofp`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Mask">
 
-    <title>rust_ofp::openflow0x01::StpState - Rust</title>
+    <title>rust_ofp::openflow0x01::Mask - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'StpState', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'Mask', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,20 +42,22 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='enum' href=''>StpState</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='struct' href=''>Mask</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-436' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#817-822' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum StpState {
-    Listen,
-    Learn,
-    Forward,
-    Block,
-}</pre><div class='docblock'><p>STP state of a port.</p>
-</div><h2 class='variants'>Variants</h2>
-<span id='variant.Listen' class='variant'><span id='Listen.v' class='invisible'><code>Listen</code></span></span><span id='variant.Learn' class='variant'><span id='Learn.v' class='invisible'><code>Learn</code></span></span><span id='variant.Forward' class='variant'><span id='Forward.v' class='invisible'><code>Forward</code></span></span><span id='variant.Block' class='variant'><span id='Block.v' class='invisible'><code>Block</code></span></span></section>
+               </span><a id='src-56' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#58-61' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Mask&lt;T&gt; {
+    pub value: T,
+    pub mask: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;,
+}</pre><h2 class='fields'>Fields</h2><span id='structfield.value' class='structfield'>
+                           <span id='value.v' class='invisible'>
+                           <code>value: T</code>
+                           </span></span><span class='stab '></span><span id='structfield.mask' class='structfield'>
+                           <span id='mask.v' class='invisible'>
+                           <code>mask: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;T&gt;</code>
+                           </span></span><span class='stab '></span></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

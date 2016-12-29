@@ -47,8 +47,59 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-52' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#50' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Pattern {}</pre><div class='docblock'><p>Fields to match against flows.</p>
+               </span><a id='src-60' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#64-77' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Pattern {
+    pub dl_src: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 6]</a>&gt;,
+    pub dl_dst: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 6]</a>&gt;,
+    pub dl_typ: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;,
+    pub dl_vlan: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;&gt;,
+    pub dl_vlan_pcp: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;,
+    pub nw_src: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../rust_ofp/openflow0x01/struct.Mask.html' title='rust_ofp::openflow0x01::Mask'>Mask</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;&gt;,
+    pub nw_dst: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../rust_ofp/openflow0x01/struct.Mask.html' title='rust_ofp::openflow0x01::Mask'>Mask</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;&gt;,
+    pub nw_proto: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;,
+    pub nw_tos: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;,
+    pub tp_src: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;,
+    pub tp_dst: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;,
+    pub in_port: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;,
+}</pre><div class='docblock'><p>Fields to match against flows.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.dl_src' class='structfield'>
+                           <span id='dl_src.v' class='invisible'>
+                           <code>dl_src: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 6]</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.dl_dst' class='structfield'>
+                           <span id='dl_dst.v' class='invisible'>
+                           <code>dl_dst: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 6]</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.dl_typ' class='structfield'>
+                           <span id='dl_typ.v' class='invisible'>
+                           <code>dl_typ: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.dl_vlan' class='structfield'>
+                           <span id='dl_vlan.v' class='invisible'>
+                           <code>dl_vlan: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.dl_vlan_pcp' class='structfield'>
+                           <span id='dl_vlan_pcp.v' class='invisible'>
+                           <code>dl_vlan_pcp: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.nw_src' class='structfield'>
+                           <span id='nw_src.v' class='invisible'>
+                           <code>nw_src: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../rust_ofp/openflow0x01/struct.Mask.html' title='rust_ofp::openflow0x01::Mask'>Mask</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.nw_dst' class='structfield'>
+                           <span id='nw_dst.v' class='invisible'>
+                           <code>nw_dst: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../rust_ofp/openflow0x01/struct.Mask.html' title='rust_ofp::openflow0x01::Mask'>Mask</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>&gt;&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.nw_proto' class='structfield'>
+                           <span id='nw_proto.v' class='invisible'>
+                           <code>nw_proto: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.nw_tos' class='structfield'>
+                           <span id='nw_tos.v' class='invisible'>
+                           <code>nw_tos: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.tp_src' class='structfield'>
+                           <span id='tp_src.v' class='invisible'>
+                           <code>tp_src: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.tp_dst' class='structfield'>
+                           <span id='tp_dst.v' class='invisible'>
+                           <code>tp_dst: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.in_port' class='structfield'>
+                           <span id='in_port.v' class='invisible'>
+                           <code>in_port: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>&gt;</code>
+                           </span></span><span class='stab '></span><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../rust_ofp/openflow0x01/struct.Pattern.html' title='rust_ofp::openflow0x01::Pattern'>Pattern</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-121' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#151-340' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.match_all' class='method'><span id='match_all.v' class='invisible'><code>fn <a href='#method.match_all' class='fnname'>match_all</a>() -&gt; <a class='struct' href='../../rust_ofp/openflow0x01/struct.Pattern.html' title='rust_ofp::openflow0x01::Pattern'>Pattern</a></code></span></h4>
 </div></section>
     <section id='search' class="content hidden"></section>
 
