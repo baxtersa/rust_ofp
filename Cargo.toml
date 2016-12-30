@@ -27,4 +27,4 @@ name = "rust_ofp_controller"
 path = "src/main.rs"
 
 [dependencies]
-byteorder = "*"
+byteorder = "1.0.0"
