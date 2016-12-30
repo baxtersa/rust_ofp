@@ -1482,8 +1482,6 @@
 <span id="1438">1438</span>
 <span id="1439">1439</span>
 <span id="1440">1440</span>
-<span id="1441">1441</span>
-<span id="1442">1442</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>BufRead</span>, <span class='ident'>Cursor</span>, <span class='ident'>Read</span>, <span class='ident'>Write</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::{<span class='ident'>size_of</span>, <span class='ident'>transmute</span>};
@@ -2776,8 +2774,9 @@
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
     <span class='kw'>use</span> <span class='ident'>ofp_header</span>::<span class='ident'>OfpHeader</span>;
+    <span class='kw'>use</span> <span class='ident'>ofp_message</span>::<span class='ident'>OfpMessage</span>;
 
-    <span class='doccomment'>/// Abstractions of OpenFlow messages mapping to message codes.</span>
+    <span class='doccomment'>/// Abstractions of OpenFlow 1.0 messages mapping to message codes.</span>
     <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Message</span> {
         <span class='ident'>Hello</span>,
         <span class='ident'>EchoRequest</span>(<span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>),
@@ -2812,7 +2811,25 @@
             }
         }
 
-        <span class='doccomment'>/// Return the byte-size of a `Message`.</span>
+        <span class='doccomment'>/// Marshal the OpenFlow message `msg`.</span>
+        <span class='kw'>fn</span> <span class='ident'>marshal_body</span>(<span class='ident'>msg</span>: <span class='ident'>Message</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {
+            <span class='kw'>match</span> <span class='ident'>msg</span> {
+                <span class='ident'>Message</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> (),
+                <span class='ident'>Message</span>::<span class='ident'>EchoReply</span>(<span class='ident'>buf</span>) <span class='op'>=&gt;</span> <span class='ident'>bytes</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>).<span class='ident'>unwrap</span>(),
+                <span class='ident'>Message</span>::<span class='ident'>EchoRequest</span>(<span class='ident'>buf</span>) <span class='op'>=&gt;</span> <span class='ident'>bytes</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>).<span class='ident'>unwrap</span>(),
+                <span class='ident'>Message</span>::<span class='ident'>FeaturesReq</span> <span class='op'>=&gt;</span> (),
+                <span class='ident'>Message</span>::<span class='ident'>FlowMod</span>(<span class='ident'>flow_mod</span>) <span class='op'>=&gt;</span> <span class='ident'>FlowMod</span>::<span class='ident'>marshal</span>(<span class='ident'>flow_mod</span>, <span class='ident'>bytes</span>),
+                <span class='ident'>Message</span>::<span class='ident'>PacketIn</span>(<span class='ident'>packet_in</span>) <span class='op'>=&gt;</span> <span class='ident'>PacketIn</span>::<span class='ident'>marshal</span>(<span class='ident'>packet_in</span>, <span class='ident'>bytes</span>),
+                <span class='ident'>Message</span>::<span class='ident'>FlowRemoved</span>(<span class='ident'>flow</span>) <span class='op'>=&gt;</span> <span class='ident'>FlowRemoved</span>::<span class='ident'>marshal</span>(<span class='ident'>flow</span>, <span class='ident'>bytes</span>),
+                <span class='ident'>Message</span>::<span class='ident'>PortStatus</span>(<span class='ident'>sts</span>) <span class='op'>=&gt;</span> <span class='ident'>PortStatus</span>::<span class='ident'>marshal</span>(<span class='ident'>sts</span>, <span class='ident'>bytes</span>),
+                <span class='ident'>Message</span>::<span class='ident'>PacketOut</span>(<span class='ident'>po</span>) <span class='op'>=&gt;</span> <span class='ident'>PacketOut</span>::<span class='ident'>marshal</span>(<span class='ident'>po</span>, <span class='ident'>bytes</span>),
+                <span class='ident'>Message</span>::<span class='ident'>BarrierRequest</span> <span class='op'>|</span> <span class='ident'>Message</span>::<span class='ident'>BarrierReply</span> <span class='op'>=&gt;</span> (),
+                _ <span class='op'>=&gt;</span> (),
+            }
+        }
+    }
+
+    <span class='kw'>impl</span> <span class='ident'>OfpMessage</span> <span class='kw'>for</span> <span class='ident'>Message</span> {
         <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
             <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>msg</span> {
                 <span class='ident'>Message</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> <span class='ident'>OfpHeader</span>::<span class='ident'>size</span>(),
@@ -2831,7 +2848,6 @@
             }
         }
 
-        <span class='doccomment'>/// Create an `OfpHeader` for the given `xid` and `msg`.</span>
         <span class='kw'>fn</span> <span class='ident'>header_of</span>(<span class='ident'>xid</span>: <span class='ident'>u32</span>, <span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>OfpHeader</span> {
             <span class='kw'>let</span> <span class='ident'>sizeof_buf</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>size_of</span>(<span class='kw-2'>&amp;</span><span class='ident'>msg</span>);
             <span class='ident'>OfpHeader</span>::<span class='ident'>new</span>(<span class='number'>0x01</span>,
@@ -2840,25 +2856,7 @@
                            <span class='ident'>xid</span>)
         }
 
-        <span class='doccomment'>/// Marshal the OpenFlow message `msg`.</span>
-        <span class='kw'>fn</span> <span class='ident'>marshal_body</span>(<span class='ident'>msg</span>: <span class='ident'>Message</span>, <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) {
-            <span class='kw'>match</span> <span class='ident'>msg</span> {
-                <span class='ident'>Message</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> (),
-                <span class='ident'>Message</span>::<span class='ident'>EchoReply</span>(<span class='ident'>buf</span>) <span class='op'>=&gt;</span> <span class='ident'>bytes</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>).<span class='ident'>unwrap</span>(),
-                <span class='ident'>Message</span>::<span class='ident'>EchoRequest</span>(<span class='ident'>buf</span>) <span class='op'>=&gt;</span> <span class='ident'>bytes</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>buf</span>).<span class='ident'>unwrap</span>(),
-                <span class='ident'>Message</span>::<span class='ident'>FeaturesReq</span> <span class='op'>=&gt;</span> (),
-                <span class='ident'>Message</span>::<span class='ident'>FlowMod</span>(<span class='ident'>flow_mod</span>) <span class='op'>=&gt;</span> <span class='ident'>FlowMod</span>::<span class='ident'>marshal</span>(<span class='ident'>flow_mod</span>, <span class='ident'>bytes</span>),
-                <span class='ident'>Message</span>::<span class='ident'>PacketIn</span>(<span class='ident'>packet_in</span>) <span class='op'>=&gt;</span> <span class='ident'>PacketIn</span>::<span class='ident'>marshal</span>(<span class='ident'>packet_in</span>, <span class='ident'>bytes</span>),
-                <span class='ident'>Message</span>::<span class='ident'>FlowRemoved</span>(<span class='ident'>flow</span>) <span class='op'>=&gt;</span> <span class='ident'>FlowRemoved</span>::<span class='ident'>marshal</span>(<span class='ident'>flow</span>, <span class='ident'>bytes</span>),
-                <span class='ident'>Message</span>::<span class='ident'>PortStatus</span>(<span class='ident'>sts</span>) <span class='op'>=&gt;</span> <span class='ident'>PortStatus</span>::<span class='ident'>marshal</span>(<span class='ident'>sts</span>, <span class='ident'>bytes</span>),
-                <span class='ident'>Message</span>::<span class='ident'>PacketOut</span>(<span class='ident'>po</span>) <span class='op'>=&gt;</span> <span class='ident'>PacketOut</span>::<span class='ident'>marshal</span>(<span class='ident'>po</span>, <span class='ident'>bytes</span>),
-                <span class='ident'>Message</span>::<span class='ident'>BarrierRequest</span> <span class='op'>|</span> <span class='ident'>Message</span>::<span class='ident'>BarrierReply</span> <span class='op'>=&gt;</span> (),
-                _ <span class='op'>=&gt;</span> (),
-            }
-        }
-
-        <span class='doccomment'>/// Returns a `u8` buffer containing a marshaled OpenFlow header and the message `msg`.</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>marshal</span>(<span class='ident'>xid</span>: <span class='ident'>u32</span>, <span class='ident'>msg</span>: <span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
+        <span class='kw'>fn</span> <span class='ident'>marshal</span>(<span class='ident'>xid</span>: <span class='ident'>u32</span>, <span class='ident'>msg</span>: <span class='ident'>Message</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span> {
             <span class='kw'>let</span> <span class='ident'>hdr</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>header_of</span>(<span class='ident'>xid</span>, <span class='kw-2'>&amp;</span><span class='ident'>msg</span>);
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
             <span class='ident'>OfpHeader</span>::<span class='ident'>marshal</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>bytes</span>, <span class='ident'>hdr</span>);
@@ -2866,9 +2864,7 @@
             <span class='ident'>bytes</span>
         }
 
-        <span class='doccomment'>/// Returns a pair `(u32, Message)` of the transaction id and OpenFlow message parsed from</span>
-        <span class='doccomment'>/// the given OpenFlow header `header`, and buffer `buf`.</span>
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>header</span>: <span class='kw-2'>&amp;</span><span class='ident'>OfpHeader</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> (<span class='ident'>u32</span>, <span class='ident'>Message</span>) {
+        <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='ident'>header</span>: <span class='kw-2'>&amp;</span><span class='ident'>OfpHeader</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> (<span class='ident'>u32</span>, <span class='ident'>Message</span>) {
             <span class='kw'>let</span> <span class='ident'>typ</span> <span class='op'>=</span> <span class='ident'>header</span>.<span class='ident'>type_code</span>();
             <span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>typ</span> {
                 <span class='ident'>MsgCode</span>::<span class='ident'>Hello</span> <span class='op'>=&gt;</span> {

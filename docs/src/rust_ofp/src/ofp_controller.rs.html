@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `FlowModCmd` enum in crate `rust_ofp`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, FlowModCmd">
+    <meta name="description" content="Source to the Rust file `src/ofp_controller.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
 
-    <title>rust_ofp::openflow0x01::FlowModCmd - Rust</title>
+    <title>ofp_controller.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
     
 
     
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'FlowModCmd', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        
     </nav>
 
     <nav class="sub">
@@ -42,21 +42,39 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='enum' href=''>FlowModCmd</a></span><span class='out-of-band'><span id='render-detail'>
-                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                       [<span class='inner'>&#x2212;</span>]
-                   </a>
-               </span><a id='src-447' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#791-797' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum FlowModCmd {
-    AddFlow,
-    ModFlow,
-    ModStrictFlow,
-    DeleteFlow,
-    DeleteStrictFlow,
-}</pre><div class='docblock'><p>Type of modification to perform on a flow table.</p>
-</div><h2 class='variants'>Variants</h2>
-<span id='variant.AddFlow' class='variant'><span id='AddFlow.v' class='invisible'><code>AddFlow</code></span></span><span id='variant.ModFlow' class='variant'><span id='ModFlow.v' class='invisible'><code>ModFlow</code></span></span><span id='variant.ModStrictFlow' class='variant'><span id='ModStrictFlow.v' class='invisible'><code>ModStrictFlow</code></span></span><span id='variant.DeleteFlow' class='variant'><span id='DeleteFlow.v' class='invisible'><code>DeleteFlow</code></span></span><span id='variant.DeleteStrictFlow' class='variant'><span id='DeleteStrictFlow.v' class='invisible'><code>DeleteStrictFlow</code></span></span></section>
+    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+</pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>TcpStream</span>;
+<span class='kw'>use</span> <span class='ident'>ofp_message</span>::<span class='ident'>OfpMessage</span>;
+
+<span class='doccomment'>/// OpenFlow Controller</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Version-agnostic API for implementing an OpenFlow controller.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>OfpController</span> {
+    <span class='doccomment'>/// OpenFlow message type supporting the same protocol version as the controller.</span>
+    <span class='kw'>type</span> <span class='ident'>Message</span>: <span class='ident'>OfpMessage</span>;
+
+    <span class='doccomment'>/// Send a message to the node associated with the given `TcpStream`.</span>
+    <span class='kw'>fn</span> <span class='ident'>send_message</span>(<span class='ident'>u32</span>, <span class='self'>Self</span>::<span class='ident'>Message</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TcpStream</span>);
+    <span class='doccomment'>/// Perform handshake and begin loop reading incoming messages from client stream.</span>
+    <span class='kw'>fn</span> <span class='ident'>handle_client_connected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TcpStream</span>);
+}
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -110,11 +128,11 @@
     
 
     <script>
-        window.rootPath = "../../";
+        window.rootPath = "../../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>

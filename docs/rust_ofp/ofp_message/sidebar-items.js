@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["OfpMessage","OpenFlow Message"]]});

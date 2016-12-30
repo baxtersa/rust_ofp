@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `add_flow` fn in crate `rust_ofp`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, add_flow">
+    <meta name="description" content="Source to the Rust file `src/ofp_message.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
 
-    <title>rust_ofp::openflow0x01::message::add_flow - Rust</title>
+    <title>ofp_message.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
@@ -28,7 +28,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../../index.html'>rust_ofp</a>::<wbr><a href='../index.html'>openflow0x01</a>::<wbr><a href='index.html'>message</a></p><script>window.sidebarCurrent = {name: 'add_flow', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        
     </nav>
 
     <nav class="sub">
@@ -42,15 +42,41 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../../index.html'>rust_ofp</a>::<wbr><a href='../index.html'>openflow0x01</a>::<wbr><a href='index.html'>message</a>::<wbr><a class='fn' href=''>add_flow</a></span><span class='out-of-band'><span id='render-detail'>
-                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
-                       [<span class='inner'>&#x2212;</span>]
-                   </a>
-               </span><a id='src-789' class='srclink' href='../../../src/rust_ofp/src/openflow0x01.rs.html#1425-1439' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn add_flow(prio: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>, pattern: <a class='struct' href='../../../rust_ofp/openflow0x01/struct.Pattern.html' title='rust_ofp::openflow0x01::Pattern'>Pattern</a>, actions: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='enum' href='../../../rust_ofp/openflow0x01/enum.Action.html' title='rust_ofp::openflow0x01::Action'>Action</a>&gt;) -&gt; <a class='struct' href='../../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></pre><div class='docblock'><p>Return a <code>FlowMod</code> adding a flow parameterized by the given <code>priority</code>, <code>pattern</code>,
-and <code>actions</code>.</p>
-</div></section>
+    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+</pre><pre class='rust '>
+<span class='kw'>use</span> <span class='ident'>ofp_header</span>::<span class='ident'>OfpHeader</span>;
+
+<span class='doccomment'>/// OpenFlow Message</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Version-agnostic API for handling OpenFlow messages at the byte-buffer level.</span>
+<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>OfpMessage</span> {
+    <span class='doccomment'>/// Return the byte-size of an `OfpMessage`.</span>
+    <span class='kw'>fn</span> <span class='ident'>size_of</span>(<span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span>;
+    <span class='doccomment'>/// Create an `OfpHeader` for the given transaction id and OpenFlow message.</span>
+    <span class='kw'>fn</span> <span class='ident'>header_of</span>(<span class='ident'>u32</span>, <span class='kw-2'>&amp;</span><span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>OfpHeader</span>;
+    <span class='doccomment'>/// Return a marshaled buffer containing an OpenFlow header and the message `msg`.</span>
+    <span class='kw'>fn</span> <span class='ident'>marshal</span>(<span class='ident'>u32</span>, <span class='self'>Self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>;
+    <span class='doccomment'>/// Returns a pair `(u32, OfpMessage)` of the transaction id and OpenFlow message parsed from</span>
+    <span class='doccomment'>/// the given OpenFlow header `header`, and buffer `buf`.</span>
+    <span class='kw'>fn</span> <span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='ident'>OfpHeader</span>, <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> (<span class='ident'>u32</span>, <span class='self'>Self</span>);
+}
+</pre>
+</section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
