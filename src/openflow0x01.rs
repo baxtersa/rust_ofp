@@ -1,11 +1,11 @@
-use std::io::{BufRead, Cursor};
+use std::io::{BufRead, Cursor, Read, Write};
 use std::mem::{size_of, transmute};
 
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
 /// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
 #[repr(u8)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum MsgCode {
     Hello,
     Error,
@@ -503,7 +503,7 @@ impl Action {
         h + body
     }
 
-    fn size_of_sequence(actions: Vec<Action>) -> usize {
+    fn size_of_sequence(actions: &Vec<Action>) -> usize {
         actions.iter().fold(0, |acc, x| Action::size_of(x) + acc)
     }
 
@@ -831,7 +831,7 @@ impl FlowMod {
 impl MessageType for FlowMod {
     fn size_of(msg: &FlowMod) -> usize {
         Pattern::size_of(&msg.pattern) + size_of::<OfpFlowMod>() +
-        Action::size_of_sequence(msg.actions.clone())
+        Action::size_of_sequence(&msg.actions)
     }
 
     fn parse(buf: &[u8]) -> FlowMod {
@@ -910,6 +910,13 @@ impl Payload {
             Payload::NotBuffered(ref buf) => buf.len(),
         }
     }
+
+    fn marshal(payload: Payload, bytes: &mut Vec<u8>) {
+        match payload {
+            Payload::Buffered(_, buf) |
+            Payload::NotBuffered(buf) => bytes.write_all(&buf).unwrap()
+        }
+    }
 }
 
 /// The reason a packet arrives at the controller.
@@ -959,6 +966,66 @@ impl MessageType for PacketIn {
     }
 
     fn marshal(_: PacketIn, _: &mut Vec<u8>) {}
+}
+
+/// Represents packets sent from the controller.
+pub struct PacketOut {
+    pub output_payload: Payload,
+    pub port_id: Option<u16>,
+    pub apply_actions: Vec<Action>,
+}
+
+struct OfpPacketOut(u32, u16, u16);
+
+impl MessageType for PacketOut {
+    fn size_of(po: &PacketOut) -> usize {
+        size_of::<OfpPacketOut>() + Action::size_of_sequence(&po.apply_actions) +
+        Payload::size_of(&po.output_payload)
+    }
+
+    fn parse(buf: &[u8]) -> PacketOut {
+        let mut bytes = Cursor::new(buf.to_vec());
+        let buf_id = match bytes.read_i32::<BigEndian>().unwrap() {
+            -1 => None,
+            n => Some(n),
+        };
+        let in_port = bytes.read_u16::<BigEndian>().unwrap();
+        let actions_len = bytes.read_u16::<BigEndian>().unwrap();
+        let mut actions_buf = vec![0; actions_len as usize];
+        bytes.read_exact(&mut actions_buf).unwrap();
+        let mut actions_bytes = Cursor::new(actions_buf);
+        let actions = Action::parse_sequence(&mut actions_bytes);
+        PacketOut {
+            output_payload: match buf_id {
+                None => Payload::NotBuffered(bytes.into_inner()),
+                Some(n) => Payload::Buffered(n as u32, bytes.into_inner()),
+            },
+            port_id: {
+                if in_port == OfpPort::OFPPNone as u16 {
+                    None
+                } else {
+                    Some(in_port)
+                }
+            },
+            apply_actions: actions,
+        }
+    }
+
+    fn marshal(po: PacketOut, bytes: &mut Vec<u8>) {
+        bytes.write_i32::<BigEndian>(match po.output_payload {
+            Payload::Buffered(n, _) => n as i32,
+            Payload::NotBuffered(_) => -1,
+        }).unwrap();
+        match po.port_id {
+            Some(id) => PseudoPort::marshal(PseudoPort::PhysicalPort(id), bytes),
+            None => bytes.write_u16::<BigEndian>(OfpPort::OFPPNone as u16).unwrap(),
+        }
+        bytes.write_u16::<BigEndian>(Action::size_of_sequence(&po.apply_actions) as u16).unwrap();
+        for act in Action::move_controller_last(po.apply_actions) {
+            Action::marshal(act, bytes);
+        }
+        Payload::marshal(po.output_payload, bytes)
+    }
 }
 
 /// STP state of a port.
@@ -1162,6 +1229,8 @@ pub mod message {
         FlowMod(FlowMod),
         PacketIn(PacketIn),
         PortStatus(PortStatus),
+        BarrierRequest,
+        BarrierReply,
     }
 
     impl Message {
@@ -1176,6 +1245,8 @@ pub mod message {
                 Message::FlowMod(_) => MsgCode::FlowMod,
                 Message::PortStatus(_) => MsgCode::PortStatus,
                 Message::PacketIn(_) => MsgCode::PacketIn,
+                Message::BarrierRequest => MsgCode::BarrierReq,
+                Message::BarrierReply => MsgCode::BarrierResp,
                 // _ => MsgCode::Hello
             }
         }
@@ -1192,6 +1263,7 @@ pub mod message {
                     OfpHeader::size() + PacketIn::size_of(packet_in)
                 }
                 Message::PortStatus(ref ps) => OfpHeader::size() + PortStatus::size_of(ps),
+                Message::BarrierRequest | Message::BarrierReply => OfpHeader::size(),
                 _ => 0,
             }
         }
@@ -1223,6 +1295,7 @@ pub mod message {
                 Message::FlowMod(flow_mod) => FlowMod::marshal(flow_mod, bytes),
                 Message::PacketIn(packet_in) => PacketIn::marshal(packet_in, bytes),
                 Message::PortStatus(sts) => PortStatus::marshal(sts, bytes),
+                Message::BarrierRequest | Message::BarrierReply => (),
                 _ => (),
             }
         }
@@ -1259,10 +1332,9 @@ pub mod message {
                     println!("PortStatus");
                     Message::PortStatus(PortStatus::parse(buf))
                 }
-                t => {
-                    println!("{}", t as u8);
-                    Message::Hello
-                }
+                MsgCode::BarrierReq => Message::BarrierRequest,
+                MsgCode::BarrierResp => Message::BarrierReply,
+                code => panic!("Unexpected message type {:?}", code),
             };
             (header.xid(), msg)
         }
