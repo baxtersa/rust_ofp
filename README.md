@@ -6,6 +6,8 @@ OpenFlow 1.0 protocol and controller in Rust.
 
 I'm drawing heavily on inspiration and code structure from the [frenetic-lang](https://github.com/frenetic-lang) project, due to my familiarity with it. I hope that Rust will enable a more natural implementation of the low-level protocol than OCaml + CStructs, and true parallelism will allow for higher controller performance and a simpler event loop.
 
+See my blog post on the crate [here](http://baxtersa.github.io/2016/12/30/rust-openflow-0x01.html)!
+
 Building
 ---
 `rust_ofp` is composed of a Rust library implementing the OpenFlow 1.0 protocol, and a `rust_ofp_controller` binary that currently acts as little more than an echo server for SDN configurations. It can be built and run by the normal means for Rust projects.
