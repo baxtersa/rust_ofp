@@ -914,7 +914,7 @@ impl Payload {
     fn marshal(payload: Payload, bytes: &mut Vec<u8>) {
         match payload {
             Payload::Buffered(_, buf) |
-            Payload::NotBuffered(buf) => bytes.write_all(&buf).unwrap()
+            Payload::NotBuffered(buf) => bytes.write_all(&buf).unwrap(),
         }
     }
 }
@@ -975,6 +975,7 @@ pub struct PacketOut {
     pub apply_actions: Vec<Action>,
 }
 
+#[repr(packed)]
 struct OfpPacketOut(u32, u16, u16);
 
 impl MessageType for PacketOut {
@@ -1013,9 +1014,10 @@ impl MessageType for PacketOut {
 
     fn marshal(po: PacketOut, bytes: &mut Vec<u8>) {
         bytes.write_i32::<BigEndian>(match po.output_payload {
-            Payload::Buffered(n, _) => n as i32,
-            Payload::NotBuffered(_) => -1,
-        }).unwrap();
+                Payload::Buffered(n, _) => n as i32,
+                Payload::NotBuffered(_) => -1,
+            })
+            .unwrap();
         match po.port_id {
             Some(id) => PseudoPort::marshal(PseudoPort::PhysicalPort(id), bytes),
             None => bytes.write_u16::<BigEndian>(OfpPort::OFPPNone as u16).unwrap(),
@@ -1025,6 +1027,75 @@ impl MessageType for PacketOut {
             Action::marshal(act, bytes);
         }
         Payload::marshal(po.output_payload, bytes)
+    }
+}
+
+/// Reason a flow was removed from a switch
+#[repr(u8)]
+pub enum FlowRemovedReason {
+    IdleTimeout,
+    HardTimeout,
+    Delete,
+}
+
+/// Flow removed (datapath -> controller)
+pub struct FlowRemoved {
+    pub pattern: Pattern,
+    pub cookie: i64,
+    pub priority: u16,
+    pub reason: FlowRemovedReason,
+    pub duration_sec: u32,
+    pub duration_nsec: u32,
+    pub idle_timeout: Timeout,
+    pub packet_count: u64,
+    pub byte_count: u64,
+}
+
+#[repr(packed)]
+struct OfpFlowRemoved(u64, u16, u8, u8, u32, u32, u16, u16, u64, u64);
+
+impl MessageType for FlowRemoved {
+    fn size_of(f: &FlowRemoved) -> usize {
+        Pattern::size_of(&f.pattern) + size_of::<OfpFlowRemoved>()
+    }
+
+    fn parse(buf: &[u8]) -> FlowRemoved {
+        let mut bytes = Cursor::new(buf.to_vec());
+        let pattern = Pattern::parse(&mut bytes);
+        let cookie = bytes.read_i64::<BigEndian>().unwrap();
+        let priority = bytes.read_u16::<BigEndian>().unwrap();
+        let reason = unsafe { transmute(bytes.read_u8().unwrap()) };
+        bytes.consume(1);
+        let duration_sec = bytes.read_u32::<BigEndian>().unwrap();
+        let duration_nsec = bytes.read_u32::<BigEndian>().unwrap();
+        let idle = Timeout::of_int(bytes.read_u16::<BigEndian>().unwrap());
+        bytes.consume(2);
+        let packet_count = bytes.read_u64::<BigEndian>().unwrap();
+        let byte_count = bytes.read_u64::<BigEndian>().unwrap();
+        FlowRemoved {
+            pattern: pattern,
+            cookie: cookie,
+            priority: priority,
+            reason: reason,
+            duration_sec: duration_sec,
+            duration_nsec: duration_nsec,
+            idle_timeout: idle,
+            packet_count: packet_count,
+            byte_count: byte_count,
+        }
+    }
+
+    fn marshal(f: FlowRemoved, bytes: &mut Vec<u8>) {
+        Pattern::marshal(f.pattern, bytes);
+        bytes.write_i64::<BigEndian>(f.cookie).unwrap();
+        bytes.write_u16::<BigEndian>(f.priority).unwrap();
+        bytes.write_u8(f.reason as u8).unwrap();
+        bytes.write_u8(0).unwrap();
+        bytes.write_u32::<BigEndian>(f.duration_sec).unwrap();
+        bytes.write_u32::<BigEndian>(f.duration_nsec).unwrap();
+        bytes.write_u16::<BigEndian>(Timeout::to_int(f.idle_timeout)).unwrap();
+        bytes.write_u64::<BigEndian>(f.packet_count).unwrap();
+        bytes.write_u64::<BigEndian>(f.byte_count).unwrap();
     }
 }
 
@@ -1216,7 +1287,7 @@ impl MessageType for PortStatus {
 /// Encapsulates handling of messages implementing `MessageType` trait.
 pub mod message {
     use super::*;
-    use byteorder::WriteBytesExt;
+    use std::io::Write;
     use ofp_header::OfpHeader;
 
     /// Abstractions of OpenFlow messages mapping to message codes.
@@ -1228,7 +1299,9 @@ pub mod message {
         FeaturesReply(SwitchFeatures),
         FlowMod(FlowMod),
         PacketIn(PacketIn),
+        FlowRemoved(FlowRemoved),
         PortStatus(PortStatus),
+        PacketOut(PacketOut),
         BarrierRequest,
         BarrierReply,
     }
@@ -1243,11 +1316,12 @@ pub mod message {
                 Message::FeaturesReq => MsgCode::FeaturesReq,
                 Message::FeaturesReply(_) => MsgCode::FeaturesResp,
                 Message::FlowMod(_) => MsgCode::FlowMod,
-                Message::PortStatus(_) => MsgCode::PortStatus,
                 Message::PacketIn(_) => MsgCode::PacketIn,
+                Message::FlowRemoved(_) => MsgCode::FlowRemoved,
+                Message::PortStatus(_) => MsgCode::PortStatus,
+                Message::PacketOut(_) => MsgCode::PacketOut,
                 Message::BarrierRequest => MsgCode::BarrierReq,
                 Message::BarrierReply => MsgCode::BarrierResp,
-                // _ => MsgCode::Hello
             }
         }
 
@@ -1262,7 +1336,9 @@ pub mod message {
                 Message::PacketIn(ref packet_in) => {
                     OfpHeader::size() + PacketIn::size_of(packet_in)
                 }
+                Message::FlowRemoved(ref flow) => OfpHeader::size() + FlowRemoved::size_of(flow),
                 Message::PortStatus(ref ps) => OfpHeader::size() + PortStatus::size_of(ps),
+                Message::PacketOut(ref po) => OfpHeader::size() + PacketOut::size_of(po),
                 Message::BarrierRequest | Message::BarrierReply => OfpHeader::size(),
                 _ => 0,
             }
@@ -1281,20 +1357,14 @@ pub mod message {
         fn marshal_body(msg: Message, bytes: &mut Vec<u8>) {
             match msg {
                 Message::Hello => (),
-                Message::EchoReply(buf) => {
-                    for b in buf {
-                        bytes.write_u8(b).unwrap();
-                    }
-                }
-                Message::EchoRequest(buf) => {
-                    for b in buf {
-                        bytes.write_u8(b).unwrap();
-                    }
-                }
+                Message::EchoReply(buf) => bytes.write_all(&buf).unwrap(),
+                Message::EchoRequest(buf) => bytes.write_all(&buf).unwrap(),
                 Message::FeaturesReq => (),
                 Message::FlowMod(flow_mod) => FlowMod::marshal(flow_mod, bytes),
                 Message::PacketIn(packet_in) => PacketIn::marshal(packet_in, bytes),
+                Message::FlowRemoved(flow) => FlowRemoved::marshal(flow, bytes),
                 Message::PortStatus(sts) => PortStatus::marshal(sts, bytes),
+                Message::PacketOut(po) => PacketOut::marshal(po, bytes),
                 Message::BarrierRequest | Message::BarrierReply => (),
                 _ => (),
             }
@@ -1324,13 +1394,25 @@ pub mod message {
                     println!("FeaturesResp");
                     Message::FeaturesReply(SwitchFeatures::parse(buf))
                 }
+                MsgCode::FlowMod => {
+                    println!("FlowMod");
+                    Message::FlowMod(FlowMod::parse(buf))
+                }
                 MsgCode::PacketIn => {
                     println!("PacketIn");
                     Message::PacketIn(PacketIn::parse(buf))
                 }
+                MsgCode::FlowRemoved => {
+                    println!("FlowRemoved");
+                    Message::FlowRemoved(FlowRemoved::parse(buf))
+                }
                 MsgCode::PortStatus => {
                     println!("PortStatus");
                     Message::PortStatus(PortStatus::parse(buf))
+                }
+                MsgCode::PacketOut => {
+                    println!("PacketOut");
+                    Message::PacketOut(PacketOut::parse(buf))
                 }
                 MsgCode::BarrierReq => Message::BarrierRequest,
                 MsgCode::BarrierResp => Message::BarrierReply,
