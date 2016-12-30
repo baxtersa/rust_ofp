@@ -9,6 +9,7 @@ use rust_ofp::openflow0x01::MsgCode;
 /// The first fields of every OpenFlow message, no matter the protocol version.
 /// This is parsed to determine version and length of the remaining message, so that
 /// it can be properly handled.
+#[repr(packed)]
 pub struct OfpHeader {
     version: u8,
     typ: u8,
