@@ -3,7 +3,9 @@
 
 extern crate byteorder;
 
+pub mod ofp_controller;
 pub mod ofp_header;
+pub mod ofp_message;
 pub mod openflow0x01;
 
 mod rust_ofp {
