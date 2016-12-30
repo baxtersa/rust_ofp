@@ -120,6 +120,7 @@
 <span id="76">76</span>
 <span id="77">77</span>
 <span id="78">78</span>
+<span id="79">79</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Cursor</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>::{<span class='ident'>size_of</span>, <span class='ident'>transmute</span>};
@@ -132,6 +133,7 @@
 <span class='doccomment'>/// The first fields of every OpenFlow message, no matter the protocol version.</span>
 <span class='doccomment'>/// This is parsed to determine version and length of the remaining message, so that</span>
 <span class='doccomment'>/// it can be properly handled.</span>
+<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>packed</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>OfpHeader</span> {
     <span class='ident'>version</span>: <span class='ident'>u8</span>,
     <span class='ident'>typ</span>: <span class='ident'>u8</span>,
