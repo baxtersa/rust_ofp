@@ -12,6 +12,12 @@ readme = "README.md"
 keywords = ["SDN", "Networking", "OpenFlow"]
 license = "MIT"
 
+exclude = [
+        "scripts/*",
+        ".travis.yml",
+        ".gitignore",
+]
+
 [lib]
 name = "rust_ofp"
 path = "src/lib.rs"
