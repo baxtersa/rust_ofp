@@ -1289,8 +1289,9 @@ pub mod message {
     use super::*;
     use std::io::Write;
     use ofp_header::OfpHeader;
+    use ofp_message::OfpMessage;
 
-    /// Abstractions of OpenFlow messages mapping to message codes.
+    /// Abstractions of OpenFlow 1.0 messages mapping to message codes.
     pub enum Message {
         Hello,
         EchoRequest(Vec<u8>),
@@ -1325,7 +1326,25 @@ pub mod message {
             }
         }
 
-        /// Return the byte-size of a `Message`.
+        /// Marshal the OpenFlow message `msg`.
+        fn marshal_body(msg: Message, bytes: &mut Vec<u8>) {
+            match msg {
+                Message::Hello => (),
+                Message::EchoReply(buf) => bytes.write_all(&buf).unwrap(),
+                Message::EchoRequest(buf) => bytes.write_all(&buf).unwrap(),
+                Message::FeaturesReq => (),
+                Message::FlowMod(flow_mod) => FlowMod::marshal(flow_mod, bytes),
+                Message::PacketIn(packet_in) => PacketIn::marshal(packet_in, bytes),
+                Message::FlowRemoved(flow) => FlowRemoved::marshal(flow, bytes),
+                Message::PortStatus(sts) => PortStatus::marshal(sts, bytes),
+                Message::PacketOut(po) => PacketOut::marshal(po, bytes),
+                Message::BarrierRequest | Message::BarrierReply => (),
+                _ => (),
+            }
+        }
+    }
+
+    impl OfpMessage for Message {
         fn size_of(msg: &Message) -> usize {
             match *msg {
                 Message::Hello => OfpHeader::size(),
@@ -1344,7 +1363,6 @@ pub mod message {
             }
         }
 
-        /// Create an `OfpHeader` for the given `xid` and `msg`.
         fn header_of(xid: u32, msg: &Message) -> OfpHeader {
             let sizeof_buf = Self::size_of(&msg);
             OfpHeader::new(0x01,
@@ -1353,25 +1371,7 @@ pub mod message {
                            xid)
         }
 
-        /// Marshal the OpenFlow message `msg`.
-        fn marshal_body(msg: Message, bytes: &mut Vec<u8>) {
-            match msg {
-                Message::Hello => (),
-                Message::EchoReply(buf) => bytes.write_all(&buf).unwrap(),
-                Message::EchoRequest(buf) => bytes.write_all(&buf).unwrap(),
-                Message::FeaturesReq => (),
-                Message::FlowMod(flow_mod) => FlowMod::marshal(flow_mod, bytes),
-                Message::PacketIn(packet_in) => PacketIn::marshal(packet_in, bytes),
-                Message::FlowRemoved(flow) => FlowRemoved::marshal(flow, bytes),
-                Message::PortStatus(sts) => PortStatus::marshal(sts, bytes),
-                Message::PacketOut(po) => PacketOut::marshal(po, bytes),
-                Message::BarrierRequest | Message::BarrierReply => (),
-                _ => (),
-            }
-        }
-
-        /// Returns a `u8` buffer containing a marshaled OpenFlow header and the message `msg`.
-        pub fn marshal(xid: u32, msg: Message) -> Vec<u8> {
+        fn marshal(xid: u32, msg: Message) -> Vec<u8> {
             let hdr = Self::header_of(xid, &msg);
             let mut bytes = vec![];
             OfpHeader::marshal(&mut bytes, hdr);
@@ -1379,9 +1379,7 @@ pub mod message {
             bytes
         }
 
-        /// Returns a pair `(u32, Message)` of the transaction id and OpenFlow message parsed from
-        /// the given OpenFlow header `header`, and buffer `buf`.
-        pub fn parse(header: &OfpHeader, buf: &[u8]) -> (u32, Message) {
+        fn parse(header: &OfpHeader, buf: &[u8]) -> (u32, Message) {
             let typ = header.type_code();
             let msg = match typ {
                 MsgCode::Hello => {
