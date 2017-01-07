@@ -886,6 +886,7 @@ impl MessageType for FlowMod {
 }
 
 /// The data associated with a packet received by the controller.
+#[derive(Debug)]
 pub enum Payload {
     Buffered(u32, Vec<u8>),
     NotBuffered(Vec<u8>),
@@ -909,6 +910,7 @@ impl Payload {
 
 /// The reason a packet arrives at the controller.
 #[repr(u8)]
+#[derive(Debug)]
 pub enum PacketInReason {
     NoMatch,
     ExplicitSend,
@@ -916,6 +918,7 @@ pub enum PacketInReason {
 
 
 /// Represents packets received by the datapath and sent to the controller.
+#[derive(Debug)]
 pub struct PacketIn {
     pub input_payload: Payload,
     pub total_len: u16,
@@ -1278,6 +1281,7 @@ pub mod message {
     use std::io::Write;
     use ofp_header::OfpHeader;
     use ofp_message::OfpMessage;
+    use packet::Packet;
 
     /// Abstractions of OpenFlow 1.0 messages mapping to message codes.
     pub enum Message {
@@ -1423,6 +1427,14 @@ pub mod message {
             out_port: None,
             apply_to_packet: None,
             check_overlap: false,
+        }
+    }
+
+    /// Parse a payload buffer into a network level packet.
+    pub fn parse_payload(p: &Payload) -> Packet {
+        match *p {
+            Payload::Buffered(_, ref b) |
+            Payload::NotBuffered(ref b) => Packet::parse(&b),
         }
     }
 }
