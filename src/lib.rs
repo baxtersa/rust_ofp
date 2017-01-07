@@ -3,6 +3,7 @@
 
 extern crate byteorder;
 
+mod bits;
 pub mod ofp_controller;
 pub mod ofp_header;
 pub mod ofp_message;

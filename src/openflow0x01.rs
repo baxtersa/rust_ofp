@@ -3,6 +3,8 @@ use std::mem::{size_of, transmute};
 
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
+use rust_ofp::bits::*;
+
 /// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
 #[repr(u8)]
 #[derive(Copy, Clone, Debug)]
@@ -39,20 +41,6 @@ pub trait MessageType {
     fn parse(buf: &[u8]) -> Self;
     /// Marshal a message into a `u8` buffer.
     fn marshal(Self, &mut Vec<u8>);
-}
-
-/// Set bit `bit` of `x` on if `toggle` is true, otherwise off.
-fn bit(bit: u64, x: u64, toggle: bool) -> u64 {
-    if toggle {
-        x | (1 << bit)
-    } else {
-        x & !(1 << bit)
-    }
-}
-
-/// Test whether bit `bit` of `x` is set.
-fn test_bit(bit: u64, x: u64) -> bool {
-    (x >> bit) & 1 == 1
 }
 
 pub struct Mask<T> {
