@@ -69,7 +69,9 @@ fn main() {
     let listener = TcpListener::bind(("127.0.0.1", 6633)).unwrap();
     for stream in listener.incoming() {
         match stream {
-            Ok(mut stream) => DropController::handle_client_connected(&mut stream),
+            Ok(mut stream) => {
+                std::thread::spawn(move || LearningSwitch::handle_client_connected(&mut stream));
+            }
             Err(_) => {
                 // connection failed
                 panic!("Connection failed")
