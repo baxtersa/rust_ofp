@@ -29,8 +29,12 @@ pub mod openflow0x01 {
         phantom: PhantomData<Cntl>,
     }
 
-    impl <Cntl: OF0x01Controller> ThreadState<Cntl> {
-        fn process_message(&mut self, xid: u32, msg: Message, stream: &mut TcpStream) {
+    impl<Cntl: OF0x01Controller> ThreadState<Cntl> {
+        fn process_message(&mut self,
+                           cntl: &mut Cntl,
+                           xid: u32,
+                           msg: Message,
+                           stream: &mut TcpStream) {
             match msg {
                 Message::Hello => Cntl::send_message(xid, Message::FeaturesReq, stream),
                 Message::EchoRequest(bytes) => {
@@ -43,11 +47,11 @@ pub mod openflow0x01 {
                         panic!("Switch connection already received.")
                     }
                     self.switch_id = Some(feats.datapath_id);
-                    Cntl::switch_connected(feats.datapath_id, feats, stream)
+                    Cntl::switch_connected(cntl, feats.datapath_id, feats, stream)
                 }
                 Message::FlowMod(_) => (),
                 Message::PacketIn(pkt) => {
-                    Cntl::packet_in(self.switch_id.unwrap(), xid, pkt, stream)
+                    Cntl::packet_in(cntl, self.switch_id.unwrap(), xid, pkt, stream)
                 }
                 Message::FlowRemoved(_) |
                 Message::PortStatus(_) |
@@ -57,8 +61,8 @@ pub mod openflow0x01 {
             }
         }
 
-        fn switch_disconnected(&self) {
-            Cntl::switch_disconnected(self.switch_id.unwrap())
+        fn switch_disconnected(&self, cntl: &mut Cntl) {
+            Cntl::switch_disconnected(cntl, self.switch_id.unwrap())
         }
     }
 
@@ -66,15 +70,17 @@ pub mod openflow0x01 {
     ///
     /// OpenFlow 1.0-specific API for communicating between a controller and the dataplane.
     pub trait OF0x01Controller: OfpController<Message = Message> {
+        /// Create a new Controller.
+        fn new() -> Self;
         /// Callback invoked with `sw` when a switch with identifier `sw` connects to
         /// the controller.
-        fn switch_connected(sw: u64, feats: SwitchFeatures, stream: &mut TcpStream);
+        fn switch_connected(&mut self, sw: u64, feats: SwitchFeatures, stream: &mut TcpStream);
         /// Callback invoked with `sw` when a switch with identifier `sw` disconnects
         /// from the controller.
-        fn switch_disconnected(sw: u64);
+        fn switch_disconnected(&mut self, sw: u64);
         /// Callback invoked when a packet `pkt` with transaction ID `xid` from
         /// switch `sw` arrives at the controller.
-        fn packet_in(sw: u64, xid: u32, pkt: PacketIn, stream: &mut TcpStream);
+        fn packet_in(&mut self, sw: u64, xid: u32, pkt: PacketIn, stream: &mut TcpStream);
 
         /// Send packet `pkt` with transaction ID `xid` to switch `sw` from the controller.
         fn send_packet_out(_: u64, xid: u32, pkt: PacketOut, stream: &mut TcpStream) {
@@ -102,10 +108,14 @@ pub mod openflow0x01 {
         }
 
         fn handle_client_connected(stream: &mut TcpStream) {
+            let mut cntl = Controller::new();
             Controller::send_message(0, Message::Hello, stream);
 
             let mut buf = [0u8; 8];
-            let mut thread_state = ThreadState::<Self> { switch_id: None, phantom: PhantomData };
+            let mut thread_state = ThreadState::<Self> {
+                switch_id: None,
+                phantom: PhantomData,
+            };
 
             loop {
                 let res = stream.read(&mut buf);
@@ -116,7 +126,7 @@ pub mod openflow0x01 {
                         let mut message_buf = vec![0; message_len];
                         let _ = stream.read(&mut message_buf);
                         let (xid, body) = Message::parse(&header, &message_buf);
-                        thread_state.process_message(xid, body, stream)
+                        thread_state.process_message(&mut cntl, xid, body, stream)
                     }
                     Ok(_) => {
                         println!("Connection closed reading header.");
@@ -124,7 +134,7 @@ pub mod openflow0x01 {
                     }
                     Err(e) => {
                         println!("{}", e);
-                        thread_state.switch_disconnected()
+                        thread_state.switch_disconnected(&mut cntl)
                     }
                 }
             }
