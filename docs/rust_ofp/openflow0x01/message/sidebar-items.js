@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Message","Abstractions of OpenFlow 1.0 messages mapping to message codes."]],"fn":[["add_flow","Return a `FlowMod` adding a flow parameterized by the given `priority`, `pattern`, and `actions`."]]});
+initSidebarItems({"enum":[["Message","Abstractions of OpenFlow 1.0 messages mapping to message codes."]],"fn":[["add_flow","Return a `FlowMod` adding a flow parameterized by the given `priority`, `pattern`, and `actions`."],["parse_payload","Parse a payload buffer into a network level packet."]]});

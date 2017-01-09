@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["ofp_controller",""],["ofp_header",""],["ofp_message",""],["openflow0x01",""]]});
+initSidebarItems({"mod":[["ofp_controller",""],["ofp_header",""],["ofp_message",""],["openflow0x01",""],["packet",""]]});

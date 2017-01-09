@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["OfpController","OpenFlow Controller"]]});
+initSidebarItems({"mod":[["openflow0x01",""]],"trait":[["OfpController","OpenFlow Controller"]]});
