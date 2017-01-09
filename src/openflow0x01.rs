@@ -3,7 +3,7 @@ use std::mem::{size_of, transmute};
 
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
-use rust_ofp::bits::*;
+use bits::*;
 
 /// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
 #[repr(u8)]

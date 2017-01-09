@@ -2,7 +2,7 @@ use std::io::{BufRead, Cursor, Read};
 use std::mem::size_of;
 use byteorder::{BigEndian, ReadBytesExt};
 
-use rust_ofp::bits::test_bit;
+use bits::test_bit;
 
 /// TCP Header flags.
 pub struct TcpFlags {
