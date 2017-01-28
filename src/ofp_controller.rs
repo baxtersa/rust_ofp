@@ -39,6 +39,7 @@ pub mod openflow0x01 {
                            stream: &mut TcpStream) {
             match msg {
                 Message::Hello => Cntl::send_message(xid, Message::FeaturesReq, stream),
+                Message::Error(err) => println!("Error: {:?}", err),
                 Message::EchoRequest(bytes) => {
                     Cntl::send_message(xid, Message::EchoReply(bytes), stream)
                 }

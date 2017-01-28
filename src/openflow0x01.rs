@@ -1275,6 +1275,119 @@ impl MessageType for PortStatus {
     fn marshal(_: PortStatus, _: &mut Vec<u8>) {}
 }
 
+/// Reason Hello failed.
+#[repr(u16)]
+#[derive(Debug)]
+pub enum HelloFailed {
+    Incompatible,
+    EPerm,
+}
+
+/// Reason the controller made a bad request to a switch.
+#[repr(u16)]
+#[derive(Debug)]
+pub enum BadRequest {
+    BadVersion,
+    BadType,
+    BadStat,
+    BadVendor,
+    BadSubType,
+    EPerm,
+    BadLen,
+    BufferEmpty,
+    BufferUnknown,
+}
+
+/// Reason the controller action failed.
+#[repr(u16)]
+#[derive(Debug)]
+pub enum BadAction {
+    BadType,
+    BadLen,
+    BadVendor,
+    BadVendorType,
+    BadOutPort,
+    BadArgument,
+    EPerm,
+    TooMany,
+    BadQueue,
+}
+
+/// Reason a FlowMod from the controller failed.
+#[repr(u16)]
+#[derive(Debug)]
+pub enum FlowModFailed {
+    AllTablesFull,
+    Overlap,
+    EPerm,
+    BadEmergTimeout,
+    BadCommand,
+    Unsupported,
+}
+
+/// Reason a PortMod from the controller failed.
+#[repr(u16)]
+#[derive(Debug)]
+pub enum PortModFailed {
+    BadPort,
+    BadHwAddr,
+}
+
+/// Reason a queue operation from the controller failed.
+#[repr(u16)]
+#[derive(Debug)]
+pub enum QueueOpFailed {
+    BadPort,
+    BadQueue,
+    EPerm,
+}
+
+/// High-level type of OpenFlow error
+#[derive(Debug)]
+pub enum ErrorType {
+    HelloFailed(HelloFailed),
+    BadRequest(BadRequest),
+    BadAction(BadAction),
+    FlowModFailed(FlowModFailed),
+    PortModFailed(PortModFailed),
+    QueueOpFailed(QueueOpFailed),
+}
+
+/// Error message (datapath -> controller)
+#[derive(Debug)]
+pub enum Error {
+    Error(ErrorType, Vec<u8>),
+}
+
+#[repr(packed)]
+struct OfpErrorMsg(u16, u16);
+
+impl MessageType for Error {
+    fn size_of(err: &Error) -> usize {
+        match *err {
+            Error::Error(_, ref body) => size_of::<OfpErrorMsg>() + body.len(),
+        }
+    }
+
+    fn parse(buf: &[u8]) -> Error {
+        let mut bytes = Cursor::new(buf.to_vec());
+        let error_type = bytes.read_u16::<BigEndian>().unwrap();
+        let error_code = bytes.read_u16::<BigEndian>().unwrap();
+        let code = match error_type {
+            0 => ErrorType::HelloFailed(unsafe { transmute(error_code) }),
+            1 => ErrorType::BadRequest(unsafe { transmute(error_code) }),
+            2 => ErrorType::BadAction(unsafe { transmute(error_code) }),
+            3 => ErrorType::FlowModFailed(unsafe { transmute(error_code) }),
+            4 => ErrorType::PortModFailed(unsafe { transmute(error_code) }),
+            5 => ErrorType::QueueOpFailed(unsafe { transmute(error_code) }),
+            _ => panic!("bad ErrorType in Error {}", error_type),
+        };
+        Error::Error(code, bytes.into_inner())
+    }
+
+    fn marshal(_: Error, _: &mut Vec<u8>) {}
+}
+
 /// Encapsulates handling of messages implementing `MessageType` trait.
 pub mod message {
     use super::*;
@@ -1286,6 +1399,7 @@ pub mod message {
     /// Abstractions of OpenFlow 1.0 messages mapping to message codes.
     pub enum Message {
         Hello,
+        Error(Error),
         EchoRequest(Vec<u8>),
         EchoReply(Vec<u8>),
         FeaturesReq,
@@ -1304,6 +1418,7 @@ pub mod message {
         fn msg_code_of_message(msg: &Message) -> MsgCode {
             match *msg {
                 Message::Hello => MsgCode::Hello,
+                Message::Error(_) => MsgCode::Error,
                 Message::EchoRequest(_) => MsgCode::EchoReq,
                 Message::EchoReply(_) => MsgCode::EchoResp,
                 Message::FeaturesReq => MsgCode::FeaturesReq,
@@ -1322,6 +1437,7 @@ pub mod message {
         fn marshal_body(msg: Message, bytes: &mut Vec<u8>) {
             match msg {
                 Message::Hello => (),
+                Message::Error(buf) => Error::marshal(buf, bytes),
                 Message::EchoReply(buf) => bytes.write_all(&buf).unwrap(),
                 Message::EchoRequest(buf) => bytes.write_all(&buf).unwrap(),
                 Message::FeaturesReq => (),
@@ -1340,6 +1456,7 @@ pub mod message {
         fn size_of(msg: &Message) -> usize {
             match *msg {
                 Message::Hello => OfpHeader::size(),
+                Message::Error(ref err) => Error::size_of(err),
                 Message::EchoRequest(ref buf) => OfpHeader::size() + buf.len(),
                 Message::EchoReply(ref buf) => OfpHeader::size() + buf.len(),
                 Message::FeaturesReq => OfpHeader::size(),
@@ -1377,6 +1494,10 @@ pub mod message {
                 MsgCode::Hello => {
                     println!("Hello!");
                     Message::Hello
+                }
+                MsgCode::Error => {
+                    println!("Error");
+                    Message::Error(Error::parse(buf))
                 }
                 MsgCode::EchoReq => Message::EchoRequest(buf.to_vec()),
                 MsgCode::EchoResp => Message::EchoReply(buf.to_vec()),
