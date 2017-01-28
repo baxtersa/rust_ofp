@@ -417,7 +417,7 @@ pub enum Action {
 }
 
 #[repr(packed)]
-struct OfpActionHeader(u16, u16, [u8; 4]);
+struct OfpActionHeader(u16, u16);
 
 #[repr(packed)]
 struct OfpActionOutput(u16, u16);
