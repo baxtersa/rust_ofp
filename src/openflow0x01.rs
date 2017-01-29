@@ -764,7 +764,8 @@ impl MessageType for SwitchFeatures {
         };
         let ports = {
             let mut v = vec![];
-            let num_ports = bytes.clone().into_inner().len() / size_of::<OfpPhyPort>();
+            let num_ports = bytes.clone().fill_buf().unwrap().to_vec().len() /
+                            size_of::<OfpPhyPort>();
             for _ in 0..num_ports {
                 v.push(PortDesc::parse(&mut bytes))
             }
@@ -953,10 +954,10 @@ impl MessageType for PacketIn {
         let port = bytes.read_u16::<BigEndian>().unwrap();
         let reason = unsafe { transmute(bytes.read_u8().unwrap()) };
         bytes.consume(1);
-        let pk = bytes;
+        let pk = bytes.fill_buf().unwrap().to_vec();
         let payload = match buf_id {
-            None => Payload::NotBuffered(pk.into_inner()),
-            Some(n) => Payload::Buffered(n as u32, pk.into_inner()),
+            None => Payload::NotBuffered(pk),
+            Some(n) => Payload::Buffered(n as u32, pk),
         };
         PacketIn {
             input_payload: payload,
@@ -999,8 +1000,8 @@ impl MessageType for PacketOut {
         let actions = Action::parse_sequence(&mut actions_bytes);
         PacketOut {
             output_payload: match buf_id {
-                None => Payload::NotBuffered(bytes.into_inner()),
-                Some(n) => Payload::Buffered(n as u32, bytes.into_inner()),
+                None => Payload::NotBuffered(bytes.fill_buf().unwrap().to_vec()),
+                Some(n) => Payload::Buffered(n as u32, bytes.fill_buf().unwrap().to_vec()),
             },
             port_id: {
                 if in_port == OfpPort::OFPPNone as u16 {
@@ -1392,7 +1393,7 @@ impl MessageType for Error {
             5 => ErrorType::QueueOpFailed(unsafe { transmute(error_code) }),
             _ => panic!("bad ErrorType in Error {}", error_type),
         };
-        Error::Error(code, bytes.into_inner())
+        Error::Error(code, bytes.fill_buf().unwrap().to_vec())
     }
 
     fn marshal(_: Error, _: &mut Vec<u8>) {}

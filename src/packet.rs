@@ -369,24 +369,22 @@ impl Packet {
         };
         let nw_header = match typ {
             t if t == (EthTyp::EthTypIP as u16) => {
-                let bytes_ = bytes.get_ref().clone();
                 let ip = Ip::parse(&mut bytes);
                 if ip.is_some() {
                     Nw::Ip(ip.unwrap())
                 } else {
-                    Nw::Unparsable(typ, bytes_)
+                    Nw::Unparsable(typ, bytes.fill_buf().unwrap().to_vec())
                 }
             }
             t if t == (EthTyp::EthTypARP as u16) => {
-                let bytes_ = bytes.get_ref().clone();
                 let arp = Arp::parse(&mut bytes);
                 if arp.is_some() {
                     Nw::Arp(arp.unwrap())
                 } else {
-                    Nw::Unparsable(typ, bytes_)
+                    Nw::Unparsable(typ, bytes.fill_buf().unwrap().to_vec())
                 }
             }
-            _ => Nw::Unparsable(typ, bytes.into_inner()),
+            _ => Nw::Unparsable(typ, bytes.fill_buf().unwrap().to_vec()),
         };
         Packet {
             dl_src: mac_of_bytes(src),
