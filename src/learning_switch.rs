@@ -5,7 +5,7 @@ use rust_ofp::openflow0x01::{Action, PacketIn, PacketOut, Pattern, PseudoPort, S
 use rust_ofp::openflow0x01::message::{add_flow, parse_payload};
 
 pub struct LearningSwitch {
-    known_hosts: HashMap<[u8; 6], u16>,
+    known_hosts: HashMap<u64, u16>,
 }
 
 impl LearningSwitch {

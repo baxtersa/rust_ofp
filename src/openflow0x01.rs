@@ -4,6 +4,7 @@ use std::mem::{size_of, transmute};
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
 use bits::*;
+use packet::{bytes_of_mac, mac_of_bytes};
 
 /// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
 #[repr(u8)]
@@ -50,8 +51,8 @@ pub struct Mask<T> {
 
 /// Fields to match against flows.
 pub struct Pattern {
-    pub dl_src: Option<[u8; 6]>,
-    pub dl_dst: Option<[u8; 6]>,
+    pub dl_src: Option<u64>,
+    pub dl_dst: Option<u64>,
     pub dl_typ: Option<u16>,
     pub dl_vlan: Option<Option<u16>>,
     pub dl_vlan_pcp: Option<u8>,
@@ -189,7 +190,7 @@ impl Pattern {
             for i in 0..6 {
                 arr[i] = bytes.read_u8().unwrap();
             }
-            Some(arr)
+            Some(mac_of_bytes(arr))
         };
         let dl_dst = if w.dl_dst {
             None
@@ -198,7 +199,7 @@ impl Pattern {
             for i in 0..6 {
                 arr[i] = bytes.read_u8().unwrap();
             }
-            Some(arr)
+            Some(mac_of_bytes(arr))
         };
         let dl_vlan = if w.dl_vlan {
             None
@@ -284,15 +285,22 @@ impl Pattern {
         }
     }
 
+    fn if_word48(n: Option<u64>) -> u64 {
+        match n {
+            Some(n) => n,
+            None => 0,
+        }
+    }
+
     fn marshal(p: Pattern, bytes: &mut Vec<u8>) {
         let w = Pattern::wildcards_of_pattern(&p);
         Wildcards::marshal(w, bytes);
         bytes.write_u16::<BigEndian>(p.in_port.unwrap_or(0)).unwrap();
         for i in 0..6 {
-            bytes.write_u8(p.dl_src.unwrap_or([0; 6])[i]).unwrap();
+            bytes.write_u8(bytes_of_mac(Self::if_word48(p.dl_src))[i]).unwrap();
         }
         for i in 0..6 {
-            bytes.write_u8(p.dl_dst.unwrap_or([0; 6])[i]).unwrap();
+            bytes.write_u8(bytes_of_mac(Self::if_word48(p.dl_dst))[i]).unwrap();
         }
         let vlan = match p.dl_vlan {
             Some(Some(v)) => v,
@@ -406,8 +414,8 @@ pub enum Action {
     Output(PseudoPort),
     SetDlVlan(Option<u16>),
     SetDlVlanPcp(u8),
-    SetDlSrc([u8; 6]),
-    SetDlDst([u8; 6]),
+    SetDlSrc(u64),
+    SetDlDst(u64),
     SetNwSrc(u32),
     SetNwDst(u32),
     SetNwTos(u8),
@@ -528,7 +536,7 @@ impl Action {
                     dl_addr[i] = bytes.read_u8().unwrap();
                 }
                 bytes.consume(6);
-                Action::SetDlSrc(dl_addr)
+                Action::SetDlSrc(mac_of_bytes(dl_addr))
             }
             t if t == (OfpActionType::OFPATSetDlDst as u16) => {
                 let mut dl_addr: [u8; 6] = [0; 6];
@@ -536,7 +544,7 @@ impl Action {
                     dl_addr[i] = bytes.read_u8().unwrap();
                 }
                 bytes.consume(6);
-                Action::SetDlDst(dl_addr)
+                Action::SetDlDst(mac_of_bytes(dl_addr))
             }
             t if t == (OfpActionType::OFPATSetNwSrc as u16) => {
                 Action::SetNwSrc(bytes.read_u32::<BigEndian>().unwrap())
@@ -617,6 +625,7 @@ impl Action {
             }
             Action::SetDlSrc(mac) |
             Action::SetDlDst(mac) => {
+                let mac = bytes_of_mac(mac);
                 for i in 0..6 {
                     bytes.write_u8(mac[i]).unwrap();
                 }
@@ -1158,7 +1167,7 @@ pub struct PortConfig {
 /// Description of a physical port.
 pub struct PortDesc {
     pub port_no: u16,
-    pub hw_addr: i64,
+    pub hw_addr: u64,
     pub name: String,
     pub config: PortConfig,
     pub state: PortState,
@@ -1179,11 +1188,11 @@ impl PortDesc {
     fn parse(bytes: &mut Cursor<Vec<u8>>) -> PortDesc {
         let port_no = bytes.read_u16::<BigEndian>().unwrap();
         let hw_addr = {
-            let mut arr: [u8; 8] = [0; 8];
-            for i in 2..8 {
+            let mut arr: [u8; 6] = [0; 6];
+            for i in 0..6 {
                 arr[i] = bytes.read_u8().unwrap();
             }
-            unsafe { transmute(arr) }
+            mac_of_bytes(arr)
         };
         let name = {
             let mut arr: [u8; 16] = [0; 16];

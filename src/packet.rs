@@ -7,9 +7,7 @@ use bits::test_bit;
 pub fn bytes_of_mac(addr: u64) -> [u8; 6] {
     let mut arr = [0; 6];
     for i in 0..6 {
-        let iso = 0xff0000000000 >> i;
-
-        arr[i] = ((iso & addr) >> (5 - i)) as u8;
+        arr[i] = ((addr >> (8 * i)) & 0xff) as u8;
     }
     arr
 }
@@ -290,8 +288,8 @@ impl Ip {
 
 /// Address resolution protocol (ARP) packet payload.
 pub enum Arp {
-    Query([u8; 6], u32, u32),
-    Reply([u8; 6], u32, [u8; 6], u32),
+    Query(u64, u32, u32),
+    Reply(u64, u32, u64, u32),
 }
 
 #[repr(packed)]
@@ -315,8 +313,8 @@ impl Arp {
         }
         let tpa = bytes.read_u32::<BigEndian>().unwrap();
         match oper {
-            0x0001 => Some(Arp::Query(sha, spa, tpa)),
-            0x0002 => Some(Arp::Reply(sha, spa, tha, tpa)),
+            0x0001 => Some(Arp::Query(mac_of_bytes(sha), spa, tpa)),
+            0x0002 => Some(Arp::Reply(mac_of_bytes(sha), spa, mac_of_bytes(tha), tpa)),
             _ => None,
         }
     }
@@ -331,8 +329,8 @@ pub enum Nw {
 
 /// Represents a packet at the ethernet protocol level.
 pub struct Packet {
-    pub dl_src: [u8; 6],
-    pub dl_dst: [u8; 6],
+    pub dl_src: u64,
+    pub dl_dst: u64,
     pub dl_vlan: Option<u16>,
     pub dl_vlan_dei: bool,
     pub dl_vlan_pcp: u8,
@@ -391,8 +389,8 @@ impl Packet {
             _ => Nw::Unparsable(typ, bytes.into_inner()),
         };
         Packet {
-            dl_src: src,
-            dl_dst: dst,
+            dl_src: mac_of_bytes(src),
+            dl_dst: mac_of_bytes(dst),
             dl_vlan: tag,
             dl_vlan_dei: dei,
             dl_vlan_pcp: pcp,
