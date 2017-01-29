@@ -967,7 +967,17 @@ impl MessageType for PacketIn {
         }
     }
 
-    fn marshal(_: PacketIn, _: &mut Vec<u8>) {}
+    fn marshal(pi: PacketIn, bytes: &mut Vec<u8>) {
+        let buf_id = match pi.input_payload {
+            Payload::NotBuffered(_) => -1,
+            Payload::Buffered(n, _) => n as i32,
+        };
+        bytes.write_i32::<BigEndian>(buf_id).unwrap();
+        bytes.write_u16::<BigEndian>(pi.total_len).unwrap();
+        bytes.write_u16::<BigEndian>(pi.port).unwrap();
+        bytes.write_u8(pi.reason as u8).unwrap();
+        Payload::marshal(pi.input_payload, bytes)
+    }
 }
 
 /// Represents packets sent from the controller.
