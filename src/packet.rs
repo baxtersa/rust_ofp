@@ -21,6 +21,7 @@ pub fn mac_of_bytes(addr: [u8; 6]) -> u64 {
 }
 
 /// TCP Header flags.
+#[derive(Debug)]
 pub struct TcpFlags {
     /// ECN-nonce concealment protection.
     pub ns: bool,
@@ -59,6 +60,7 @@ impl TcpFlags {
 }
 
 /// TCP frame of a packet.
+#[derive(Debug)]
 pub struct Tcp {
     pub src: u16,
     pub dst: u16,
@@ -108,6 +110,7 @@ impl Tcp {
 }
 
 /// UDP frame of a packet.
+#[derive(Debug)]
 pub struct Udp {
     pub src: u16,
     pub dst: u16,
@@ -139,6 +142,7 @@ impl Udp {
 }
 
 /// ICMP frame of a packet.
+#[derive(Debug)]
 pub struct Icmp {
     pub typ: u8,
     pub code: u8,
@@ -172,6 +176,7 @@ impl Icmp {
 /// Represents packets at the transport protocol level, which are encapsulated
 /// within the IPv4 payload. At present, we only support TCP, UDP, and ICMP
 /// explicitly; otherwise, the raw bytes and IPv4 protocol number are provided.
+#[derive(Debug)]
 pub enum Tp {
     Tcp(Tcp),
     Udp(Udp),
@@ -180,6 +185,7 @@ pub enum Tp {
 }
 
 /// The type of IPv4 flags.
+#[derive(Debug)]
 pub struct Flags {
     pub dont_fragment: bool,
     pub more_fragments: bool,
@@ -195,6 +201,7 @@ impl Flags {
 }
 
 /// IPv4 frame of a packet.
+#[derive(Debug)]
 pub struct Ip {
     pub tos: u8,
     pub ident: u16,
@@ -287,6 +294,7 @@ impl Ip {
 }
 
 /// Address resolution protocol (ARP) packet payload.
+#[derive(Debug)]
 pub enum Arp {
     Query(u64, u32, u32),
     Reply(u64, u32, u64, u32),
@@ -321,6 +329,7 @@ impl Arp {
 }
 
 /// Represents a packet at the network protocol level.
+#[derive(Debug)]
 pub enum Nw {
     Ip(Ip),
     Arp(Arp),
@@ -328,6 +337,7 @@ pub enum Nw {
 }
 
 /// Represents a packet at the ethernet protocol level.
+#[derive(Debug)]
 pub struct Packet {
     pub dl_src: u64,
     pub dl_dst: u64,
