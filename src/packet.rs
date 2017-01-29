@@ -92,8 +92,7 @@ impl Tcp {
         let window = bytes.read_u16::<BigEndian>().unwrap();
         let chksum = bytes.read_u16::<BigEndian>().unwrap();
         let urgent = bytes.read_u16::<BigEndian>().unwrap();
-        let mut payload = vec![0; bytes.get_ref().len()];
-        bytes.read_exact(&mut payload).unwrap();
+        let payload = bytes.fill_buf().unwrap().to_vec();
         Some(Tcp {
             src: src,
             dst: dst,
@@ -130,8 +129,7 @@ impl Udp {
         let src = bytes.read_u16::<BigEndian>().unwrap();
         let dst = bytes.read_u16::<BigEndian>().unwrap();
         let chksum = bytes.read_u16::<BigEndian>().unwrap();
-        let mut payload = vec![0; bytes.get_ref().len()];
-        bytes.read_exact(&mut payload).unwrap();
+        let payload = bytes.fill_buf().unwrap().to_vec();
         Some(Udp {
             src: src,
             dst: dst,
@@ -162,8 +160,7 @@ impl Icmp {
         let typ = bytes.read_u8().unwrap();
         let code = bytes.read_u8().unwrap();
         let chksum = bytes.read_u16::<BigEndian>().unwrap();
-        let mut payload = vec![0; bytes.get_ref().len()];
-        bytes.read_exact(&mut payload).unwrap();
+        let payload = bytes.fill_buf().unwrap().to_vec();
         Some(Icmp {
             typ: typ,
             code: code,
@@ -250,33 +247,30 @@ impl Ip {
         bytes.read_exact(&mut options).unwrap();
         let tp = match proto {
             t if t == (IpProto::IpICMP as u8) => {
-                let bytes_ = bytes.get_ref().clone();
                 let icmp = Icmp::parse(bytes);
                 if icmp.is_some() {
                     Tp::Icmp(icmp.unwrap())
                 } else {
-                    Tp::Unparsable(proto, bytes_)
+                    Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec())
                 }
             }
             t if t == (IpProto::IpTCP as u8) => {
-                let bytes_ = bytes.get_ref().clone();
                 let tcp = Tcp::parse(bytes);
                 if tcp.is_some() {
                     Tp::Tcp(tcp.unwrap())
                 } else {
-                    Tp::Unparsable(proto, bytes_)
+                    Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec())
                 }
             }
             t if t == (IpProto::IpUDP as u8) => {
-                let bytes_ = bytes.get_ref().clone();
                 let udp = Udp::parse(bytes);
                 if udp.is_some() {
                     Tp::Udp(udp.unwrap())
                 } else {
-                    Tp::Unparsable(proto, bytes_)
+                    Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec())
                 }
             }
-            _ => Tp::Unparsable(proto, bytes.get_ref().clone()),
+            _ => Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec()),
         };
         Some(Ip {
             tos: tos,

@@ -503,7 +503,7 @@ impl Action {
         actions.iter().fold(0, |acc, x| Action::size_of(x) + acc)
     }
 
-    fn _parse(bytes: &mut Cursor<Vec<u8>>) -> (&mut Cursor<Vec<u8>>, Action) {
+    fn _parse(bytes: &mut Cursor<Vec<u8>>) -> Action {
         let action_code = bytes.read_u16::<BigEndian>().unwrap();
         let _ = bytes.read_u16::<BigEndian>().unwrap();
         let action = match action_code {
@@ -575,16 +575,16 @@ impl Action {
             }
             t => panic!("Unrecognized OfpActionType {}", t),
         };
-        (bytes, action)
+        action
     }
 
     fn parse_sequence(bytes: &mut Cursor<Vec<u8>>) -> Vec<Action> {
         if bytes.get_ref().is_empty() {
             vec![]
         } else {
-            let (bytes_, action) = Action::_parse(bytes);
+            let action = Action::_parse(bytes);
             let mut v = vec![action];
-            v.append(&mut Action::parse_sequence(bytes_));
+            v.append(&mut Action::parse_sequence(bytes));
             v
         }
     }
@@ -764,8 +764,9 @@ impl MessageType for SwitchFeatures {
         };
         let ports = {
             let mut v = vec![];
-            let num_ports = bytes.clone().fill_buf().unwrap().to_vec().len() /
-                            size_of::<OfpPhyPort>();
+            let pos = bytes.position() as usize;
+            let rem = bytes.get_ref()[pos..].to_vec();
+            let num_ports = rem.len() / size_of::<OfpPhyPort>();
             for _ in 0..num_ports {
                 v.push(PortDesc::parse(&mut bytes))
             }
