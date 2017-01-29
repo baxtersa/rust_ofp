@@ -4,6 +4,24 @@ use byteorder::{BigEndian, ReadBytesExt};
 
 use bits::test_bit;
 
+pub fn bytes_of_mac(addr: u64) -> [u8; 6] {
+    let mut arr = [0; 6];
+    for i in 0..6 {
+        let iso = 0xff0000000000 >> i;
+
+        arr[i] = ((iso & addr) >> (5 - i)) as u8;
+    }
+    arr
+}
+
+pub fn mac_of_bytes(addr: [u8; 6]) -> u64 {
+    fn byte(u: &[u8; 6], i: usize) -> u64 {
+        u[i] as u64
+    };
+    (byte(&addr, 0) << 8 * 5) | (byte(&addr, 1) << 8 * 4) | (byte(&addr, 2) << 8 * 3) |
+    (byte(&addr, 3) << 8 * 2) | (byte(&addr, 4) << 8 * 1) | (byte(&addr, 5))
+}
+
 /// TCP Header flags.
 pub struct TcpFlags {
     /// ECN-nonce concealment protection.
