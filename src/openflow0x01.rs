@@ -943,6 +943,7 @@ impl MessageType for PacketIn {
         let total_len = bytes.read_u16::<BigEndian>().unwrap();
         let port = bytes.read_u16::<BigEndian>().unwrap();
         let reason = unsafe { transmute(bytes.read_u8().unwrap()) };
+        bytes.consume(1);
         let pk = bytes;
         let payload = match buf_id {
             None => Payload::NotBuffered(pk.into_inner()),
