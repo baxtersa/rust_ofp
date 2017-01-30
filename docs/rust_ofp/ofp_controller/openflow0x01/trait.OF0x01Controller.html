@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-48' class='srclink' href='../../../src/rust_ofp/src/ofp_controller.rs.html#75-103' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-90' class='srclink' href='../../../src/rust_ofp/src/ofp_controller.rs.html#75-103' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait OF0x01Controller: <a class='trait' href='../../../rust_ofp/ofp_controller/trait.OfpController.html' title='rust_ofp::ofp_controller::OfpController'>OfpController</a>&lt;Message=<a class='enum' href='../../../rust_ofp/openflow0x01/message/enum.Message.html' title='rust_ofp::openflow0x01::message::Message'>Message</a>&gt; {
     fn <a href='#tymethod.new' class='fnname'>new</a>() -&gt; Self;
     fn <a href='#tymethod.switch_connected' class='fnname'>switch_connected</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sw: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; feats: <a class='struct' href='../../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stream: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>);
@@ -80,7 +80,8 @@ Guarantees switch <code>sw</code> processes messages prior to barrier before mes
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    </ul><script type="text/javascript" async
+    <li><code>impl OF0x01Controller for <a class='struct' href='../../../rust_ofp/learning_switch/struct.LearningSwitch.html' title='rust_ofp::learning_switch::LearningSwitch'>LearningSwitch</a></code></li>
+</ul><script type="text/javascript" async
                          src="../../../implementors/rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.js">
                  </script></section>
     <section id='search' class="content hidden"></section>

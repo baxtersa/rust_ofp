@@ -63,58 +63,20 @@
 <span id="19">19</span>
 <span id="20">20</span>
 <span id="21">21</span>
-<span id="22">22</span>
-<span id="23">23</span>
-<span id="24">24</span>
-<span id="25">25</span>
-<span id="26">26</span>
-<span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
-<span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
-<span id="35">35</span>
-<span id="36">36</span>
-<span id="37">37</span>
-<span id="38">38</span>
-<span id="39">39</span>
-<span id="40">40</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>TcpListener</span>, <span class='ident'>TcpStream</span>};
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>TcpListener</span>;
 
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>rust_ofp</span>;
+<span class='kw'>use</span> <span class='ident'>rust_ofp</span>::<span class='ident'>learning_switch</span>::<span class='ident'>LearningSwitch</span>;
 <span class='kw'>use</span> <span class='ident'>rust_ofp</span>::<span class='ident'>ofp_controller</span>::<span class='ident'>OfpController</span>;
-<span class='kw'>use</span> <span class='ident'>rust_ofp</span>::<span class='ident'>ofp_controller</span>::<span class='ident'>openflow0x01</span>::<span class='ident'>OF0x01Controller</span>;
-<span class='kw'>use</span> <span class='ident'>rust_ofp</span>::<span class='ident'>openflow0x01</span>::{<span class='ident'>SwitchFeatures</span>, <span class='ident'>PacketIn</span>, <span class='ident'>Pattern</span>};
-<span class='kw'>use</span> <span class='ident'>rust_ofp</span>::<span class='ident'>openflow0x01</span>::<span class='ident'>message</span>::{<span class='ident'>add_flow</span>, <span class='ident'>Message</span>};
 
 <span class='kw'>fn</span> <span class='ident'>main</span>() {
-    <span class='kw'>struct</span> <span class='ident'>OF0x01</span>;
-    <span class='kw'>impl</span> <span class='ident'>OF0x01Controller</span> <span class='kw'>for</span> <span class='ident'>OF0x01</span> {
-        <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>OF0x01</span> {
-            <span class='ident'>OF0x01</span> {}
-        }
-
-        <span class='kw'>fn</span> <span class='ident'>switch_connected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: <span class='ident'>u64</span>, _: <span class='ident'>SwitchFeatures</span>, <span class='ident'>stream</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TcpStream</span>) {
-            <span class='kw'>let</span> <span class='ident'>prio</span> <span class='op'>=</span> <span class='number'>0</span>;
-            <span class='kw'>let</span> <span class='ident'>pat</span> <span class='op'>=</span> <span class='ident'>Pattern</span>::<span class='ident'>match_all</span>();
-            <span class='kw'>let</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='ident'>Message</span>::<span class='ident'>FlowMod</span>(<span class='ident'>add_flow</span>(<span class='ident'>prio</span>, <span class='ident'>pat</span>, <span class='macro'>vec</span><span class='macro'>!</span>[]));
-            <span class='self'>Self</span>::<span class='ident'>send_message</span>(<span class='number'>1000</span>, <span class='ident'>message</span>, <span class='ident'>stream</span>)
-        }
-
-        <span class='kw'>fn</span> <span class='ident'>switch_disconnected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: <span class='ident'>u64</span>) {}
-
-        <span class='kw'>fn</span> <span class='ident'>packet_in</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: <span class='ident'>u64</span>, _: <span class='ident'>u32</span>, _: <span class='ident'>PacketIn</span>, _: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TcpStream</span>) {}
-    }
-
     <span class='kw'>let</span> <span class='ident'>listener</span> <span class='op'>=</span> <span class='ident'>TcpListener</span>::<span class='ident'>bind</span>((<span class='string'>&quot;127.0.0.1&quot;</span>, <span class='number'>6633</span>)).<span class='ident'>unwrap</span>();
     <span class='kw'>for</span> <span class='ident'>stream</span> <span class='kw'>in</span> <span class='ident'>listener</span>.<span class='ident'>incoming</span>() {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>stream</span>);
         <span class='kw'>match</span> <span class='ident'>stream</span> {
             <span class='prelude-val'>Ok</span>(<span class='kw-2'>mut</span> <span class='ident'>stream</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> <span class='ident'>OF0x01</span>::<span class='ident'>handle_client_connected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stream</span>));
+                <span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> <span class='ident'>LearningSwitch</span>::<span class='ident'>handle_client_connected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stream</span>));
             }
             <span class='prelude-val'>Err</span>(_) <span class='op'>=&gt;</span> {
                 <span class='comment'>// connection failed</span>

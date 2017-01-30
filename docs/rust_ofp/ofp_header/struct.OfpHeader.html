@@ -47,13 +47,13 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-102' class='srclink' href='../../src/rust_ofp/src/ofp_header.rs.html#13-18' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-144' class='srclink' href='../../src/rust_ofp/src/ofp_header.rs.html#13-18' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct OfpHeader { /* fields omitted */ }</pre><div class='docblock'><p>OpenFlow Header</p>
 
 <p>The first fields of every OpenFlow message, no matter the protocol version.
 This is parsed to determine version and length of the remaining message, so that
 it can be properly handled.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-107' class='srclink' href='../../src/rust_ofp/src/ofp_header.rs.html#20-79' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-149' class='srclink' href='../../src/rust_ofp/src/ofp_header.rs.html#20-79' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(version: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, typ: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, length: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>, xid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a></code></span></h4>
 <div class='docblock'><p>Create an <code>OfpHeader</code> out of the arguments.</p>
 </div><h4 id='method.size' class='method'><span id='size.v' class='invisible'><code>fn <a href='#method.size' class='fnname'>size</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
