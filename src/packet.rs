@@ -4,7 +4,24 @@ use byteorder::{BigEndian, ReadBytesExt};
 
 use bits::test_bit;
 
+pub fn bytes_of_mac(addr: u64) -> [u8; 6] {
+    let mut arr = [0; 6];
+    for i in 0..6 {
+        arr[i] = ((addr >> (8 * i)) & 0xff) as u8;
+    }
+    arr
+}
+
+pub fn mac_of_bytes(addr: [u8; 6]) -> u64 {
+    fn byte(u: &[u8; 6], i: usize) -> u64 {
+        u[i] as u64
+    };
+    (byte(&addr, 0) << 8 * 5) | (byte(&addr, 1) << 8 * 4) | (byte(&addr, 2) << 8 * 3) |
+    (byte(&addr, 3) << 8 * 2) | (byte(&addr, 4) << 8 * 1) | (byte(&addr, 5))
+}
+
 /// TCP Header flags.
+#[derive(Debug)]
 pub struct TcpFlags {
     /// ECN-nonce concealment protection.
     pub ns: bool,
@@ -43,6 +60,7 @@ impl TcpFlags {
 }
 
 /// TCP frame of a packet.
+#[derive(Debug)]
 pub struct Tcp {
     pub src: u16,
     pub dst: u16,
@@ -74,8 +92,7 @@ impl Tcp {
         let window = bytes.read_u16::<BigEndian>().unwrap();
         let chksum = bytes.read_u16::<BigEndian>().unwrap();
         let urgent = bytes.read_u16::<BigEndian>().unwrap();
-        let mut payload = vec![0; bytes.get_ref().len()];
-        bytes.read_exact(&mut payload).unwrap();
+        let payload = bytes.fill_buf().unwrap().to_vec();
         Some(Tcp {
             src: src,
             dst: dst,
@@ -92,6 +109,7 @@ impl Tcp {
 }
 
 /// UDP frame of a packet.
+#[derive(Debug)]
 pub struct Udp {
     pub src: u16,
     pub dst: u16,
@@ -111,8 +129,7 @@ impl Udp {
         let src = bytes.read_u16::<BigEndian>().unwrap();
         let dst = bytes.read_u16::<BigEndian>().unwrap();
         let chksum = bytes.read_u16::<BigEndian>().unwrap();
-        let mut payload = vec![0; bytes.get_ref().len()];
-        bytes.read_exact(&mut payload).unwrap();
+        let payload = bytes.fill_buf().unwrap().to_vec();
         Some(Udp {
             src: src,
             dst: dst,
@@ -123,6 +140,7 @@ impl Udp {
 }
 
 /// ICMP frame of a packet.
+#[derive(Debug)]
 pub struct Icmp {
     pub typ: u8,
     pub code: u8,
@@ -142,8 +160,7 @@ impl Icmp {
         let typ = bytes.read_u8().unwrap();
         let code = bytes.read_u8().unwrap();
         let chksum = bytes.read_u16::<BigEndian>().unwrap();
-        let mut payload = vec![0; bytes.get_ref().len()];
-        bytes.read_exact(&mut payload).unwrap();
+        let payload = bytes.fill_buf().unwrap().to_vec();
         Some(Icmp {
             typ: typ,
             code: code,
@@ -156,6 +173,7 @@ impl Icmp {
 /// Represents packets at the transport protocol level, which are encapsulated
 /// within the IPv4 payload. At present, we only support TCP, UDP, and ICMP
 /// explicitly; otherwise, the raw bytes and IPv4 protocol number are provided.
+#[derive(Debug)]
 pub enum Tp {
     Tcp(Tcp),
     Udp(Udp),
@@ -164,6 +182,7 @@ pub enum Tp {
 }
 
 /// The type of IPv4 flags.
+#[derive(Debug)]
 pub struct Flags {
     pub dont_fragment: bool,
     pub more_fragments: bool,
@@ -179,6 +198,7 @@ impl Flags {
 }
 
 /// IPv4 frame of a packet.
+#[derive(Debug)]
 pub struct Ip {
     pub tos: u8,
     pub ident: u16,
@@ -227,33 +247,30 @@ impl Ip {
         bytes.read_exact(&mut options).unwrap();
         let tp = match proto {
             t if t == (IpProto::IpICMP as u8) => {
-                let bytes_ = bytes.get_ref().clone();
                 let icmp = Icmp::parse(bytes);
                 if icmp.is_some() {
                     Tp::Icmp(icmp.unwrap())
                 } else {
-                    Tp::Unparsable(proto, bytes_)
+                    Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec())
                 }
             }
             t if t == (IpProto::IpTCP as u8) => {
-                let bytes_ = bytes.get_ref().clone();
                 let tcp = Tcp::parse(bytes);
                 if tcp.is_some() {
                     Tp::Tcp(tcp.unwrap())
                 } else {
-                    Tp::Unparsable(proto, bytes_)
+                    Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec())
                 }
             }
             t if t == (IpProto::IpUDP as u8) => {
-                let bytes_ = bytes.get_ref().clone();
                 let udp = Udp::parse(bytes);
                 if udp.is_some() {
                     Tp::Udp(udp.unwrap())
                 } else {
-                    Tp::Unparsable(proto, bytes_)
+                    Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec())
                 }
             }
-            _ => Tp::Unparsable(proto, bytes.get_ref().clone()),
+            _ => Tp::Unparsable(proto, bytes.fill_buf().unwrap().to_vec()),
         };
         Some(Ip {
             tos: tos,
@@ -271,9 +288,10 @@ impl Ip {
 }
 
 /// Address resolution protocol (ARP) packet payload.
+#[derive(Debug)]
 pub enum Arp {
-    Query([u8; 6], u32, u32),
-    Reply([u8; 6], u32, [u8; 6], u32),
+    Query(u64, u32, u32),
+    Reply(u64, u32, u64, u32),
 }
 
 #[repr(packed)]
@@ -297,14 +315,15 @@ impl Arp {
         }
         let tpa = bytes.read_u32::<BigEndian>().unwrap();
         match oper {
-            0x0001 => Some(Arp::Query(sha, spa, tpa)),
-            0x0002 => Some(Arp::Reply(sha, spa, tha, tpa)),
+            0x0001 => Some(Arp::Query(mac_of_bytes(sha), spa, tpa)),
+            0x0002 => Some(Arp::Reply(mac_of_bytes(sha), spa, mac_of_bytes(tha), tpa)),
             _ => None,
         }
     }
 }
 
 /// Represents a packet at the network protocol level.
+#[derive(Debug)]
 pub enum Nw {
     Ip(Ip),
     Arp(Arp),
@@ -312,9 +331,10 @@ pub enum Nw {
 }
 
 /// Represents a packet at the ethernet protocol level.
+#[derive(Debug)]
 pub struct Packet {
-    pub dl_src: [u8; 6],
-    pub dl_dst: [u8; 6],
+    pub dl_src: u64,
+    pub dl_dst: u64,
     pub dl_vlan: Option<u16>,
     pub dl_vlan_dei: bool,
     pub dl_vlan_pcp: u8,
@@ -353,28 +373,26 @@ impl Packet {
         };
         let nw_header = match typ {
             t if t == (EthTyp::EthTypIP as u16) => {
-                let bytes_ = bytes.get_ref().clone();
                 let ip = Ip::parse(&mut bytes);
                 if ip.is_some() {
                     Nw::Ip(ip.unwrap())
                 } else {
-                    Nw::Unparsable(typ, bytes_)
+                    Nw::Unparsable(typ, bytes.fill_buf().unwrap().to_vec())
                 }
             }
             t if t == (EthTyp::EthTypARP as u16) => {
-                let bytes_ = bytes.get_ref().clone();
                 let arp = Arp::parse(&mut bytes);
                 if arp.is_some() {
                     Nw::Arp(arp.unwrap())
                 } else {
-                    Nw::Unparsable(typ, bytes_)
+                    Nw::Unparsable(typ, bytes.fill_buf().unwrap().to_vec())
                 }
             }
-            _ => Nw::Unparsable(typ, bytes.into_inner()),
+            _ => Nw::Unparsable(typ, bytes.fill_buf().unwrap().to_vec()),
         };
         Packet {
-            dl_src: src,
-            dl_dst: dst,
+            dl_src: mac_of_bytes(src),
+            dl_dst: mac_of_bytes(dst),
             dl_vlan: tag,
             dl_vlan_dei: dei,
             dl_vlan_pcp: pcp,

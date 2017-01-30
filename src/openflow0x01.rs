@@ -4,6 +4,7 @@ use std::mem::{size_of, transmute};
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
 use bits::*;
+use packet::{bytes_of_mac, mac_of_bytes};
 
 /// OpenFlow 1.0 message type codes, used by headers to identify meaning of the rest of a message.
 #[repr(u8)]
@@ -50,8 +51,8 @@ pub struct Mask<T> {
 
 /// Fields to match against flows.
 pub struct Pattern {
-    pub dl_src: Option<[u8; 6]>,
-    pub dl_dst: Option<[u8; 6]>,
+    pub dl_src: Option<u64>,
+    pub dl_dst: Option<u64>,
     pub dl_typ: Option<u16>,
     pub dl_vlan: Option<Option<u16>>,
     pub dl_vlan_pcp: Option<u8>,
@@ -189,7 +190,7 @@ impl Pattern {
             for i in 0..6 {
                 arr[i] = bytes.read_u8().unwrap();
             }
-            Some(arr)
+            Some(mac_of_bytes(arr))
         };
         let dl_dst = if w.dl_dst {
             None
@@ -198,7 +199,7 @@ impl Pattern {
             for i in 0..6 {
                 arr[i] = bytes.read_u8().unwrap();
             }
-            Some(arr)
+            Some(mac_of_bytes(arr))
         };
         let dl_vlan = if w.dl_vlan {
             None
@@ -284,15 +285,22 @@ impl Pattern {
         }
     }
 
+    fn if_word48(n: Option<u64>) -> u64 {
+        match n {
+            Some(n) => n,
+            None => 0,
+        }
+    }
+
     fn marshal(p: Pattern, bytes: &mut Vec<u8>) {
         let w = Pattern::wildcards_of_pattern(&p);
         Wildcards::marshal(w, bytes);
         bytes.write_u16::<BigEndian>(p.in_port.unwrap_or(0)).unwrap();
         for i in 0..6 {
-            bytes.write_u8(p.dl_src.unwrap_or([0; 6])[i]).unwrap();
+            bytes.write_u8(bytes_of_mac(Self::if_word48(p.dl_src))[i]).unwrap();
         }
         for i in 0..6 {
-            bytes.write_u8(p.dl_dst.unwrap_or([0; 6])[i]).unwrap();
+            bytes.write_u8(bytes_of_mac(Self::if_word48(p.dl_dst))[i]).unwrap();
         }
         let vlan = match p.dl_vlan {
             Some(Some(v)) => v,
@@ -406,8 +414,8 @@ pub enum Action {
     Output(PseudoPort),
     SetDlVlan(Option<u16>),
     SetDlVlanPcp(u8),
-    SetDlSrc([u8; 6]),
-    SetDlDst([u8; 6]),
+    SetDlSrc(u64),
+    SetDlDst(u64),
     SetNwSrc(u32),
     SetNwDst(u32),
     SetNwTos(u8),
@@ -495,7 +503,7 @@ impl Action {
         actions.iter().fold(0, |acc, x| Action::size_of(x) + acc)
     }
 
-    fn _parse(bytes: &mut Cursor<Vec<u8>>) -> (&mut Cursor<Vec<u8>>, Action) {
+    fn _parse(bytes: &mut Cursor<Vec<u8>>) -> Action {
         let action_code = bytes.read_u16::<BigEndian>().unwrap();
         let _ = bytes.read_u16::<BigEndian>().unwrap();
         let action = match action_code {
@@ -528,7 +536,7 @@ impl Action {
                     dl_addr[i] = bytes.read_u8().unwrap();
                 }
                 bytes.consume(6);
-                Action::SetDlSrc(dl_addr)
+                Action::SetDlSrc(mac_of_bytes(dl_addr))
             }
             t if t == (OfpActionType::OFPATSetDlDst as u16) => {
                 let mut dl_addr: [u8; 6] = [0; 6];
@@ -536,7 +544,7 @@ impl Action {
                     dl_addr[i] = bytes.read_u8().unwrap();
                 }
                 bytes.consume(6);
-                Action::SetDlDst(dl_addr)
+                Action::SetDlDst(mac_of_bytes(dl_addr))
             }
             t if t == (OfpActionType::OFPATSetNwSrc as u16) => {
                 Action::SetNwSrc(bytes.read_u32::<BigEndian>().unwrap())
@@ -567,16 +575,16 @@ impl Action {
             }
             t => panic!("Unrecognized OfpActionType {}", t),
         };
-        (bytes, action)
+        action
     }
 
     fn parse_sequence(bytes: &mut Cursor<Vec<u8>>) -> Vec<Action> {
         if bytes.get_ref().is_empty() {
             vec![]
         } else {
-            let (bytes_, action) = Action::_parse(bytes);
+            let action = Action::_parse(bytes);
             let mut v = vec![action];
-            v.append(&mut Action::parse_sequence(bytes_));
+            v.append(&mut Action::parse_sequence(bytes));
             v
         }
     }
@@ -617,6 +625,7 @@ impl Action {
             }
             Action::SetDlSrc(mac) |
             Action::SetDlDst(mac) => {
+                let mac = bytes_of_mac(mac);
                 for i in 0..6 {
                     bytes.write_u8(mac[i]).unwrap();
                 }
@@ -755,7 +764,9 @@ impl MessageType for SwitchFeatures {
         };
         let ports = {
             let mut v = vec![];
-            let num_ports = bytes.clone().into_inner().len() / size_of::<OfpPhyPort>();
+            let pos = bytes.position() as usize;
+            let rem = bytes.get_ref()[pos..].to_vec();
+            let num_ports = rem.len() / size_of::<OfpPhyPort>();
             for _ in 0..num_ports {
                 v.push(PortDesc::parse(&mut bytes))
             }
@@ -944,10 +955,10 @@ impl MessageType for PacketIn {
         let port = bytes.read_u16::<BigEndian>().unwrap();
         let reason = unsafe { transmute(bytes.read_u8().unwrap()) };
         bytes.consume(1);
-        let pk = bytes;
+        let pk = bytes.fill_buf().unwrap().to_vec();
         let payload = match buf_id {
-            None => Payload::NotBuffered(pk.into_inner()),
-            Some(n) => Payload::Buffered(n as u32, pk.into_inner()),
+            None => Payload::NotBuffered(pk),
+            Some(n) => Payload::Buffered(n as u32, pk),
         };
         PacketIn {
             input_payload: payload,
@@ -957,7 +968,17 @@ impl MessageType for PacketIn {
         }
     }
 
-    fn marshal(_: PacketIn, _: &mut Vec<u8>) {}
+    fn marshal(pi: PacketIn, bytes: &mut Vec<u8>) {
+        let buf_id = match pi.input_payload {
+            Payload::NotBuffered(_) => -1,
+            Payload::Buffered(n, _) => n as i32,
+        };
+        bytes.write_i32::<BigEndian>(buf_id).unwrap();
+        bytes.write_u16::<BigEndian>(pi.total_len).unwrap();
+        bytes.write_u16::<BigEndian>(pi.port).unwrap();
+        bytes.write_u8(pi.reason as u8).unwrap();
+        Payload::marshal(pi.input_payload, bytes)
+    }
 }
 
 /// Represents packets sent from the controller.
@@ -990,8 +1011,8 @@ impl MessageType for PacketOut {
         let actions = Action::parse_sequence(&mut actions_bytes);
         PacketOut {
             output_payload: match buf_id {
-                None => Payload::NotBuffered(bytes.into_inner()),
-                Some(n) => Payload::Buffered(n as u32, bytes.into_inner()),
+                None => Payload::NotBuffered(bytes.fill_buf().unwrap().to_vec()),
+                Some(n) => Payload::Buffered(n as u32, bytes.fill_buf().unwrap().to_vec()),
             },
             port_id: {
                 if in_port == OfpPort::OFPPNone as u16 {
@@ -1158,7 +1179,7 @@ pub struct PortConfig {
 /// Description of a physical port.
 pub struct PortDesc {
     pub port_no: u16,
-    pub hw_addr: i64,
+    pub hw_addr: u64,
     pub name: String,
     pub config: PortConfig,
     pub state: PortState,
@@ -1179,11 +1200,11 @@ impl PortDesc {
     fn parse(bytes: &mut Cursor<Vec<u8>>) -> PortDesc {
         let port_no = bytes.read_u16::<BigEndian>().unwrap();
         let hw_addr = {
-            let mut arr: [u8; 8] = [0; 8];
-            for i in 2..8 {
+            let mut arr: [u8; 6] = [0; 6];
+            for i in 0..6 {
                 arr[i] = bytes.read_u8().unwrap();
             }
-            unsafe { transmute(arr) }
+            mac_of_bytes(arr)
         };
         let name = {
             let mut arr: [u8; 16] = [0; 16];
@@ -1383,7 +1404,7 @@ impl MessageType for Error {
             5 => ErrorType::QueueOpFailed(unsafe { transmute(error_code) }),
             _ => panic!("bad ErrorType in Error {}", error_type),
         };
-        Error::Error(code, bytes.into_inner())
+        Error::Error(code, bytes.fill_buf().unwrap().to_vec())
     }
 
     fn marshal(_: Error, _: &mut Vec<u8>) {}
