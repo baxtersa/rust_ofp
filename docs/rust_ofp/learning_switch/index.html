@@ -47,14 +47,18 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-5' class='srclink' href='../../src/rust_ofp/src/learning_switch.rs.html#1-72' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-5' class='srclink' href='../../src/rust_ofp/src/learning_switch.rs.html#1-88' title='goto source code'>[src]</a></span></h1>
 <h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.LearningSwitch.html'
                                   title='rust_ofp::learning_switch::LearningSwitch'>LearningSwitch</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Implements L2 learning switch functionality. Switches forward packets to the
+learning controller, which will examine the packet and learn the source-port
+mapping. If the controller already knows the destination location, it pushes
+a flow entry down to the switch that matches traffic between the packet&#39;s
+source and destination.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

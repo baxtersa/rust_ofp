@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["LearningSwitch",""]]});
+initSidebarItems({"struct":[["LearningSwitch","Implements L2 learning switch functionality. Switches forward packets to the learning controller, which will examine the packet and learn the source-port mapping. If the controller already knows the destination location, it pushes a flow entry down to the switch that matches traffic between the packet's source and destination."]]});
