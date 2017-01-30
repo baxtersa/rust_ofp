@@ -128,8 +128,6 @@
 <span id="84">84</span>
 <span id="85">85</span>
 <span id="86">86</span>
-<span id="87">87</span>
-<span id="88">88</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>TcpStream</span>;
@@ -191,7 +189,6 @@
                 <span class='self'>Self</span>::<span class='ident'>send_packet_out</span>(<span class='ident'>sw</span>, <span class='number'>0</span>, <span class='ident'>pkt_out</span>, <span class='ident'>stream</span>)
             }
             <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Known Hosts:\t{:?}&quot;</span>, <span class='self'>self</span>.<span class='ident'>known_hosts</span>);
                 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Flooding to {:?}&quot;</span>, <span class='ident'>pkt_dst</span>);
                 <span class='kw'>let</span> <span class='ident'>pkt_out</span> <span class='op'>=</span> <span class='ident'>PacketOut</span> {
                     <span class='ident'>output_payload</span>: <span class='ident'>pkt</span>.<span class='ident'>input_payload</span>,
@@ -214,7 +211,6 @@
     <span class='kw'>fn</span> <span class='ident'>switch_disconnected</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, _: <span class='ident'>u64</span>) {}
 
     <span class='kw'>fn</span> <span class='ident'>packet_in</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>sw</span>: <span class='ident'>u64</span>, _: <span class='ident'>u32</span>, <span class='ident'>pkt</span>: <span class='ident'>PacketIn</span>, <span class='ident'>stream</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TcpStream</span>) {
-        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>, <span class='ident'>pkt</span>);
         <span class='self'>self</span>.<span class='ident'>learning_packet_in</span>(<span class='kw-2'>&amp;</span><span class='ident'>pkt</span>);
         <span class='self'>self</span>.<span class='ident'>routing_packet_in</span>(<span class='ident'>sw</span>, <span class='ident'>pkt</span>, <span class='ident'>stream</span>);
     }
