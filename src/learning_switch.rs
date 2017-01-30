@@ -58,7 +58,6 @@ impl LearningSwitch {
                 Self::send_packet_out(sw, 0, pkt_out, stream)
             }
             None => {
-                println!("Known Hosts:\t{:?}", self.known_hosts);
                 println!("Flooding to {:?}", pkt_dst);
                 let pkt_out = PacketOut {
                     output_payload: pkt.input_payload,
@@ -81,7 +80,6 @@ impl OF0x01Controller for LearningSwitch {
     fn switch_disconnected(&mut self, _: u64) {}
 
     fn packet_in(&mut self, sw: u64, _: u32, pkt: PacketIn, stream: &mut TcpStream) {
-        println!("{:?}", pkt);
         self.learning_packet_in(&pkt);
         self.routing_packet_in(sw, pkt, stream);
     }
