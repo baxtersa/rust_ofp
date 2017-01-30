@@ -4,6 +4,22 @@ use rust_ofp::ofp_controller::openflow0x01::OF0x01Controller;
 use rust_ofp::openflow0x01::{Action, PacketIn, PacketOut, Pattern, PseudoPort, SwitchFeatures};
 use rust_ofp::openflow0x01::message::{add_flow, parse_payload};
 
+/// Implements L2 learning switch functionality. Switches forward packets to the
+/// learning controller, which will examine the packet and learn the source-port
+/// mapping. If the controller already knows the destination location, it pushes
+/// a flow entry down to the switch that matches traffic between the packet's
+/// source and destination.
+///
+/// Abstractly, a learning switch can be thought of in terms of two logically
+/// distinct components.
+///
+///  - A _Learning Module_ that builds a map from host MAC addresses to the
+///    switch port on which they are connected.
+///
+///  - A _Routing Module_ that performs traffic routing. If the switch receives
+///    a packet which the learning module has learned of the destination location,
+///    it forwards the packet directly on the associated port. If the location of
+///    the destination is unknown, it floods the packet out all ports.
 pub struct LearningSwitch {
     known_hosts: HashMap<u64, u16>,
 }

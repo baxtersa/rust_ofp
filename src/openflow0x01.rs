@@ -602,7 +602,6 @@ impl Action {
     fn marshal(act: Action, bytes: &mut Vec<u8>) {
         bytes.write_u16::<BigEndian>(Action::type_code(&act) as u16).unwrap();
         bytes.write_u16::<BigEndian>(Action::size_of(&act) as u16).unwrap();
-        bytes.write_u32::<BigEndian>(0).unwrap();
         match act {
             Action::Output(pp) => {
                 PseudoPort::marshal(pp, bytes);

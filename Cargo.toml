@@ -1,9 +1,9 @@
 [package]
 name = "rust_ofp"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Sam Baxter <sbaxter@cs.umass.edu>"]
 
-description = "Simple Rust OpenFlow 0x01 controller"
+description = "Rust OpenFlow 0x01 Protocol and Controller Framework"
 
 documentation = "https://baxtersa.github.io/rust_ofp/docs"
 repository = "https://github.com/baxtersa/rust_ofp"
