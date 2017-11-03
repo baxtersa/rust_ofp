@@ -9,6 +9,7 @@
 
     <title>rust_ofp::ofp_controller::OfpController - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_controller</a></p><script>window.sidebarCurrent = {name: 'OfpController', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait OfpController</p><div class="block items"><ul><li><a href="#associated-types">Associated Types</a></li><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_controller</a></p><script>window.sidebarCurrent = {name: 'OfpController', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,32 +43,38 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_controller</a>::<wbr><a class='trait' href=''>OfpController</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_controller</a>::<wbr><a class="trait" href=''>OfpController</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-58' class='srclink' href='../../src/rust_ofp/src/ofp_controller.rs.html#7-15' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/ofp_controller.rs.html#7-15' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait OfpController {
-    type <a href='#associatedtype.Message' class='type'>Message</a>: <a class='trait' href='../../rust_ofp/ofp_message/trait.OfpMessage.html' title='rust_ofp::ofp_message::OfpMessage'>OfpMessage</a>;
-    fn <a href='#tymethod.send_message' class='fnname'>send_message</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, Self::Message, &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>);
-    fn <a href='#tymethod.handle_client_connected' class='fnname'>handle_client_connected</a>(&amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>);
+    type <a href='#associatedtype.Message' class="type">Message</a>: <a class="trait" href="../../rust_ofp/ofp_message/trait.OfpMessage.html" title="trait rust_ofp::ofp_message::OfpMessage">OfpMessage</a>;
+    fn <a href='#tymethod.send_message' class='fnname'>send_message</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, _: Self::<a class="type" href="../../rust_ofp/ofp_controller/trait.OfpController.html#associatedtype.Message" title="type rust_ofp::ofp_controller::OfpController::Message">Message</a>, _: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>);
+<div class='item-spacer'></div>    fn <a href='#tymethod.handle_client_connected' class='fnname'>handle_client_connected</a>(_: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>);
 }</pre><div class='docblock'><p>OpenFlow Controller</p>
 
 <p>Version-agnostic API for implementing an OpenFlow controller.</p>
 </div>
-            <h2 id='associated-types'>Associated Types</h2>
+            <h2 id='associated-types' class='small-section-header'>
+              Associated Types<a href='#associated-types' class='anchor'></a>
+            </h2>
             <div class='methods'>
-        <h3 id='associatedtype.Message' class='method stab '><span id='Message.t' class='invisible'><code>type <a href='#associatedtype.Message' class='type'>Message</a>: <a class='trait' href='../../rust_ofp/ofp_message/trait.OfpMessage.html' title='rust_ofp::ofp_message::OfpMessage'>OfpMessage</a></code></span></h3><div class='docblock'><p>OpenFlow message type supporting the same protocol version as the controller.</p>
+        <h3 id='associatedtype.Message' class='method'><span id='Message.t' class='invisible'><code>type <a href='#associatedtype.Message' class="type">Message</a>: <a class="trait" href="../../rust_ofp/ofp_message/trait.OfpMessage.html" title="trait rust_ofp::ofp_message::OfpMessage">OfpMessage</a></code></span></h3><div class='docblock'><p>OpenFlow message type supporting the same protocol version as the controller.</p>
 </div></div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
-        <h3 id='tymethod.send_message' class='method stab '><span id='send_message.v' class='invisible'><code>fn <a href='#tymethod.send_message' class='fnname'>send_message</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, Self::Message, &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h3><div class='docblock'><p>Send a message to the node associated with the given <code>TcpStream</code>.</p>
-</div><h3 id='tymethod.handle_client_connected' class='method stab '><span id='handle_client_connected.v' class='invisible'><code>fn <a href='#tymethod.handle_client_connected' class='fnname'>handle_client_connected</a>(&amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h3><div class='docblock'><p>Perform handshake and begin loop reading incoming messages from client stream.</p>
+        <h3 id='tymethod.send_message' class='method'><span id='send_message.v' class='invisible'><code>fn <a href='#tymethod.send_message' class='fnname'>send_message</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, _: Self::<a class="type" href="../../rust_ofp/ofp_controller/trait.OfpController.html#associatedtype.Message" title="type rust_ofp::ofp_controller::OfpController::Message">Message</a>, _: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span></h3><div class='docblock'><p>Send a message to the node associated with the given <code>TcpStream</code>.</p>
+</div><h3 id='tymethod.handle_client_connected' class='method'><span id='handle_client_connected.v' class='invisible'><code>fn <a href='#tymethod.handle_client_connected' class='fnname'>handle_client_connected</a>(_: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span></h3><div class='docblock'><p>Perform handshake and begin loop reading incoming messages from client stream.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;Controller:&nbsp;<a class='trait' href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html' title='rust_ofp::ofp_controller::openflow0x01::OF0x01Controller'>OF0x01Controller</a>&gt; OfpController for Controller</code></li>
+    <li><code>impl&lt;Controller:&nbsp;<a class="trait" href="../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html" title="trait rust_ofp::ofp_controller::openflow0x01::OF0x01Controller">OF0x01Controller</a>&gt; OfpController for Controller<span class="where fmt-newline">  type <a href='#associatedtype.Message' class="type">Message</a> = <a class="enum" href="../../rust_ofp/openflow0x01/message/enum.Message.html" title="enum rust_ofp::openflow0x01::message::Message">Message</a>;</span></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/rust_ofp/ofp_controller/trait.OfpController.js">
                  </script></section>
@@ -127,7 +134,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

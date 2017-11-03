@@ -9,6 +9,7 @@
 
     <title>rust_ofp::packet::TcpFlags - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a></p><script>window.sidebarCurrent = {name: 'TcpFlags', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct TcpFlags</p><div class="block items"><ul><li><a href="#fields">Fields</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a></p><script>window.sidebarCurrent = {name: 'TcpFlags', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,61 +43,66 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a>::<wbr><a class='struct' href=''>TcpFlags</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a>::<wbr><a class="struct" href=''>TcpFlags</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1411' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#25-44' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/packet.rs.html#25-44' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TcpFlags {
-    pub ns: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub cwr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub ece: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub urg: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub ack: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub psh: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub rst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub syn: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub fin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
+    pub ns: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub cwr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub ece: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub urg: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub ack: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub psh: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub rst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub syn: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub fin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
 }</pre><div class='docblock'><p>TCP Header flags.</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.ns' class='structfield'>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id='structfield.ns' class="structfield">
                            <span id='ns.v' class='invisible'>
-                           <code>ns: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>ECN-nonce concealment protection.</p>
-</div><span id='structfield.cwr' class='structfield'>
+                           <code>ns: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>ECN-nonce concealment protection.</p>
+</div><span id='structfield.cwr' class="structfield">
                            <span id='cwr.v' class='invisible'>
-                           <code>cwr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Congestion window reduced.</p>
-</div><span id='structfield.ece' class='structfield'>
+                           <code>cwr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Congestion window reduced.</p>
+</div><span id='structfield.ece' class="structfield">
                            <span id='ece.v' class='invisible'>
-                           <code>ece: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>ECN-Echo.</p>
-</div><span id='structfield.urg' class='structfield'>
+                           <code>ece: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>ECN-Echo.</p>
+</div><span id='structfield.urg' class="structfield">
                            <span id='urg.v' class='invisible'>
-                           <code>urg: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Indicates the Urgent pointer field is significant.</p>
-</div><span id='structfield.ack' class='structfield'>
+                           <code>urg: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Indicates the Urgent pointer field is significant.</p>
+</div><span id='structfield.ack' class="structfield">
                            <span id='ack.v' class='invisible'>
-                           <code>ack: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Indicates that the Acknowledgment field is significant.</p>
-</div><span id='structfield.psh' class='structfield'>
+                           <code>ack: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Indicates that the Acknowledgment field is significant.</p>
+</div><span id='structfield.psh' class="structfield">
                            <span id='psh.v' class='invisible'>
-                           <code>psh: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Asks to push the buffered data to the receiving application.</p>
-</div><span id='structfield.rst' class='structfield'>
+                           <code>psh: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Asks to push the buffered data to the receiving application.</p>
+</div><span id='structfield.rst' class="structfield">
                            <span id='rst.v' class='invisible'>
-                           <code>rst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Reset the connection.</p>
-</div><span id='structfield.syn' class='structfield'>
+                           <code>rst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Reset the connection.</p>
+</div><span id='structfield.syn' class="structfield">
                            <span id='syn.v' class='invisible'>
-                           <code>syn: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>Synchronize sequence numbers.</p>
-</div><span id='structfield.fin' class='structfield'>
+                           <code>syn: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Synchronize sequence numbers.</p>
+</div><span id='structfield.fin' class="structfield">
                            <span id='fin.v' class='invisible'>
-                           <code>fin: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><div class='docblock'><p>No more data from sender.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../rust_ofp/packet/struct.TcpFlags.html' title='rust_ofp::packet::TcpFlags'>TcpFlags</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1421' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#24' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+                           <code>fin: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>No more data from sender.</p>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../rust_ofp/packet/struct.TcpFlags.html" title="struct rust_ofp::packet::TcpFlags">TcpFlags</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/packet.rs.html#24' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/packet.rs.html#24' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -155,7 +161,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

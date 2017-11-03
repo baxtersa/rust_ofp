@@ -9,6 +9,7 @@
 
     <title>rust_ofp::packet::Ip - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a></p><script>window.sidebarCurrent = {name: 'Ip', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Ip</p><div class="block items"><ul><li><a href="#fields">Fields</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a></p><script>window.sidebarCurrent = {name: 'Ip', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,56 +43,61 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a>::<wbr><a class='struct' href=''>Ip</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a>::<wbr><a class="struct" href=''>Ip</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1522' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#202-213' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/packet.rs.html#202-213' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Ip {
-    pub tos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,
-    pub ident: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>,
-    pub flags: <a class='struct' href='../../rust_ofp/packet/struct.Flags.html' title='rust_ofp::packet::Flags'>Flags</a>,
-    pub frag: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>,
-    pub ttl: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,
-    pub chksum: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>,
-    pub src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>,
-    pub dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>,
-    pub options: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;,
-    pub tp: <a class='enum' href='../../rust_ofp/packet/enum.Tp.html' title='rust_ofp::packet::Tp'>Tp</a>,
+    pub tos: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>,
+    pub ident: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>,
+    pub flags: <a class="struct" href="../../rust_ofp/packet/struct.Flags.html" title="struct rust_ofp::packet::Flags">Flags</a>,
+    pub frag: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>,
+    pub ttl: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>,
+    pub chksum: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>,
+    pub src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    pub dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
+    pub options: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;,
+    pub tp: <a class="enum" href="../../rust_ofp/packet/enum.Tp.html" title="enum rust_ofp::packet::Tp">Tp</a>,
 }</pre><div class='docblock'><p>IPv4 frame of a packet.</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.tos' class='structfield'>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id='structfield.tos' class="structfield">
                            <span id='tos.v' class='invisible'>
-                           <code>tos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.ident' class='structfield'>
+                           <code>tos: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code>
+                           </span></span><span id='structfield.ident' class="structfield">
                            <span id='ident.v' class='invisible'>
-                           <code>ident: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.flags' class='structfield'>
+                           <code>ident: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code>
+                           </span></span><span id='structfield.flags' class="structfield">
                            <span id='flags.v' class='invisible'>
-                           <code>flags: <a class='struct' href='../../rust_ofp/packet/struct.Flags.html' title='rust_ofp::packet::Flags'>Flags</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.frag' class='structfield'>
+                           <code>flags: <a class="struct" href="../../rust_ofp/packet/struct.Flags.html" title="struct rust_ofp::packet::Flags">Flags</a></code>
+                           </span></span><span id='structfield.frag' class="structfield">
                            <span id='frag.v' class='invisible'>
-                           <code>frag: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.ttl' class='structfield'>
+                           <code>frag: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code>
+                           </span></span><span id='structfield.ttl' class="structfield">
                            <span id='ttl.v' class='invisible'>
-                           <code>ttl: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.chksum' class='structfield'>
+                           <code>ttl: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code>
+                           </span></span><span id='structfield.chksum' class="structfield">
                            <span id='chksum.v' class='invisible'>
-                           <code>chksum: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.src' class='structfield'>
+                           <code>chksum: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code>
+                           </span></span><span id='structfield.src' class="structfield">
                            <span id='src.v' class='invisible'>
-                           <code>src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.dst' class='structfield'>
+                           <code>src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code>
+                           </span></span><span id='structfield.dst' class="structfield">
                            <span id='dst.v' class='invisible'>
-                           <code>dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.options' class='structfield'>
+                           <code>dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code>
+                           </span></span><span id='structfield.options' class="structfield">
                            <span id='options.v' class='invisible'>
-                           <code>options: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code>
-                           </span></span><span class='stab '></span><span id='structfield.tp' class='structfield'>
+                           <code>options: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code>
+                           </span></span><span id='structfield.tp' class="structfield">
                            <span id='tp.v' class='invisible'>
-                           <code>tp: <a class='enum' href='../../rust_ofp/packet/enum.Tp.html' title='rust_ofp::packet::Tp'>Tp</a></code>
-                           </span></span><span class='stab '></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../rust_ofp/packet/struct.Ip.html' title='rust_ofp::packet::Ip'>Ip</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1533' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#201' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+                           <code>tp: <a class="enum" href="../../rust_ofp/packet/enum.Tp.html" title="enum rust_ofp::packet::Tp">Tp</a></code>
+                           </span></span>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../rust_ofp/packet/struct.Ip.html" title="struct rust_ofp::packet::Ip">Ip</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/packet.rs.html#201' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/packet.rs.html#201' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -150,7 +156,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

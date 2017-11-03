@@ -9,6 +9,7 @@
 
     <title>rust_ofp::openflow0x01::FlowRemovedReason - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'FlowRemovedReason', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum FlowRemovedReason</p><div class="block items"><ul><li><a href="#variants">Variants</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'FlowRemovedReason', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,18 +43,20 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='enum' href=''>FlowRemovedReason</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class="enum" href=''>FlowRemovedReason</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-694' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#1047-1051' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum FlowRemovedReason {
+               </span><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#1047-1051' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'><div class="docblock attributes">#[repr(u8)]
+</div>pub enum FlowRemovedReason {
     IdleTimeout,
     HardTimeout,
     Delete,
 }</pre><div class='docblock'><p>Reason a flow was removed from a switch</p>
-</div><h2 class='variants'>Variants</h2>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
 <span id='variant.IdleTimeout' class='variant'><span id='IdleTimeout.v' class='invisible'><code>IdleTimeout</code></span></span><span id='variant.HardTimeout' class='variant'><span id='HardTimeout.v' class='invisible'><code>HardTimeout</code></span></span><span id='variant.Delete' class='variant'><span id='Delete.v' class='invisible'><code>Delete</code></span></span></section>
     <section id='search' class="content hidden"></section>
 
@@ -111,7 +114,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -9,6 +9,7 @@
 
     <title>rust_ofp::openflow0x01::MessageType - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'MessageType', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait MessageType</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'MessageType', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,33 +43,37 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='trait' href=''>MessageType</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class="trait" href=''>MessageType</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-191' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#38-45' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#38-45' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait MessageType {
-    fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(&amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
-    fn <a href='#tymethod.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; Self;
-    fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(Self, &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;);
+    fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.parse' class='fnname'>parse</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; Self;
+<div class='item-spacer'></div>    fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(_: Self, _: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;);
 }</pre><div class='docblock'><p>Common API for message types implementing OpenFlow Message Codes (see <code>MsgCode</code> enum).</p>
 </div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
-        <h3 id='tymethod.size_of' class='method stab '><span id='size_of.v' class='invisible'><code>fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(&amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h3><div class='docblock'><p>Return the byte-size of a message.</p>
-</div><h3 id='tymethod.parse' class='method stab '><span id='parse.v' class='invisible'><code>fn <a href='#tymethod.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Parse a buffer into a message.</p>
-</div><h3 id='tymethod.marshal' class='method stab '><span id='marshal.v' class='invisible'><code>fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(Self, &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)</code></span></h3><div class='docblock'><p>Marshal a message into a <code>u8</code> buffer.</p>
+        <h3 id='tymethod.size_of' class='method'><span id='size_of.v' class='invisible'><code>fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h3><div class='docblock'><p>Return the byte-size of a message.</p>
+</div><h3 id='tymethod.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='#tymethod.parse' class='fnname'>parse</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Parse a buffer into a message.</p>
+</div><h3 id='tymethod.marshal' class='method'><span id='marshal.v' class='invisible'><code>fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(_: Self, _: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;)</code></span></h3><div class='docblock'><p>Marshal a message into a <code>u8</code> buffer.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl MessageType for <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a></code></li>
-<li><code>impl MessageType for <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a></code></li>
-<li><code>impl MessageType for <a class='struct' href='../../rust_ofp/openflow0x01/struct.PacketIn.html' title='rust_ofp::openflow0x01::PacketIn'>PacketIn</a></code></li>
-<li><code>impl MessageType for <a class='struct' href='../../rust_ofp/openflow0x01/struct.PacketOut.html' title='rust_ofp::openflow0x01::PacketOut'>PacketOut</a></code></li>
-<li><code>impl MessageType for <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowRemoved.html' title='rust_ofp::openflow0x01::FlowRemoved'>FlowRemoved</a></code></li>
-<li><code>impl MessageType for <a class='struct' href='../../rust_ofp/openflow0x01/struct.PortStatus.html' title='rust_ofp::openflow0x01::PortStatus'>PortStatus</a></code></li>
-<li><code>impl MessageType for <a class='enum' href='../../rust_ofp/openflow0x01/enum.Error.html' title='rust_ofp::openflow0x01::Error'>Error</a></code></li>
+    <li><code>impl MessageType for <a class="struct" href="../../rust_ofp/openflow0x01/struct.SwitchFeatures.html" title="struct rust_ofp::openflow0x01::SwitchFeatures">SwitchFeatures</a></code></li>
+<li><code>impl MessageType for <a class="struct" href="../../rust_ofp/openflow0x01/struct.FlowMod.html" title="struct rust_ofp::openflow0x01::FlowMod">FlowMod</a></code></li>
+<li><code>impl MessageType for <a class="struct" href="../../rust_ofp/openflow0x01/struct.PacketIn.html" title="struct rust_ofp::openflow0x01::PacketIn">PacketIn</a></code></li>
+<li><code>impl MessageType for <a class="struct" href="../../rust_ofp/openflow0x01/struct.PacketOut.html" title="struct rust_ofp::openflow0x01::PacketOut">PacketOut</a></code></li>
+<li><code>impl MessageType for <a class="struct" href="../../rust_ofp/openflow0x01/struct.FlowRemoved.html" title="struct rust_ofp::openflow0x01::FlowRemoved">FlowRemoved</a></code></li>
+<li><code>impl MessageType for <a class="struct" href="../../rust_ofp/openflow0x01/struct.PortStatus.html" title="struct rust_ofp::openflow0x01::PortStatus">PortStatus</a></code></li>
+<li><code>impl MessageType for <a class="enum" href="../../rust_ofp/openflow0x01/enum.Error.html" title="enum rust_ofp::openflow0x01::Error">Error</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/rust_ofp/openflow0x01/trait.MessageType.js">
                  </script></section>
@@ -128,7 +133,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

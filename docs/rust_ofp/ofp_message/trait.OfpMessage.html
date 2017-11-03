@@ -9,6 +9,7 @@
 
     <title>rust_ofp::ofp_message::OfpMessage - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_message</a></p><script>window.sidebarCurrent = {name: 'OfpMessage', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait OfpMessage</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_message</a></p><script>window.sidebarCurrent = {name: 'OfpMessage', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,32 +43,36 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_message</a>::<wbr><a class='trait' href=''>OfpMessage</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_message</a>::<wbr><a class="trait" href=''>OfpMessage</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-173' class='srclink' href='../../src/rust_ofp/src/ofp_message.rs.html#6-16' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/ofp_message.rs.html#6-16' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait OfpMessage {
-    fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(&amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>;
-    fn <a href='#tymethod.header_of' class='fnname'>header_of</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, &amp;Self) -&gt; <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a>;
-    fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, Self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;;
-    fn <a href='#tymethod.parse' class='fnname'>parse</a>(&amp;<a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, Self<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>;
+    fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.header_of' class='fnname'>header_of</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self) -&gt; <a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, _: Self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;;
+<div class='item-spacer'></div>    fn <a href='#tymethod.parse' class='fnname'>parse</a>(_: &amp;<a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a>, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, Self<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>;
 }</pre><div class='docblock'><p>OpenFlow Message</p>
 
 <p>Version-agnostic API for handling OpenFlow messages at the byte-buffer level.</p>
 </div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
-        <h3 id='tymethod.size_of' class='method stab '><span id='size_of.v' class='invisible'><code>fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(&amp;Self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h3><div class='docblock'><p>Return the byte-size of an <code>OfpMessage</code>.</p>
-</div><h3 id='tymethod.header_of' class='method stab '><span id='header_of.v' class='invisible'><code>fn <a href='#tymethod.header_of' class='fnname'>header_of</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, &amp;Self) -&gt; <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a></code></span></h3><div class='docblock'><p>Create an <code>OfpHeader</code> for the given transaction id and OpenFlow message.</p>
-</div><h3 id='tymethod.marshal' class='method stab '><span id='marshal.v' class='invisible'><code>fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, Self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;</code></span></h3><div class='docblock'><p>Return a marshaled buffer containing an OpenFlow header and the message <code>msg</code>.</p>
-</div><h3 id='tymethod.parse' class='method stab '><span id='parse.v' class='invisible'><code>fn <a href='#tymethod.parse' class='fnname'>parse</a>(&amp;<a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, Self<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></span></h3><div class='docblock'><p>Returns a pair <code>(u32, OfpMessage)</code> of the transaction id and OpenFlow message parsed from
+        <h3 id='tymethod.size_of' class='method'><span id='size_of.v' class='invisible'><code>fn <a href='#tymethod.size_of' class='fnname'>size_of</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h3><div class='docblock'><p>Return the byte-size of an <code>OfpMessage</code>.</p>
+</div><h3 id='tymethod.header_of' class='method'><span id='header_of.v' class='invisible'><code>fn <a href='#tymethod.header_of' class='fnname'>header_of</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self) -&gt; <a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a></code></span></h3><div class='docblock'><p>Create an <code>OfpHeader</code> for the given transaction id and OpenFlow message.</p>
+</div><h3 id='tymethod.marshal' class='method'><span id='marshal.v' class='invisible'><code>fn <a href='#tymethod.marshal' class='fnname'>marshal</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, _: Self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></span></h3><div class='docblock'><p>Return a marshaled buffer containing an OpenFlow header and the message <code>msg</code>.</p>
+</div><h3 id='tymethod.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='#tymethod.parse' class='fnname'>parse</a>(_: &amp;<a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a>, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, Self<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h3><div class='docblock'><p>Returns a pair <code>(u32, OfpMessage)</code> of the transaction id and OpenFlow message parsed from
 the given OpenFlow header <code>header</code>, and buffer <code>buf</code>.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl OfpMessage for <a class='enum' href='../../rust_ofp/openflow0x01/message/enum.Message.html' title='rust_ofp::openflow0x01::message::Message'>Message</a></code></li>
+    <li><code>impl OfpMessage for <a class="enum" href="../../rust_ofp/openflow0x01/message/enum.Message.html" title="enum rust_ofp::openflow0x01::message::Message">Message</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/rust_ofp/ofp_message/trait.OfpMessage.js">
                  </script></section>
@@ -127,7 +132,6 @@ the given OpenFlow header <code>header</code>, and buffer <code>buf</code>.</p>
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -9,6 +9,7 @@
 
     <title>rust_ofp::packet - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a></p><script>window.sidebarCurrent = {name: 'packet', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module packet</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a></p><script>window.sidebarCurrent = {name: 'packet', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,81 +43,81 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>rust_ofp</a>::<wbr><a class='mod' href=''>packet</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>rust_ofp</a>::<wbr><a class="mod" href=''>packet</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-925' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#1-402' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/packet.rs.html#1-402' title='goto source code'>[src]</a></span></h1>
 <h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Flags.html'
-                                  title='rust_ofp::packet::Flags'>Flags</a></td>
+                           <td><a class="struct" href="struct.Flags.html"
+                                  title='struct rust_ofp::packet::Flags'>Flags</a></td>
                            <td class='docblock-short'>
                                 <p>The type of IPv4 flags.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Icmp.html'
-                                  title='rust_ofp::packet::Icmp'>Icmp</a></td>
+                           <td><a class="struct" href="struct.Icmp.html"
+                                  title='struct rust_ofp::packet::Icmp'>Icmp</a></td>
                            <td class='docblock-short'>
                                 <p>ICMP frame of a packet.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Ip.html'
-                                  title='rust_ofp::packet::Ip'>Ip</a></td>
+                           <td><a class="struct" href="struct.Ip.html"
+                                  title='struct rust_ofp::packet::Ip'>Ip</a></td>
                            <td class='docblock-short'>
                                 <p>IPv4 frame of a packet.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Packet.html'
-                                  title='rust_ofp::packet::Packet'>Packet</a></td>
+                           <td><a class="struct" href="struct.Packet.html"
+                                  title='struct rust_ofp::packet::Packet'>Packet</a></td>
                            <td class='docblock-short'>
                                 <p>Represents a packet at the ethernet protocol level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Tcp.html'
-                                  title='rust_ofp::packet::Tcp'>Tcp</a></td>
+                           <td><a class="struct" href="struct.Tcp.html"
+                                  title='struct rust_ofp::packet::Tcp'>Tcp</a></td>
                            <td class='docblock-short'>
                                 <p>TCP frame of a packet.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.TcpFlags.html'
-                                  title='rust_ofp::packet::TcpFlags'>TcpFlags</a></td>
+                           <td><a class="struct" href="struct.TcpFlags.html"
+                                  title='struct rust_ofp::packet::TcpFlags'>TcpFlags</a></td>
                            <td class='docblock-short'>
                                 <p>TCP Header flags.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Udp.html'
-                                  title='rust_ofp::packet::Udp'>Udp</a></td>
+                           <td><a class="struct" href="struct.Udp.html"
+                                  title='struct rust_ofp::packet::Udp'>Udp</a></td>
                            <td class='docblock-short'>
                                 <p>UDP frame of a packet.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Arp.html'
-                                  title='rust_ofp::packet::Arp'>Arp</a></td>
+                           <td><a class="enum" href="enum.Arp.html"
+                                  title='enum rust_ofp::packet::Arp'>Arp</a></td>
                            <td class='docblock-short'>
                                 <p>Address resolution protocol (ARP) packet payload.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Nw.html'
-                                  title='rust_ofp::packet::Nw'>Nw</a></td>
+                           <td><a class="enum" href="enum.Nw.html"
+                                  title='enum rust_ofp::packet::Nw'>Nw</a></td>
                            <td class='docblock-short'>
                                 <p>Represents a packet at the network protocol level.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Tp.html'
-                                  title='rust_ofp::packet::Tp'>Tp</a></td>
+                           <td><a class="enum" href="enum.Tp.html"
+                                  title='enum rust_ofp::packet::Tp'>Tp</a></td>
                            <td class='docblock-short'>
                                 <p>Represents packets at the transport protocol level, which are encapsulated
 within the IPv4 payload. At present, we only support TCP, UDP, and ICMP
@@ -125,15 +126,15 @@ explicitly; otherwise, the raw bytes and IPv4 protocol number are provided.</p>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.bytes_of_mac.html'
-                                  title='rust_ofp::packet::bytes_of_mac'>bytes_of_mac</a></td>
+                           <td><a class="fn" href="fn.bytes_of_mac.html"
+                                  title='fn rust_ofp::packet::bytes_of_mac'>bytes_of_mac</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.mac_of_bytes.html'
-                                  title='rust_ofp::packet::mac_of_bytes'>mac_of_bytes</a></td>
+                           <td><a class="fn" href="fn.mac_of_bytes.html"
+                                  title='fn rust_ofp::packet::mac_of_bytes'>mac_of_bytes</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
@@ -194,7 +195,6 @@ explicitly; otherwise, the raw bytes and IPv4 protocol number are provided.</p>
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

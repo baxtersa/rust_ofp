@@ -9,6 +9,7 @@
 
     <title>rust_ofp::openflow0x01::SupportedActions - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'SupportedActions', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct SupportedActions</p><div class="block items"><ul><li><a href="#fields">Fields</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'SupportedActions', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,67 +43,68 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='struct' href=''>SupportedActions</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class="struct" href=''>SupportedActions</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-513' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#693-707' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#693-707' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct SupportedActions {
-    pub output: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_vlan_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_vlan_pcp: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub strip_vlan: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_dl_src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_dl_dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_nw_src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_nw_dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_nw_tos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_tp_src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub set_tp_dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub enqueue: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub vendor: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
+    pub output: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_vlan_id: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_vlan_pcp: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub strip_vlan: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_dl_src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_dl_dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_nw_src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_nw_dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_nw_tos: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_tp_src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub set_tp_dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub enqueue: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub vendor: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
 }</pre><div class='docblock'><p>Actions supported by the datapath.</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.output' class='structfield'>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id='structfield.output' class="structfield">
                            <span id='output.v' class='invisible'>
-                           <code>output: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_vlan_id' class='structfield'>
+                           <code>output: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_vlan_id' class="structfield">
                            <span id='set_vlan_id.v' class='invisible'>
-                           <code>set_vlan_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_vlan_pcp' class='structfield'>
+                           <code>set_vlan_id: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_vlan_pcp' class="structfield">
                            <span id='set_vlan_pcp.v' class='invisible'>
-                           <code>set_vlan_pcp: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.strip_vlan' class='structfield'>
+                           <code>set_vlan_pcp: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.strip_vlan' class="structfield">
                            <span id='strip_vlan.v' class='invisible'>
-                           <code>strip_vlan: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_dl_src' class='structfield'>
+                           <code>strip_vlan: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_dl_src' class="structfield">
                            <span id='set_dl_src.v' class='invisible'>
-                           <code>set_dl_src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_dl_dst' class='structfield'>
+                           <code>set_dl_src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_dl_dst' class="structfield">
                            <span id='set_dl_dst.v' class='invisible'>
-                           <code>set_dl_dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_nw_src' class='structfield'>
+                           <code>set_dl_dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_nw_src' class="structfield">
                            <span id='set_nw_src.v' class='invisible'>
-                           <code>set_nw_src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_nw_dst' class='structfield'>
+                           <code>set_nw_src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_nw_dst' class="structfield">
                            <span id='set_nw_dst.v' class='invisible'>
-                           <code>set_nw_dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_nw_tos' class='structfield'>
+                           <code>set_nw_dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_nw_tos' class="structfield">
                            <span id='set_nw_tos.v' class='invisible'>
-                           <code>set_nw_tos: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_tp_src' class='structfield'>
+                           <code>set_nw_tos: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_tp_src' class="structfield">
                            <span id='set_tp_src.v' class='invisible'>
-                           <code>set_tp_src: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.set_tp_dst' class='structfield'>
+                           <code>set_tp_src: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.set_tp_dst' class="structfield">
                            <span id='set_tp_dst.v' class='invisible'>
-                           <code>set_tp_dst: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.enqueue' class='structfield'>
+                           <code>set_tp_dst: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.enqueue' class="structfield">
                            <span id='enqueue.v' class='invisible'>
-                           <code>enqueue: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.vendor' class='structfield'>
+                           <code>enqueue: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id='structfield.vendor' class="structfield">
                            <span id='vendor.v' class='invisible'>
-                           <code>vendor: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span></section>
+                           <code>vendor: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
@@ -159,7 +161,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

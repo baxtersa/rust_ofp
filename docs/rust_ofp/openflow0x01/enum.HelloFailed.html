@@ -9,6 +9,7 @@
 
     <title>rust_ofp::openflow0x01::HelloFailed - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'HelloFailed', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum HelloFailed</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'HelloFailed', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,19 +43,25 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='enum' href=''>HelloFailed</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class="enum" href=''>HelloFailed</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1265' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#1302-1305' title='goto source code'>[src]</a></span></h1>
-<pre class='rust enum'>pub enum HelloFailed {
+               </span><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#1302-1305' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'><div class="docblock attributes">#[repr(u16)]
+</div>pub enum HelloFailed {
     Incompatible,
     EPerm,
 }</pre><div class='docblock'><p>Reason Hello failed.</p>
-</div><h2 class='variants'>Variants</h2>
-<span id='variant.Incompatible' class='variant'><span id='Incompatible.v' class='invisible'><code>Incompatible</code></span></span><span id='variant.EPerm' class='variant'><span id='EPerm.v' class='invisible'><code>EPerm</code></span></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../rust_ofp/openflow0x01/enum.HelloFailed.html' title='rust_ofp::openflow0x01::HelloFailed'>HelloFailed</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1268' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#1301' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id='variant.Incompatible' class='variant'><span id='Incompatible.v' class='invisible'><code>Incompatible</code></span></span><span id='variant.EPerm' class='variant'><span id='EPerm.v' class='invisible'><code>EPerm</code></span></span>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../rust_ofp/openflow0x01/enum.HelloFailed.html" title="enum rust_ofp::openflow0x01::HelloFailed">HelloFailed</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#1301' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#1301' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -113,7 +120,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

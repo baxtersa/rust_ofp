@@ -9,6 +9,7 @@
 
     <title>rust_ofp::packet::Tp - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a></p><script>window.sidebarCurrent = {name: 'Tp', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum Tp</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a></p><script>window.sidebarCurrent = {name: 'Tp', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,23 +43,28 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a>::<wbr><a class='enum' href=''>Tp</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>packet</a>::<wbr><a class="enum" href=''>Tp</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1489' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#177-182' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/packet.rs.html#177-182' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Tp {
-    Tcp(<a class='struct' href='../../rust_ofp/packet/struct.Tcp.html' title='rust_ofp::packet::Tcp'>Tcp</a>),
-    Udp(<a class='struct' href='../../rust_ofp/packet/struct.Udp.html' title='rust_ofp::packet::Udp'>Udp</a>),
-    Icmp(<a class='struct' href='../../rust_ofp/packet/struct.Icmp.html' title='rust_ofp::packet::Icmp'>Icmp</a>),
-    Unparsable(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,&nbsp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;),
+    Tcp(<a class="struct" href="../../rust_ofp/packet/struct.Tcp.html" title="struct rust_ofp::packet::Tcp">Tcp</a>),
+    Udp(<a class="struct" href="../../rust_ofp/packet/struct.Udp.html" title="struct rust_ofp::packet::Udp">Udp</a>),
+    Icmp(<a class="struct" href="../../rust_ofp/packet/struct.Icmp.html" title="struct rust_ofp::packet::Icmp">Icmp</a>),
+    Unparsable(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;),
 }</pre><div class='docblock'><p>Represents packets at the transport protocol level, which are encapsulated
 within the IPv4 payload. At present, we only support TCP, UDP, and ICMP
 explicitly; otherwise, the raw bytes and IPv4 protocol number are provided.</p>
-</div><h2 class='variants'>Variants</h2>
-<span id='variant.Tcp' class='variant'><span id='Tcp.v' class='invisible'><code>Tcp(<a class='struct' href='../../rust_ofp/packet/struct.Tcp.html' title='rust_ofp::packet::Tcp'>Tcp</a>)</code></span></span><span id='variant.Udp' class='variant'><span id='Udp.v' class='invisible'><code>Udp(<a class='struct' href='../../rust_ofp/packet/struct.Udp.html' title='rust_ofp::packet::Udp'>Udp</a>)</code></span></span><span id='variant.Icmp' class='variant'><span id='Icmp.v' class='invisible'><code>Icmp(<a class='struct' href='../../rust_ofp/packet/struct.Icmp.html' title='rust_ofp::packet::Icmp'>Icmp</a>)</code></span></span><span id='variant.Unparsable' class='variant'><span id='Unparsable.v' class='invisible'><code>Unparsable(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>,&nbsp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)</code></span></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../rust_ofp/packet/enum.Tp.html' title='rust_ofp::packet::Tp'>Tp</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1499' class='srclink' href='../../src/rust_ofp/src/packet.rs.html#176' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id='variant.Tcp' class='variant'><span id='Tcp.v' class='invisible'><code>Tcp(<a class="struct" href="../../rust_ofp/packet/struct.Tcp.html" title="struct rust_ofp::packet::Tcp">Tcp</a>)</code></span></span><span id='variant.Udp' class='variant'><span id='Udp.v' class='invisible'><code>Udp(<a class="struct" href="../../rust_ofp/packet/struct.Udp.html" title="struct rust_ofp::packet::Udp">Udp</a>)</code></span></span><span id='variant.Icmp' class='variant'><span id='Icmp.v' class='invisible'><code>Icmp(<a class="struct" href="../../rust_ofp/packet/struct.Icmp.html" title="struct rust_ofp::packet::Icmp">Icmp</a>)</code></span></span><span id='variant.Unparsable' class='variant'><span id='Unparsable.v' class='invisible'><code>Unparsable(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>,&nbsp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;)</code></span></span>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../rust_ofp/packet/enum.Tp.html" title="enum rust_ofp::packet::Tp">Tp</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/packet.rs.html#176' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/packet.rs.html#176' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -117,7 +123,6 @@ explicitly; otherwise, the raw bytes and IPv4 protocol number are provided.</p>
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

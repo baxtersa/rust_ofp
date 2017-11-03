@@ -9,6 +9,7 @@
 
     <title>rust_ofp::learning_switch::LearningSwitch - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>learning_switch</a></p><script>window.sidebarCurrent = {name: 'LearningSwitch', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct LearningSwitch</p><div class="block items"><ul><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>learning_switch</a></p><script>window.sidebarCurrent = {name: 'LearningSwitch', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,12 +43,12 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>learning_switch</a>::<wbr><a class='struct' href=''>LearningSwitch</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>learning_switch</a>::<wbr><a class="struct" href=''>LearningSwitch</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-11' class='srclink' href='../../src/rust_ofp/src/learning_switch.rs.html#23-25' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/learning_switch.rs.html#23-25' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct LearningSwitch { /* fields omitted */ }</pre><div class='docblock'><p>Implements L2 learning switch functionality. Switches forward packets to the
 learning controller, which will examine the packet and learn the source-port
 mapping. If the controller already knows the destination location, it pushes
@@ -65,20 +66,24 @@ a packet which the learning module has learned of the destination location,
 it forwards the packet directly on the associated port. If the location of
 the destination is unknown, it floods the packet out all ports.</p></li>
 </ul>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html' title='rust_ofp::ofp_controller::openflow0x01::OF0x01Controller'>OF0x01Controller</a> for <a class='struct' href='../../rust_ofp/learning_switch/struct.LearningSwitch.html' title='rust_ofp::learning_switch::LearningSwitch'>LearningSwitch</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-36' class='srclink' href='../../src/rust_ofp/src/learning_switch.rs.html#73-86' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.new' class='fnname'>new</a>() -&gt; <a class='struct' href='../../rust_ofp/learning_switch/struct.LearningSwitch.html' title='rust_ofp::learning_switch::LearningSwitch'>LearningSwitch</a></code></span></h4>
+</div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-OF0x01Controller' class='impl'><span class='in-band'><code>impl <a class="trait" href="../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html" title="trait rust_ofp::ofp_controller::openflow0x01::OF0x01Controller">OF0x01Controller</a> for <a class="struct" href="../../rust_ofp/learning_switch/struct.LearningSwitch.html" title="struct rust_ofp::learning_switch::LearningSwitch">LearningSwitch</a></code><a href='#impl-OF0x01Controller' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/learning_switch.rs.html#73-86' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.new' class='fnname'>new</a>() -&gt; <a class="struct" href="../../rust_ofp/learning_switch/struct.LearningSwitch.html" title="struct rust_ofp::learning_switch::LearningSwitch">LearningSwitch</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/learning_switch.rs.html#74-76' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Create a new Controller.</p>
-</div><h4 id='method.switch_connected' class='method'><span id='switch_connected.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.switch_connected' class='fnname'>switch_connected</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, _: <a class='struct' href='../../rust_ofp/openflow0x01/struct.SwitchFeatures.html' title='rust_ofp::openflow0x01::SwitchFeatures'>SwitchFeatures</a>, _: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h4>
+</div><h4 id='method.switch_connected' class="method"><span id='switch_connected.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.switch_connected' class='fnname'>switch_connected</a>(&amp;mut self, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>, _: <a class="struct" href="../../rust_ofp/openflow0x01/struct.SwitchFeatures.html" title="struct rust_ofp::openflow0x01::SwitchFeatures">SwitchFeatures</a>, _: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/learning_switch.rs.html#78' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Callback invoked with <code>sw</code> when a switch with identifier <code>sw</code> connects to the controller. <a href="../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.switch_connected">Read more</a></p>
-</div><h4 id='method.switch_disconnected' class='method'><span id='switch_disconnected.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.switch_disconnected' class='fnname'>switch_disconnected</a>(&amp;mut self, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</code></span></h4>
+</div><h4 id='method.switch_disconnected' class="method"><span id='switch_disconnected.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.switch_disconnected' class='fnname'>switch_disconnected</a>(&amp;mut self, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/learning_switch.rs.html#80' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Callback invoked with <code>sw</code> when a switch with identifier <code>sw</code> disconnects from the controller. <a href="../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.switch_disconnected">Read more</a></p>
-</div><h4 id='method.packet_in' class='method'><span id='packet_in.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.packet_in' class='fnname'>packet_in</a>(&amp;mut self, sw: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, _: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, pkt: <a class='struct' href='../../rust_ofp/openflow0x01/struct.PacketIn.html' title='rust_ofp::openflow0x01::PacketIn'>PacketIn</a>, stream: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h4>
+</div><h4 id='method.packet_in' class="method"><span id='packet_in.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.packet_in' class='fnname'>packet_in</a>(&amp;mut self, sw: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>, _: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, pkt: <a class="struct" href="../../rust_ofp/openflow0x01/struct.PacketIn.html" title="struct rust_ofp::openflow0x01::PacketIn">PacketIn</a>, stream: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/learning_switch.rs.html#82-85' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Callback invoked when a packet <code>pkt</code> with transaction ID <code>xid</code> from switch <code>sw</code> arrives at the controller. <a href="../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#tymethod.packet_in">Read more</a></p>
-</div><h4 id='method.send_packet_out' class='method'><span id='send_packet_out.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_packet_out' class='fnname'>send_packet_out</a>(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, xid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, pkt: <a class='struct' href='../../rust_ofp/openflow0x01/struct.PacketOut.html' title='rust_ofp::openflow0x01::PacketOut'>PacketOut</a>, stream: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h4>
+</div><h4 id='method.send_packet_out' class="method"><span id='send_packet_out.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_packet_out' class='fnname'>send_packet_out</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>, xid: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, pkt: <a class="struct" href="../../rust_ofp/openflow0x01/struct.PacketOut.html" title="struct rust_ofp::openflow0x01::PacketOut">PacketOut</a>, stream: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_controller.rs.html#89-91' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Send packet <code>pkt</code> with transaction ID <code>xid</code> to switch <code>sw</code> from the controller.</p>
-</div><h4 id='method.send_flow_mod' class='method'><span id='send_flow_mod.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_flow_mod' class='fnname'>send_flow_mod</a>(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, xid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, flow: <a class='struct' href='../../rust_ofp/openflow0x01/struct.FlowMod.html' title='rust_ofp::openflow0x01::FlowMod'>FlowMod</a>, stream: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h4>
+</div><h4 id='method.send_flow_mod' class="method"><span id='send_flow_mod.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_flow_mod' class='fnname'>send_flow_mod</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>, xid: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, flow: <a class="struct" href="../../rust_ofp/openflow0x01/struct.FlowMod.html" title="struct rust_ofp::openflow0x01::FlowMod">FlowMod</a>, stream: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_controller.rs.html#94-96' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Send flowmod <code>flow</code> with transaction ID <code>xid</code> to switch <code>sw</code> from the controller.</p>
-</div><h4 id='method.send_barrier_request' class='method'><span id='send_barrier_request.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_barrier_request' class='fnname'>send_barrier_request</a>(_: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, xid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>, stream: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html' title='std::net::tcp::TcpStream'>TcpStream</a>)</code></span></h4>
+</div><h4 id='method.send_barrier_request' class="method"><span id='send_barrier_request.v' class='invisible'><code>fn <a href='../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_barrier_request' class='fnname'>send_barrier_request</a>(_: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>, xid: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, stream: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/std/net/tcp/struct.TcpStream.html" title="struct std::net::tcp::TcpStream">TcpStream</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_controller.rs.html#100-102' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Send barrier request with transaction ID <code>xid</code> to switch <code>sw</code> from the controller. Guarantees switch <code>sw</code> processes messages prior to barrier before messages after. <a href="../../rust_ofp/ofp_controller/openflow0x01/trait.OF0x01Controller.html#method.send_barrier_request">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -137,7 +142,6 @@ the destination is unknown, it floods the packet out all ports.</p></li>
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

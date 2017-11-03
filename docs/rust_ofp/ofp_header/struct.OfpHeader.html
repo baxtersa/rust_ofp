@@ -9,6 +9,7 @@
 
     <title>rust_ofp::ofp_header::OfpHeader - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_header</a></p><script>window.sidebarCurrent = {name: 'OfpHeader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct OfpHeader</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_header</a></p><script>window.sidebarCurrent = {name: 'OfpHeader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,37 +43,42 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_header</a>::<wbr><a class='struct' href=''>OfpHeader</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>ofp_header</a>::<wbr><a class="struct" href=''>OfpHeader</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-144' class='srclink' href='../../src/rust_ofp/src/ofp_header.rs.html#13-18' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct OfpHeader { /* fields omitted */ }</pre><div class='docblock'><p>OpenFlow Header</p>
+               </span><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#13-18' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'><div class="docblock attributes">#[repr(packed)]
+</div>pub struct OfpHeader { /* fields omitted */ }</pre><div class='docblock'><p>OpenFlow Header</p>
 
 <p>The first fields of every OpenFlow message, no matter the protocol version.
 This is parsed to determine version and length of the remaining message, so that
 it can be properly handled.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-149' class='srclink' href='../../src/rust_ofp/src/ofp_header.rs.html#20-79' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(version: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, typ: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, length: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>, xid: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a></code></span></h4>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#20-79' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(version: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, typ: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, length: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>, xid: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; <a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#22-29' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Create an <code>OfpHeader</code> out of the arguments.</p>
-</div><h4 id='method.size' class='method'><span id='size.v' class='invisible'><code>fn <a href='#method.size' class='fnname'>size</a>() -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+</div><h4 id='method.size' class="method"><span id='size.v' class='invisible'><code>fn <a href='#method.size' class='fnname'>size</a>() -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#32-34' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Return the byte-size of an <code>OfpHeader</code>.</p>
-</div><h4 id='method.marshal' class='method'><span id='marshal.v' class='invisible'><code>fn <a href='#method.marshal' class='fnname'>marshal</a>(bytes: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;, header: <a class='struct' href='../../rust_ofp/ofp_header/struct.OfpHeader.html' title='rust_ofp::ofp_header::OfpHeader'>OfpHeader</a>)</code></span></h4>
+</div><h4 id='method.marshal' class="method"><span id='marshal.v' class='invisible'><code>fn <a href='#method.marshal' class='fnname'>marshal</a>(bytes: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;, header: <a class="struct" href="../../rust_ofp/ofp_header/struct.OfpHeader.html" title="struct rust_ofp::ofp_header::OfpHeader">OfpHeader</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#37-42' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Fills a message buffer with the header fields of an <code>OfpHeader</code>.</p>
-</div><h4 id='method.parse' class='method'><span id='parse.v' class='invisible'><code>fn <a href='#method.parse' class='fnname'>parse</a>(buf: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 8]</a>) -&gt; Self</code></span></h4>
+</div><h4 id='method.parse' class="method"><span id='parse.v' class='invisible'><code>fn <a href='#method.parse' class='fnname'>parse</a>(buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 8]</a>) -&gt; Self</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#45-53' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Takes a message buffer (sized for an <code>OfpHeader</code>) and returns an <code>OfpHeader</code>.</p>
-</div><h4 id='method.version' class='method'><span id='version.v' class='invisible'><code>fn <a href='#method.version' class='fnname'>version</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></span></h4>
+</div><h4 id='method.version' class="method"><span id='version.v' class='invisible'><code>fn <a href='#method.version' class='fnname'>version</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#56-58' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Return the <code>version</code> field of a header.</p>
-</div><h4 id='method.type_code' class='method'><span id='type_code.v' class='invisible'><code>fn <a href='#method.type_code' class='fnname'>type_code</a>(&amp;self) -&gt; <a class='enum' href='../../rust_ofp/openflow0x01/enum.MsgCode.html' title='rust_ofp::openflow0x01::MsgCode'>MsgCode</a></code></span></h4>
+</div><h4 id='method.type_code' class="method"><span id='type_code.v' class='invisible'><code>fn <a href='#method.type_code' class='fnname'>type_code</a>(&amp;self) -&gt; <a class="enum" href="../../rust_ofp/openflow0x01/enum.MsgCode.html" title="enum rust_ofp::openflow0x01::MsgCode">MsgCode</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#65-67' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Return the OpenFlow message type code of a header.</p>
 
 <h1 id='safety' class='section-header'><a href='#safety'>Safety</a></h1>
 <p>The <code>typ</code> field of the <code>self</code> header is expected to be a <code>u8</code> within the
 defined range of the <code>MsgCode</code> enum.</p>
-</div><h4 id='method.length' class='method'><span id='length.v' class='invisible'><code>fn <a href='#method.length' class='fnname'>length</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+</div><h4 id='method.length' class="method"><span id='length.v' class='invisible'><code>fn <a href='#method.length' class='fnname'>length</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#70-72' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Return the <code>length</code> field of a header. Includes the length of the header itself.</p>
-</div><h4 id='method.xid' class='method'><span id='xid.v' class='invisible'><code>fn <a href='#method.xid' class='fnname'>xid</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+</div><h4 id='method.xid' class="method"><span id='xid.v' class='invisible'><code>fn <a href='#method.xid' class='fnname'>xid</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/ofp_header.rs.html#76-78' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Return the <code>xid</code> field of a header, the transaction id associated with this packet.
 Replies use the same id to facilitate pairing.</p>
 </div></div></section>
@@ -132,7 +138,6 @@ Replies use the same id to facilitate pairing.</p>
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -9,6 +9,7 @@
 
     <title>rust_ofp::openflow0x01::PseudoPort - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc enum">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'PseudoPort', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Enum PseudoPort</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a></p><script>window.sidebarCurrent = {name: 'PseudoPort', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,28 +43,33 @@
         </form>
     </nav>
 
-    <section id='main' class="content enum">
-<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class='enum' href=''>PseudoPort</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rust_ofp</a>::<wbr><a href='index.html'>openflow0x01</a>::<wbr><a class="enum" href=''>PseudoPort</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1174' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#343-352' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#343-352' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum PseudoPort {
-    PhysicalPort(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>),
+    PhysicalPort(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>),
     InPort,
     Table,
     Normal,
     Flood,
     AllPorts,
-    Controller(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>),
+    Controller(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>),
     Local,
 }</pre><div class='docblock'><p>Port behavior.</p>
-</div><h2 class='variants'>Variants</h2>
-<span id='variant.PhysicalPort' class='variant'><span id='PhysicalPort.v' class='invisible'><code>PhysicalPort(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>)</code></span></span><span id='variant.InPort' class='variant'><span id='InPort.v' class='invisible'><code>InPort</code></span></span><span id='variant.Table' class='variant'><span id='Table.v' class='invisible'><code>Table</code></span></span><span id='variant.Normal' class='variant'><span id='Normal.v' class='invisible'><code>Normal</code></span></span><span id='variant.Flood' class='variant'><span id='Flood.v' class='invisible'><code>Flood</code></span></span><span id='variant.AllPorts' class='variant'><span id='AllPorts.v' class='invisible'><code>AllPorts</code></span></span><span id='variant.Controller' class='variant'><span id='Controller.v' class='invisible'><code>Controller(<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>)</code></span></span><span id='variant.Local' class='variant'><span id='Local.v' class='invisible'><code>Local</code></span></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../rust_ofp/openflow0x01/enum.PseudoPort.html' title='rust_ofp::openflow0x01::PseudoPort'>PseudoPort</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1185' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#342' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../../rust_ofp/openflow0x01/enum.PseudoPort.html' title='rust_ofp::openflow0x01::PseudoPort'>PseudoPort</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1186' class='srclink' href='../../src/rust_ofp/src/openflow0x01.rs.html#342' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../../rust_ofp/openflow0x01/enum.PseudoPort.html' title='rust_ofp::openflow0x01::PseudoPort'>PseudoPort</a></code></span></h4>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id='variant.PhysicalPort' class='variant'><span id='PhysicalPort.v' class='invisible'><code>PhysicalPort(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>)</code></span></span><span id='variant.InPort' class='variant'><span id='InPort.v' class='invisible'><code>InPort</code></span></span><span id='variant.Table' class='variant'><span id='Table.v' class='invisible'><code>Table</code></span></span><span id='variant.Normal' class='variant'><span id='Normal.v' class='invisible'><code>Normal</code></span></span><span id='variant.Flood' class='variant'><span id='Flood.v' class='invisible'><code>Flood</code></span></span><span id='variant.AllPorts' class='variant'><span id='AllPorts.v' class='invisible'><code>AllPorts</code></span></span><span id='variant.Controller' class='variant'><span id='Controller.v' class='invisible'><code>Controller(<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>)</code></span></span><span id='variant.Local' class='variant'><span id='Local.v' class='invisible'><code>Local</code></span></span>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Copy' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="enum" href="../../rust_ofp/openflow0x01/enum.PseudoPort.html" title="enum rust_ofp::openflow0x01::PseudoPort">PseudoPort</a></code><a href='#impl-Copy' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#342' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../../rust_ofp/openflow0x01/enum.PseudoPort.html" title="enum rust_ofp::openflow0x01::PseudoPort">PseudoPort</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#342' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="enum" href="../../rust_ofp/openflow0x01/enum.PseudoPort.html" title="enum rust_ofp::openflow0x01::PseudoPort">PseudoPort</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rust_ofp/openflow0x01.rs.html#342' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -122,7 +128,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rust_ofp";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
