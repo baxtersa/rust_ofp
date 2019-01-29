@@ -256,7 +256,7 @@ impl Pattern {
         } else {
             Some(Mask {
                 value: bytes.read_u32::<BigEndian>().unwrap(),
-                mask: Some(w.nw_src),
+                mask: Some(w.nw_dst),
             })
         };
         let tp_src = if w.tp_src {
