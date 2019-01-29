@@ -312,8 +312,8 @@ impl Pattern {
         bytes.write_u8(0).unwrap();
         bytes.write_u16::<BigEndian>(p.dl_typ.unwrap_or(0)).unwrap();
         bytes.write_u8(p.nw_tos.unwrap_or(0)).unwrap();
-        bytes.write_u16::<BigEndian>(0).unwrap();
         bytes.write_u8(p.nw_proto.unwrap_or(0)).unwrap();
+        bytes.write_u16::<BigEndian>(0).unwrap();
 
         bytes.write_u32::<BigEndian>(p.nw_src
                 .unwrap_or(Mask {
