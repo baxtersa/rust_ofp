@@ -256,7 +256,7 @@ impl Pattern {
         } else {
             Some(Mask {
                 value: bytes.read_u32::<BigEndian>().unwrap(),
-                mask: Some(w.nw_src),
+                mask: Some(w.nw_dst),
             })
         };
         let tp_src = if w.tp_src {
@@ -312,8 +312,8 @@ impl Pattern {
         bytes.write_u8(0).unwrap();
         bytes.write_u16::<BigEndian>(p.dl_typ.unwrap_or(0)).unwrap();
         bytes.write_u8(p.nw_tos.unwrap_or(0)).unwrap();
-        bytes.write_u16::<BigEndian>(0).unwrap();
         bytes.write_u8(p.nw_proto.unwrap_or(0)).unwrap();
+        bytes.write_u16::<BigEndian>(0).unwrap();
 
         bytes.write_u32::<BigEndian>(p.nw_src
                 .unwrap_or(Mask {
