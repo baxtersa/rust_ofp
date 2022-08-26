@@ -9,9 +9,9 @@ pub trait OfpController {
     type Message: OfpMessage;
 
     /// Send a message to the node associated with the given `TcpStream`.
-    fn send_message(u32, Self::Message, &mut TcpStream);
+    fn send_message(xid: u32, message: Self::Message, writer: &mut TcpStream);
     /// Perform handshake and begin loop reading incoming messages from client stream.
-    fn handle_client_connected(&mut TcpStream);
+    fn handle_client_connected(stream: &mut TcpStream);
 }
 
 pub mod openflow0x01 {

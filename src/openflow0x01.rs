@@ -37,11 +37,11 @@ pub enum MsgCode {
 /// Common API for message types implementing OpenFlow Message Codes (see `MsgCode` enum).
 pub trait MessageType {
     /// Return the byte-size of a message.
-    fn size_of(&Self) -> usize;
+    fn size_of(_self: &Self) -> usize;
     /// Parse a buffer into a message.
     fn parse(buf: &[u8]) -> Self;
     /// Marshal a message into a `u8` buffer.
-    fn marshal(Self, &mut Vec<u8>);
+    fn marshal(_self: Self, bytes: &mut Vec<u8>);
 }
 
 pub struct Mask<T> {
@@ -93,12 +93,10 @@ impl Wildcards {
     fn mask_bits(x: &Option<Mask<u32>>) -> u32 {
         match *x {
             None => 32,
-            Some(ref x) => {
-                match x.mask {
-                    None => 0,
-                    Some(m) => m,
-                }
-            }
+            Some(ref x) => match x.mask {
+                None => 0,
+                Some(m) => m,
+            },
         }
     }
 
@@ -295,12 +293,18 @@ impl Pattern {
     fn marshal(p: Pattern, bytes: &mut Vec<u8>) {
         let w = Pattern::wildcards_of_pattern(&p);
         Wildcards::marshal(w, bytes);
-        bytes.write_u16::<BigEndian>(p.in_port.unwrap_or(0)).unwrap();
+        bytes
+            .write_u16::<BigEndian>(p.in_port.unwrap_or(0))
+            .unwrap();
         for i in 0..6 {
-            bytes.write_u8(bytes_of_mac(Self::if_word48(p.dl_src))[i]).unwrap();
+            bytes
+                .write_u8(bytes_of_mac(Self::if_word48(p.dl_src))[i])
+                .unwrap();
         }
         for i in 0..6 {
-            bytes.write_u8(bytes_of_mac(Self::if_word48(p.dl_dst))[i]).unwrap();
+            bytes
+                .write_u8(bytes_of_mac(Self::if_word48(p.dl_dst))[i])
+                .unwrap();
         }
         let vlan = match p.dl_vlan {
             Some(Some(v)) => v,
@@ -315,19 +319,25 @@ impl Pattern {
         bytes.write_u8(p.nw_proto.unwrap_or(0)).unwrap();
         bytes.write_u16::<BigEndian>(0).unwrap();
 
-        bytes.write_u32::<BigEndian>(p.nw_src
-                .unwrap_or(Mask {
-                    value: 0,
-                    mask: None,
-                })
-                .value)
+        bytes
+            .write_u32::<BigEndian>(
+                p.nw_src
+                    .unwrap_or(Mask {
+                        value: 0,
+                        mask: None,
+                    })
+                    .value,
+            )
             .unwrap();
-        bytes.write_u32::<BigEndian>(p.nw_dst
-                .unwrap_or(Mask {
-                    value: 0,
-                    mask: None,
-                })
-                .value)
+        bytes
+            .write_u32::<BigEndian>(
+                p.nw_dst
+                    .unwrap_or(Mask {
+                        value: 0,
+                        mask: None,
+                    })
+                    .value,
+            )
             .unwrap();
 
         bytes.write_u16::<BigEndian>(p.tp_src.unwrap_or(0)).unwrap();
@@ -336,7 +346,23 @@ impl Pattern {
 }
 
 #[repr(packed)]
-struct OfpMatch(u32, u16, [u8; 6], [u8; 6], u16, u8, u8, u16, u8, u8, u16, u32, u32, u16, u16);
+struct OfpMatch(
+    u32,
+    u16,
+    [u8; 6],
+    [u8; 6],
+    u16,
+    u8,
+    u8,
+    u16,
+    u8,
+    u8,
+    u16,
+    u32,
+    u32,
+    u16,
+    u16,
+);
 
 /// Port behavior.
 #[derive(Copy, Clone)]
@@ -395,15 +421,27 @@ impl PseudoPort {
     fn marshal(pp: PseudoPort, bytes: &mut Vec<u8>) {
         match pp {
             PseudoPort::PhysicalPort(p) => bytes.write_u16::<BigEndian>(p).unwrap(),
-            PseudoPort::InPort => bytes.write_u16::<BigEndian>(OfpPort::OFPPInPort as u16).unwrap(),
-            PseudoPort::Table => bytes.write_u16::<BigEndian>(OfpPort::OFPPTable as u16).unwrap(),
-            PseudoPort::Normal => bytes.write_u16::<BigEndian>(OfpPort::OFPPNormal as u16).unwrap(),
-            PseudoPort::Flood => bytes.write_u16::<BigEndian>(OfpPort::OFPPFlood as u16).unwrap(),
-            PseudoPort::AllPorts => bytes.write_u16::<BigEndian>(OfpPort::OFPPAll as u16).unwrap(),
-            PseudoPort::Controller(_) => {
-                bytes.write_u16::<BigEndian>(OfpPort::OFPPController as u16).unwrap()
-            }
-            PseudoPort::Local => bytes.write_u16::<BigEndian>(OfpPort::OFPPLocal as u16).unwrap(),
+            PseudoPort::InPort => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPInPort as u16)
+                .unwrap(),
+            PseudoPort::Table => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPTable as u16)
+                .unwrap(),
+            PseudoPort::Normal => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPNormal as u16)
+                .unwrap(),
+            PseudoPort::Flood => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPFlood as u16)
+                .unwrap(),
+            PseudoPort::AllPorts => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPAll as u16)
+                .unwrap(),
+            PseudoPort::Controller(_) => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPController as u16)
+                .unwrap(),
+            PseudoPort::Local => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPLocal as u16)
+                .unwrap(),
         }
     }
 }
@@ -487,13 +525,10 @@ impl Action {
             Action::SetDlVlan(None) => size_of::<OfpActionStripVlan>(),
             Action::SetDlVlan(Some(_)) => size_of::<OfpActionVlanVId>(),
             Action::SetDlVlanPcp(_) => size_of::<OfpActionVlanPcp>(),
-            Action::SetDlSrc(_) |
-            Action::SetDlDst(_) => size_of::<OfpActionDlAddr>(),
-            Action::SetNwSrc(_) |
-            Action::SetNwDst(_) => size_of::<OfpActionNwAddr>(),
+            Action::SetDlSrc(_) | Action::SetDlDst(_) => size_of::<OfpActionDlAddr>(),
+            Action::SetNwSrc(_) | Action::SetNwDst(_) => size_of::<OfpActionNwAddr>(),
             Action::SetNwTos(_) => size_of::<OfpActionNwTos>(),
-            Action::SetTpSrc(_) |
-            Action::SetTpDst(_) => size_of::<OfpActionTpPort>(),
+            Action::SetTpSrc(_) | Action::SetTpDst(_) => size_of::<OfpActionTpPort>(),
             Action::Enqueue(_, _) => size_of::<OfpActionEnqueue>(),
         };
         h + body
@@ -590,8 +625,8 @@ impl Action {
     }
 
     fn move_controller_last(acts: Vec<Action>) -> Vec<Action> {
-        let (mut to_ctrl, mut not_to_ctrl): (Vec<Action>, Vec<Action>) = acts.into_iter()
-            .partition(|act| match *act {
+        let (mut to_ctrl, mut not_to_ctrl): (Vec<Action>, Vec<Action>) =
+            acts.into_iter().partition(|act| match *act {
                 Action::Output(PseudoPort::Controller(_)) => true,
                 _ => false,
             });
@@ -600,12 +635,17 @@ impl Action {
     }
 
     fn marshal(act: Action, bytes: &mut Vec<u8>) {
-        bytes.write_u16::<BigEndian>(Action::type_code(&act) as u16).unwrap();
-        bytes.write_u16::<BigEndian>(Action::size_of(&act) as u16).unwrap();
+        bytes
+            .write_u16::<BigEndian>(Action::type_code(&act) as u16)
+            .unwrap();
+        bytes
+            .write_u16::<BigEndian>(Action::size_of(&act) as u16)
+            .unwrap();
         match act {
             Action::Output(pp) => {
                 PseudoPort::marshal(pp, bytes);
-                bytes.write_u16::<BigEndian>(match pp {
+                bytes
+                    .write_u16::<BigEndian>(match pp {
                         PseudoPort::Controller(w) => w as u16,
                         _ => 0,
                     })
@@ -622,8 +662,7 @@ impl Action {
                     bytes.write_u8(0).unwrap();
                 }
             }
-            Action::SetDlSrc(mac) |
-            Action::SetDlDst(mac) => {
+            Action::SetDlSrc(mac) | Action::SetDlDst(mac) => {
                 let mac = bytes_of_mac(mac);
                 for i in 0..6 {
                     bytes.write_u8(mac[i]).unwrap();
@@ -632,16 +671,16 @@ impl Action {
                     bytes.write_u8(0).unwrap();
                 }
             }
-            Action::SetNwSrc(addr) |
-            Action::SetNwDst(addr) => bytes.write_u32::<BigEndian>(addr).unwrap(),
+            Action::SetNwSrc(addr) | Action::SetNwDst(addr) => {
+                bytes.write_u32::<BigEndian>(addr).unwrap()
+            }
             Action::SetNwTos(n) => {
                 bytes.write_u8(n).unwrap();
                 for _ in 0..3 {
                     bytes.write_u8(0).unwrap();
                 }
             }
-            Action::SetTpSrc(pt) |
-            Action::SetTpDst(pt) => {
+            Action::SetTpSrc(pt) | Action::SetTpDst(pt) => {
                 bytes.write_u16::<BigEndian>(pt).unwrap();
                 bytes.write_u16::<BigEndian>(0).unwrap();
             }
@@ -828,8 +867,9 @@ impl FlowMod {
 
 impl MessageType for FlowMod {
     fn size_of(msg: &FlowMod) -> usize {
-        Pattern::size_of(&msg.pattern) + size_of::<OfpFlowMod>() +
-        Action::size_of_sequence(&msg.actions)
+        Pattern::size_of(&msg.pattern)
+            + size_of::<OfpFlowMod>()
+            + Action::size_of_sequence(&msg.actions)
     }
 
     fn parse(buf: &[u8]) -> FlowMod {
@@ -868,20 +908,30 @@ impl MessageType for FlowMod {
         Pattern::marshal(fm.pattern, bytes);
         bytes.write_u64::<BigEndian>(fm.cookie).unwrap();
         bytes.write_u16::<BigEndian>(fm.command as u16).unwrap();
-        bytes.write_u16::<BigEndian>(Timeout::to_int(fm.idle_timeout)).unwrap();
-        bytes.write_u16::<BigEndian>(Timeout::to_int(fm.hard_timeout)).unwrap();
+        bytes
+            .write_u16::<BigEndian>(Timeout::to_int(fm.idle_timeout))
+            .unwrap();
+        bytes
+            .write_u16::<BigEndian>(Timeout::to_int(fm.hard_timeout))
+            .unwrap();
         bytes.write_u16::<BigEndian>(fm.priority).unwrap();
-        bytes.write_i32::<BigEndian>(match fm.apply_to_packet {
+        bytes
+            .write_i32::<BigEndian>(match fm.apply_to_packet {
                 None => -1,
                 Some(buf_id) => buf_id as i32,
             })
             .unwrap();
         match fm.out_port {
-            None => bytes.write_u16::<BigEndian>(OfpPort::OFPPNone as u16).unwrap(),
+            None => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPNone as u16)
+                .unwrap(),
             Some(x) => PseudoPort::marshal(x, bytes),
         }
-        bytes.write_u16::<BigEndian>(FlowMod::flags_to_int(fm.check_overlap,
-                                                          fm.notify_when_removed))
+        bytes
+            .write_u16::<BigEndian>(FlowMod::flags_to_int(
+                fm.check_overlap,
+                fm.notify_when_removed,
+            ))
             .unwrap();
         for act in Action::move_controller_last(fm.actions) {
             match act {
@@ -905,15 +955,13 @@ pub enum Payload {
 impl Payload {
     pub fn size_of(payload: &Payload) -> usize {
         match *payload {
-            Payload::Buffered(_, ref buf) |
-            Payload::NotBuffered(ref buf) => buf.len(),
+            Payload::Buffered(_, ref buf) | Payload::NotBuffered(ref buf) => buf.len(),
         }
     }
 
     fn marshal(payload: Payload, bytes: &mut Vec<u8>) {
         match payload {
-            Payload::Buffered(_, buf) |
-            Payload::NotBuffered(buf) => bytes.write_all(&buf).unwrap(),
+            Payload::Buffered(_, buf) | Payload::NotBuffered(buf) => bytes.write_all(&buf).unwrap(),
         }
     }
 }
@@ -925,7 +973,6 @@ pub enum PacketInReason {
     NoMatch,
     ExplicitSend,
 }
-
 
 /// Represents packets received by the datapath and sent to the controller.
 #[derive(Debug)]
@@ -992,8 +1039,9 @@ struct OfpPacketOut(u32, u16, u16);
 
 impl MessageType for PacketOut {
     fn size_of(po: &PacketOut) -> usize {
-        size_of::<OfpPacketOut>() + Action::size_of_sequence(&po.apply_actions) +
-        Payload::size_of(&po.output_payload)
+        size_of::<OfpPacketOut>()
+            + Action::size_of_sequence(&po.apply_actions)
+            + Payload::size_of(&po.output_payload)
     }
 
     fn parse(buf: &[u8]) -> PacketOut {
@@ -1025,16 +1073,21 @@ impl MessageType for PacketOut {
     }
 
     fn marshal(po: PacketOut, bytes: &mut Vec<u8>) {
-        bytes.write_i32::<BigEndian>(match po.output_payload {
+        bytes
+            .write_i32::<BigEndian>(match po.output_payload {
                 Payload::Buffered(n, _) => n as i32,
                 Payload::NotBuffered(_) => -1,
             })
             .unwrap();
         match po.port_id {
             Some(id) => PseudoPort::marshal(PseudoPort::PhysicalPort(id), bytes),
-            None => bytes.write_u16::<BigEndian>(OfpPort::OFPPNone as u16).unwrap(),
+            None => bytes
+                .write_u16::<BigEndian>(OfpPort::OFPPNone as u16)
+                .unwrap(),
         }
-        bytes.write_u16::<BigEndian>(Action::size_of_sequence(&po.apply_actions) as u16).unwrap();
+        bytes
+            .write_u16::<BigEndian>(Action::size_of_sequence(&po.apply_actions) as u16)
+            .unwrap();
         for act in Action::move_controller_last(po.apply_actions) {
             Action::marshal(act, bytes);
         }
@@ -1105,7 +1158,9 @@ impl MessageType for FlowRemoved {
         bytes.write_u8(0).unwrap();
         bytes.write_u32::<BigEndian>(f.duration_sec).unwrap();
         bytes.write_u32::<BigEndian>(f.duration_nsec).unwrap();
-        bytes.write_u16::<BigEndian>(Timeout::to_int(f.idle_timeout)).unwrap();
+        bytes
+            .write_u16::<BigEndian>(Timeout::to_int(f.idle_timeout))
+            .unwrap();
         bytes.write_u64::<BigEndian>(f.packet_count).unwrap();
         bytes.write_u64::<BigEndian>(f.byte_count).unwrap();
     }
@@ -1412,10 +1467,10 @@ impl MessageType for Error {
 /// Encapsulates handling of messages implementing `MessageType` trait.
 pub mod message {
     use super::*;
-    use std::io::Write;
     use ofp_header::OfpHeader;
     use ofp_message::OfpMessage;
     use packet::Packet;
+    use std::io::Write;
 
     /// Abstractions of OpenFlow 1.0 messages mapping to message codes.
     pub enum Message {
@@ -1495,10 +1550,12 @@ pub mod message {
 
         fn header_of(xid: u32, msg: &Message) -> OfpHeader {
             let sizeof_buf = Self::size_of(&msg);
-            OfpHeader::new(0x01,
-                           Self::msg_code_of_message(msg) as u8,
-                           sizeof_buf as u16,
-                           xid)
+            OfpHeader::new(
+                0x01,
+                Self::msg_code_of_message(msg) as u8,
+                sizeof_buf as u16,
+                xid,
+            )
         }
 
         fn marshal(xid: u32, msg: Message) -> Vec<u8> {
@@ -1575,8 +1632,7 @@ pub mod message {
     /// Parse a payload buffer into a network level packet.
     pub fn parse_payload(p: &Payload) -> Packet {
         match *p {
-            Payload::Buffered(_, ref b) |
-            Payload::NotBuffered(ref b) => Packet::parse(&b),
+            Payload::Buffered(_, ref b) | Payload::NotBuffered(ref b) => Packet::parse(&b),
         }
     }
 }
