@@ -46,15 +46,15 @@ pub struct TcpFlags {
 impl TcpFlags {
     fn of_int(d: u16) -> TcpFlags {
         TcpFlags {
-            ns: test_bit(0, d as u64),
-            cwr: test_bit(1, d as u64),
-            ece: test_bit(2, d as u64),
-            urg: test_bit(3, d as u64),
+            ns: test_bit(8, d as u64),
+            cwr: test_bit(7, d as u64),
+            ece: test_bit(6, d as u64),
+            urg: test_bit(5, d as u64),
             ack: test_bit(4, d as u64),
-            psh: test_bit(5, d as u64),
-            rst: test_bit(6, d as u64),
-            syn: test_bit(7, d as u64),
-            fin: test_bit(8, d as u64),
+            psh: test_bit(3, d as u64),
+            rst: test_bit(2, d as u64),
+            syn: test_bit(1, d as u64),
+            fin: test_bit(0, d as u64),
         }
     }
 }
